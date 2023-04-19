@@ -12,7 +12,7 @@ import {
 } from '../authConfig';
 import { environment } from '../environments/environment';
 
-export const router = express.Router();
+export const authRouter = express.Router();
 const msalInstance = new ConfidentialClientApplication(msalConfig);
 const cryptoProvider = new CryptoProvider();
 
@@ -70,7 +70,7 @@ async function redirectToAuthCodeUrl(req: Request, res: Response, next: (error: 
     }
 };
 
-router.get('/signin', async (req: Request, res: Response, next) => {
+authRouter.get('/signin', async (req: Request, res: Response, next) => {
     // create a GUID for crsf
     req.session.csrfToken = cryptoProvider.createNewGuid();
     req.session.save();
@@ -110,7 +110,7 @@ router.get('/signin', async (req: Request, res: Response, next) => {
     return redirectToAuthCodeUrl(req, res, next, authCodeUrlRequestParams, authCodeRequestParams)
 });
 
-router.get('/acquireToken', async function (req, res, next) {
+authRouter.get('/acquireToken', async function (req, res, next) {
     // create a GUID for csrf
     req.session.csrfToken = cryptoProvider.createNewGuid();
     req.session.save();
@@ -136,7 +136,7 @@ router.get('/acquireToken', async function (req, res, next) {
     return redirectToAuthCodeUrl(req, res, next, authCodeUrlRequestParams, authCodeRequestParams)
 });
 
-router.post('/redirect', async function (req: Request, res: Response, next) {
+authRouter.post('/redirect', async function (req: Request, res: Response, next) {
     if (req.body.state) {
         const state = JSON.parse(cryptoProvider.base64Decode(req.body.state));
 
@@ -169,7 +169,7 @@ router.post('/redirect', async function (req: Request, res: Response, next) {
     }
 });
 
-router.get('/signout', function (req, res) {
+authRouter.get('/signout', function (req, res) {
     /**
      * Construct a logout URI and redirect the user to end the
      * session with Azure AD. For more information, visit:

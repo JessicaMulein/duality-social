@@ -1,7 +1,7 @@
 /* eslint-disable */
 export default {
   displayName: 'duality-social-queue-worker-e2e',
-  preset: '../..//jest.preset.js',
+  preset: '../../apps/jest.preset.js',
   globals: {
     'ts-jest': {
       tsconfig: '<rootDir>/tsconfig.spec.json',
@@ -13,5 +13,4 @@ export default {
     '^.+\\.[tj]s$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../..//coverage/duality-social-queue-worker-e2e',
 };

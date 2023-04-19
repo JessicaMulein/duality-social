@@ -5,7 +5,7 @@ import {
     BaseModelCaches,
     HumanityTypeEnum,
     LockTypeEnum,
-} from '@digital-defiance/duality-social-lib';
+} from '@duality-social/duality-social-lib';
 import { Request, Response } from 'express';
 import { Schema } from 'mongoose';
 import axios from 'axios';
@@ -31,8 +31,8 @@ function validateMsalToken(token: string, audience: string, issuer: string, publ
   }
 }
 
-async function getMsalPublicKey(): Promise<string> {
-  const url = `https://login.microsoftonline.com/${environment.msal.tenantId}/.well-known/openid-configuration`;
+async function getMsalPublicKey(tenantId = 'common'): Promise<string> {
+  const url = `https:///${environment.msal.cloudInstance}/consumers/.well-known/openid-configuration`;
 
   try {
     const response = await axios.get(url);

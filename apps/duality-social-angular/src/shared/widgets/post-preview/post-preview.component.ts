@@ -1,6 +1,6 @@
 import { Component, Input, ViewEncapsulation } from "@angular/core";
 import { SafeHtml } from "@angular/platform-browser";
-import { parsePostContent } from "@digital-defiance/duality-social-lib";
+import { parsePostContent } from "@duality-social/duality-social-lib";
 import { SafeHtmlPipe } from "../../pipes/safe-html.pipe";
 
 @Component({

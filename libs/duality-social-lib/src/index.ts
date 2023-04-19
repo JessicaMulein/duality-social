@@ -44,6 +44,7 @@ export * from './lib/font-awesome/font-awesome';
 //export * from './lib/models/baseModel';
 //export * from './lib/models/baseModelCache';
 export * from './lib/models/schema';
+export * from './lib/models/user';
 export * from './lib/schemas/adminUser';
 export * from './lib/schemas/invitation';
 export * from './lib/schemas/login';

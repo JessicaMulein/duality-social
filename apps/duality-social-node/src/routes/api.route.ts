@@ -1,10 +1,9 @@
 import { Router } from 'express';
 import { testGet } from '../controllers/test';
 import { openAiRouter  } from '../routes/openai.route';
-import { isAuthenticated } from './auth.route';
 import { feedRouter } from './feed.route';
 
-// all routes prefixed with /api
+// all routes prefixed with /api and all are authenticated
 export const apiRouter = Router();
 // Sub-routers
 // -----

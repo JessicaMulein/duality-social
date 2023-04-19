@@ -4,6 +4,7 @@ import { AccountLoginTypeEnum } from '../enumerations/accountLoginType';
 import { AdminLevelEnum } from '../enumerations/adminLevel';
 import { LockTypeEnum } from '../enumerations/lockType';
 import { BaseModelCaches } from '../models/schema';
+import { UserMetaSchema } from './userMeta';
 
 /**
  * A user in the system.
@@ -44,8 +45,8 @@ export const UserSchema = new Schema(
     /**
      * The user's password hash, used for login if accountType is email/password.
      */
-    accountPasswordHash: { type: String, optional: true },
-    accoungPasswordSalt: { type: String, optional: true },
+    accountPasswordHash: { type: String, optional: true, default: null },
+    accountPasswordSalt: { type: String, optional: true, default: null },
     /**
      * The unique @username of the user.
      */
@@ -108,44 +109,7 @@ export const UserSchema = new Schema(
       enum: LockTypeEnum,
       default: LockTypeEnum.PendingEmailVerification,
     },
-    meta: {
-      /**
-       * How many posts the user has made.
-       */
-      totalPosts: { type: Number, default: 0 },
-      /**
-       * How many replies the user has made.
-       */
-      totalReplies: { type: Number, default: 0 },
-      /**
-       * The total number of reactions the user has made on other posts.
-       */
-      totalReactions: { type: Number, default: 0 },
-      /**
-       * The total number of reactions the user has received on their posts.
-       */
-      totalReactionsReceived: { type: Number, default: 0 },
-      /**
-       * The total number of votes the user has made on other posts.
-       */
-      totalVotes: { type: Number, default: 0 },
-      /**
-       * The total number of votes the user has received on their posts.
-       */
-      totalVotesReceived: { type: Number, default: 0 },
-      /**
-       * The total number of impressions the user has received on their profile.
-       */
-      totalProfileViewsReceived: { type: Number, default: 0 },
-      /**
-       * The total number of impressions the user has received on their posts.
-       */
-      totalPostViewsReceived: { type: Number, default: 0 },
-      /**
-       * The total number of impressions the user has received on their replies.
-       */
-      totalReplyViewsReceived: { type: Number, default: 0 },
-    },
+    meta: UserMetaSchema,
   },
   { timestamps: true }
 );

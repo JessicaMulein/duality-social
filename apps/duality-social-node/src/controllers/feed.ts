@@ -1,7 +1,7 @@
 import {
     BaseModelCaches,
     HumanityTypeEnum,
-} from '@digital-defiance/duality-social-lib';
+} from '@duality-social/duality-social-lib';
 import { Request, Response } from 'express';
 import { Schema } from 'mongoose';
 

@@ -3,6 +3,7 @@
 import corslib from 'cors';
 
 const whitelist = [
+  'http://localhost:3000',
   'https://localhost:3000',
   'https://duality.social',
   'https://duality-social.azurewebsites.net',

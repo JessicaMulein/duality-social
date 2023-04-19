@@ -3,7 +3,7 @@ import {
     DevilsAdvocateImagePrompt,
     getOppositeResponseFromOpenAI
 } from '../services/openai';
-import { BaseModelCaches, IDevilsAdvocateRequest, IDevilsAdvocateResponse, HumanityTypeEnum } from '@digital-defiance/duality-social-lib';
+import { BaseModelCaches, IDevilsAdvocateRequest, IDevilsAdvocateResponse, HumanityTypeEnum } from '@duality-social/duality-social-lib';
 import { Schema } from 'mongoose';
 
 

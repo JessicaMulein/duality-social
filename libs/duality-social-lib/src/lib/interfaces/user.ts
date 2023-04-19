@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-empty-interface */
+/* eslint-disable @typescript-eslint/no-namespace */
 import { Document } from 'mongoose';
 import { AccountLoginTypeEnum } from '../enumerations/accountLoginType';
 import { AccountStatusTypeEnum } from '../enumerations/accountStatusType';
@@ -6,47 +8,15 @@ import { IHasID } from './hasId';
 import { IHasSoftDelete } from './hasSoftDelete';
 import { IHasTimestampOwners } from './hasTimestampOwners';
 import { IHasTimestamps } from './hasTimestamps';
+import { IUserMeta } from './userMeta';
 
-export interface IUserMeta {
-  /**
-   * How many posts the user has made.
-   */
-  totalPosts: number;
-  /**
-   * How many replies the user has made.
-   */
-  totalReplies: number;
-  /**
-   * The total number of reactions the user has made on other posts.
-   */
-  totalReactions: number;
-  /**
-   * The total number of reactions the user has received on their posts.
-   */
-  totalReactionsReceived: number;
-  /**
-   * The total number of votes the user has made on other posts.
-   */
-  totalVotes: number;
-  /**
-   * The total number of votes the user has received on their posts.
-   */
-  totalVotesReceived: number;
-  /**
-   * The total number of impressions the user has received on their profile.
-   */
-  totalProfileViewsReceived: number;
-  /**
-   * The total number of impressions the user has received on their posts.
-   */
-  totalPostViewsReceived: number;
-  /**
-   * The total number of impressions the user has received on their replies.
-   */
-  totalReplyViewsReceived: number;
+declare global {
+  namespace Express {
+      interface User {}
+  }
 }
 
-export interface IUser extends IHasID, IHasTimestamps, IHasTimestampOwners, IHasSoftDelete, Document {
+export interface IUser extends Express.User, IHasID, IHasTimestamps, IHasTimestampOwners, IHasSoftDelete, Document {
   // graphql fields
     givenName: string;
     surname: string;
@@ -88,4 +58,3 @@ export interface IUser extends IHasID, IHasTimestamps, IHasTimestampOwners, IHas
   }
 
   export type UserKeys = { [P in keyof IUser]: P }[keyof IUser];
-  export type UserMetaKeya = { [P in keyof IUserMeta]: P }[keyof IUserMeta];

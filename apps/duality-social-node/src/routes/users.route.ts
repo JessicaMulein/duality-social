@@ -9,14 +9,14 @@ import { fetch } from '../fetch';
 import { isAuthenticated } from './auth.route';
 import { environment } from '../environments/environment';
 import { login } from '../controllers/user';
-export const router = express.Router();
+export const usersRouter = express.Router();
 
-router.post(
+usersRouter.post(
   '/login', // POST /users/login
   login // use the login POST handler
 )
 
-router.get(
+usersRouter.get(
   '/id',
   isAuthenticated, // check if user is authenticated
   async function (req: Request, res: Response, next: (error: unknown) => void) {
@@ -28,7 +28,7 @@ router.get(
   }
 );
 
-router.get(
+usersRouter.get(
   '/profile',
   isAuthenticated, // check if user is authenticated
   async function (req, res, next) {

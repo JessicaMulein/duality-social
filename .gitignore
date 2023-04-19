@@ -1,4 +1,7 @@
 # See http://help.github.com/ignore-files/ for more about ignoring files.
+.env
+.devcontainer/devcontainer.env
+.npmrc
 
 # compiled output
 dist
@@ -39,3 +42,7 @@ testem.log
 Thumbs.db
 
 .angular
+
+# Generated Docusaurus files
+.docusaurus/
+.cache-loader/

@@ -20,6 +20,8 @@ export class AuthenticationService {
   private msalClient: PublicClientApplication;
 
   constructor(private http: HttpClient) {
+    const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
+
     this.msalClient = new PublicClientApplication({
       auth: {
         clientId: environment.msal.clientId,
@@ -28,7 +30,7 @@ export class AuthenticationService {
       },
       cache: {
         cacheLocation: 'localStorage',
-        storeAuthStateInCookie: true,
+        storeAuthStateInCookie: isIE,
       },
     });
   }
@@ -36,7 +38,7 @@ export class AuthenticationService {
   login(): Observable<boolean> {
     return from(
       this.msalClient.loginPopup({
-        scopes: ['openid', 'profile', 'email'],
+        scopes: ['openid', 'profile', 'email', 'User.Read'],
       })
     ).pipe(
       map((result: AuthenticationResult) => {
@@ -75,15 +77,13 @@ export class AuthenticationService {
   getAccessToken(): Observable<string> {
     return from(
       this.msalClient.acquireTokenSilent({
-        scopes: ['openid', 'profile', 'email', `api://${environment.msal.clientId}`],
+        scopes: ['openid', 'profile', 'email', 'User.Read'],
       })
     ).pipe(map((result: AuthenticationResult) => result.accessToken));
   }
 
   getCurrentUser(): User | null {
     const account = this.msalClient.getActiveAccount();
-    const x: User = account as User;
-    x.isAdmin = false;
-    return account ? x : null;
+    return account ? (account as User) : null;
   }
 }

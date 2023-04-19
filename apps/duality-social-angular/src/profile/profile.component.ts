@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { IProfile } from '@digital-defiance/duality-social-lib';
+import { IProfile } from '@duality-social/duality-social-lib';
 
 const GRAPH_ENDPOINT = 'https://graph.microsoft.com/v1.0/me'; // Prod graph endpoint. Uncomment to use.
 //const GRAPH_ENDPOINT = 'https://graph.microsoft-ppe.com/v1.0/me';

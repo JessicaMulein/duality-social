@@ -3,19 +3,25 @@
 // The list of file replacements can be found in `angular.json`.
 
 import { NgxLoggerLevel } from 'ngx-logger';
+import { IEnvironment } from '../core/interfaces/environment';
 
-export const environment = {
+export const environment: IEnvironment = {
   production: false,
   logLevel: NgxLoggerLevel.OFF,
   serverLogLevel: NgxLoggerLevel.ERROR,
   msal: {
-    authority: 'https://login.microsoftonline.com/83f34336-afeb-4706-b665-02995bbdffc8/',
-    clientId: '8c8572d9-9cad-4cee-b00f-4b642f7441bb',
+    authority: 'https://login.microsoftonline.com/consumers', // 'https://login.microsoftonline.com/83f34336-afeb-4706-b665-02995bbdffc8/',
+    clientId: '25989269-b717-4761-8498-f83e3bfc0754',
     cloudInstance: 'https://login.microsoftonline.com/',
-    redirectUri: 'https://localhost:3000/auth/redirect',
-    postLogoutRedirectUri: 'https://localhost:3000/auth/signout',
+    redirectUri: 'http://localhost:3000',
+    postLogoutRedirectUri: 'http://localhost:3000/auth/signout',
   },
-  domainName: 'https://localhost:3000',
+  domainName: 'http://localhost:3000',
+  apiUrl: 'http://localhost:3000/api',
+  pusher: {
+    appId: 1592034,
+    key: 'eeb22df2aaa65ce1ede4'
+  }
 };
 
 /*

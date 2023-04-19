@@ -1,23 +1,26 @@
+/* eslint-disable @typescript-eslint/no-namespace */
+/* eslint-disable @typescript-eslint/no-empty-interface */
 import express from 'express';
 import compression from 'compression';
 import { apiRouter as apiRouter } from './routes/api.route';
-import { router as authRouter } from './routes/auth.route';
-import { router as usersRouter } from './routes/users.route';
+import { authRouter as authRouter } from './routes/auth.route';
+import { usersRouter as usersRouter } from './routes/users.route';
 import { cors as corslib } from './cors';
 import https from 'https';
 import fs from 'fs';
-import { IEnvironment, validateEnvironment } from './environments/environment';
+import { environment as environmentToValidate } from './environments/environment';
+import { IEnvironment, validateEnvironment } from './interfaces/environment';
 import { AccountInfo, PkceCodes } from '@azure/msal-common';
 import {
   AuthorizationCodeRequest,
   AuthorizationUrlRequest,
 } from '@azure/msal-node';
-import logger from 'morgan';
-import { json } from 'body-parser';
-import session = require('express-session');
-import mongoDbSession = require('connect-mongodb-session');
-import mongoose from 'mongoose';
-import { MongooseSchemas } from '@digital-defiance/duality-social-lib';
+import { setupPusher } from './setupPusher';
+import { setupPassport } from './setupPassport';
+import { setupDatabase } from './setupDatabase';
+import { setupMiddlewares } from './setupMiddlewares';
+import { setupSession } from './setupSession';
+
 // Augment express-session with a custom SessionData object
 declare module 'express-session' {
   interface SessionData {
@@ -31,98 +34,49 @@ declare module 'express-session' {
     isAuthenticated?: boolean;
   }
 }
-validateEnvironment((environment: IEnvironment) => {
-  const Schemas = MongooseSchemas;
 
-  mongoose.set('strictQuery', true);
-  mongoose
-    .connect(environment.mongo.uri)
-    .then(() => {
-      const MongoDBStore = mongoDbSession(session);
-      const app = express();
-      app.use(corslib);
-      app.use(compression());
-      app.use(json());
-      app.use(express.json());
-      app.use(logger('dev'));
-      app.use(express.urlencoded({ extended: true }));
-      app.use(
-        express.static(environment.developer.appFolder, {
-          index: ['index.html'],
-        })
-      );
+declare global {
+  namespace Express {
+    interface User { }
+  }
+}
 
-      if (environment.cookies.enabled && environment.mongo.mongoSessions) {
-        const store = new MongoDBStore({
-          uri: environment.mongo.uri,
-          databaseName: environment.mongo.sessionDatabase,
-          collection: environment.mongo.sessionCollection,
-        });
+async function configureApplication(validatedEnvironment: IEnvironment): Promise<void> {
+  await setupDatabase();
+  const app = express();
+  await setupPusher(app);
+  await setupSession(app);
+  await setupPassport(app);
+  await setupMiddlewares(app);
 
-        // Catch errors
-        store.on('error', function (error) {
-          console.error(error);
-        });
-
-        app.use(
-          session({
-            secret: environment.cookies.secret,
-            cookie: {
-              maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
-            },
-            store: store,
-            // Boilerplate options, see:
-            // * https://www.npmjs.com/package/express-session#resave
-            // * https://www.npmjs.com/package/express-session#saveuninitialized
-            resave: true,
-            saveUninitialized: true,
-          })
+  if (validatedEnvironment.developer.sslEnabled) {
+    const path =
+      (process.env.NX_WORKSPACE_ROOT ?? '.') +
+      '/apps/duality-social-node/localdev/';
+    const httpsOptions = {
+      key: fs.readFileSync(path + 'cert.key'),
+      cert: fs.readFileSync(path + 'cert.pem'),
+    };
+    https
+      .createServer(httpsOptions, app)
+      .listen(validatedEnvironment.developer.port, () => {
+        console.log(
+          `[ ready ] https://${validatedEnvironment.developer.host}:${validatedEnvironment.developer.port}`
         );
-      } else if (environment.cookies.enabled) {
-        app.use(
-          session({
-            resave: false,
-            saveUninitialized: true,
-            // randomly generated string, 100 characters long
-            secret: environment.cookies.secret,
-          })
-        );
-      }
-      app.use('/auth', authRouter);
-      app.use('/api', apiRouter);
-      app.use('/users', usersRouter);
-      app.get('**', (req, res) => {
-        res.sendFile('index.html', { root: environment.developer.appFolder });
       });
-
-      if (environment.developer.sslEnabled) {
-        const path =
-          (process.env.NX_WORKSPACE_ROOT ?? '.') +
-          '/apps/duality-social-node/localdev/';
-        const httpsOptions = {
-          key: fs.readFileSync(path + 'cert.key'),
-          cert: fs.readFileSync(path + 'cert.pem'),
-        };
-        https
-          .createServer(httpsOptions, app)
-          .listen(environment.developer.port, () => {
-            console.log(
-              `[ ready ] https://${environment.developer.host}:${environment.developer.port}`
-            );
-          });
-      } else {
-        app.listen(
-          environment.developer.port,
-          environment.developer.host,
-          () => {
-            console.log(
-              `[ ready ] http://${environment.developer.host}:${environment.developer.port}`
-            );
-          }
+  } else {
+    app.listen(
+      validatedEnvironment.developer.port,
+      validatedEnvironment.developer.host,
+      () => {
+        console.log(
+          `[ ready ] http://${validatedEnvironment.developer.host}:${validatedEnvironment.developer.port}`
         );
       }
-    })
-    .catch((err) => {
-      console.log(err);
-    });
+    );
+  }
+}
+
+validateEnvironment(environmentToValidate, async (validatedEnvironment: IEnvironment) => {
+  return await configureApplication(validatedEnvironment);
 });

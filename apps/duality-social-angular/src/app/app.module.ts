@@ -1,5 +1,4 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule, NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 
@@ -15,7 +14,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { IPublicClientApplication, PublicClientApplication, InteractionType, BrowserCacheLocation, LogLevel } from '@azure/msal-browser';
 import { MsalGuard, MsalInterceptor, MsalBroadcastService, MsalInterceptorConfiguration, MsalModule, MsalService, MSAL_GUARD_CONFIG, MSAL_INSTANCE, MSAL_INTERCEPTOR_CONFIG, MsalGuardConfiguration, MsalRedirectComponent } from '@azure/msal-angular';
 import { FailedComponent } from '../failed/failed.component';
-import { environment } from '../environments/environment.prod';
+import { environment } from '../environments/environment';
 import { CoreModule } from '../core/core.module';
 import { SharedModule } from '../shared/shared.module';
 import { CustomMaterialModule } from '../custom-material/custom-material.module';
@@ -30,10 +29,8 @@ export function loggerCallback(logLevel: LogLevel, message: string) {
 export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication({
     auth: {
-      clientId: environment.msal.clientId, // Prod enviroment. Uncomment to use.
-      //clientId: '3fba556e-5d4a-48e3-8e1a-fd57c12cb82e', // PPE testing environment
-      authority: environment.msal.authority, // Prod environment. Uncomment to use.
-      //authority: 'https://login.windows-ppe.net/common', // PPE testing environment.
+      clientId: environment.msal.clientId,
+      authority: environment.msal.authority,
       redirectUri: environment.msal.redirectUri,
       postLogoutRedirectUri: environment.msal.postLogoutRedirectUri
     },
@@ -83,8 +80,8 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
     NoopAnimationsModule, // Animations cause delay which interfere with E2E tests
     AppRoutingModule,
     MatButtonModule,
-    MatToolbarModule,
     MatListModule,
+    MatToolbarModule,
     MatMenuModule,
     //
     BrowserAnimationsModule,
@@ -98,7 +95,11 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
     }),
     //
     HttpClientModule,
-    MsalModule,
+    MsalModule.forRoot(
+      MSALInstanceFactory(),
+      MSALGuardConfigFactory(),
+      MSALInterceptorConfigFactory()
+    ),
   ],
   providers: [
     {

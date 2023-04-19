@@ -40,12 +40,14 @@ export class NewPostComponent implements OnInit, OnChanges {
   }
 
   public async submit(): Promise<void> {
+    console.log('Validating...');
     if (this.form.valid) {
+      console.log('Posting...');
         this.httpClient.post('/api/openai/devils-advocate', {
           postContent: this._postContent
         }, {
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
           }
         }).subscribe((res) => {
           console.log(res);

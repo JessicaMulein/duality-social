@@ -1,0 +1,9 @@
+@font-face {
+    font-family: 'Electric Shocker';
+    src: url('ElectricShocker.woff2') format('woff2'),
+        url('ElectricShocker.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+

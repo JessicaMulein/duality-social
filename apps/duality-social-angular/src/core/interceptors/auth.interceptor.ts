@@ -8,16 +8,18 @@ import {
   HttpHandler,
   HttpEvent,
 } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { catchError, mergeMap } from 'rxjs/operators';
+import { throwError, from } from 'rxjs';
 
-import { AuthenticationService } from '../services/auth.service';
+import { MsalService } from '@azure/msal-angular';
 import { MatDialog } from '@angular/material/dialog';
+import { environment } from '../../environments/environment';
+import { AuthenticationResult } from '@azure/msal-browser';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   constructor(
-    private authService: AuthenticationService,
+    private msalService: MsalService,
     private router: Router,
     private dialog: MatDialog
   ) {}
@@ -26,30 +28,42 @@ export class AuthInterceptor implements HttpInterceptor {
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    const accessToken = this.authService.getCurrentUser()?.idToken;
+    console.log('Intercepting request...');
+    return from(
+      this.msalService.acquireTokenSilent({
+        scopes: ['User.Read'],
+      })
+    ).pipe(
+      mergeMap((tokenResponse: AuthenticationResult) => {
+        console.log('Got token response...', tokenResponse);
+        const accessToken = tokenResponse.accessToken;
+        if (accessToken) {
+          console.log('Got access token...', accessToken);
+          const authReq = req.clone({
+            setHeaders: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          });
 
-    if (accessToken) {
-      const authReq = req.clone({
-        setHeaders: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+          return next.handle(authReq).pipe(
+            catchError((error) => {
+              console.log('Got error...', error);
+              if (error instanceof HttpErrorResponse) {
+                if (error.status === 401) {
+                  this.msalService.logout();
+                  this.dialog.closeAll();
+                  this.router.navigate(['/auth/login']);
+                }
+              }
 
-      return next.handle(authReq).pipe(
-        catchError((error) => {
-          if (error instanceof HttpErrorResponse) {
-            if (error.status === 401) {
-              this.authService.logout();
-              this.dialog.closeAll();
-              this.router.navigate(['/auth/login']);
-            }
-          }
-
-          return throwError(error);
-        })
-      );
-    } else {
-      return next.handle(req);
-    }
+              return throwError(() => error);
+            })
+          );
+        } else {
+          console.log('No access token...');
+          return next.handle(req);
+        }
+      })
+    );
   }
 }

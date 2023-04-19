@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { DefaultReactionsArray, IReactionArrayEntry } from "@digital-defiance/duality-social-lib";
+import { DefaultReactionsArray, IReactionArrayEntry } from "@duality-social/duality-social-lib";
 
 @Component({
     selector: 'app-post-reaction',

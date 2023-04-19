@@ -6,7 +6,7 @@ import {
   imageDataUrlToFile,
   IPost,
   makeDataUrl,
-} from '@digital-defiance/duality-social-lib';
+} from '@duality-social/duality-social-lib';
 import {
     Configuration,
     CreateCompletionRequest,
@@ -156,7 +156,7 @@ export async function imageDataUrlToSizeAndFile(imageDataUrl: string): Promise<{
       }
     }
     return Promise.reject(
-      new Error('Unexpected response from OpenAI', { cause: openaiResponse })
+      new Error('Unexpected response from OpenAI')
     );
   }
   
@@ -191,18 +191,14 @@ export async function imageDataUrlToSizeAndFile(imageDataUrl: string): Promise<{
       if (!imageBase64Json) {
         // console.error("Unexpected response from OpenAI", generatedImage.data);
         return Promise.reject(
-          new Error('Unexpected response from OpenAI', {
-            cause: [generatedImage, generatedImage.data.data],
-          })
+          new Error('Unexpected response from OpenAI')
         );
       }
       return makeDataUrl(imageBase64Json);
     }
-    // console.error("Unexpected response from OpenAI", generatedImage.data);
+    console.error("Unexpected response from OpenAI", generatedImage.data);
     return Promise.reject(
-      new Error('Unexpected response from OpenAI', {
-        cause: [generatedImage, generatedImage.data?.data],
-      })
+      new Error('Unexpected response from OpenAI')
     );
   }
 

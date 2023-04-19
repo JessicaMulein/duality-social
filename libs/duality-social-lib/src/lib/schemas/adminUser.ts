@@ -20,10 +20,9 @@ export const AdminUserSchema = new Schema(
     sudoHash: { type: String, required: true },
     lastSudo: {
       type: Date,
-      default: Date.now,
-      required: true,
-      immutable: true,
+      default: null,
     },
+    lastFailedSudo: { type: Date, default: null },
   },
   { timestamps: true }
 );

@@ -26,11 +26,14 @@
     "@azure/msal-browser": "^2.22.1",
     "@nrwl/angular": "^15.7.2",
     "@nrwl/jest": "^15.8.5",
+    "@pusher/push-notifications-web": "^1.1.0",
     "connect-mongodb-session": "^3.1.1",
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.4",
     "mongoose-browser": "^5.2.8-pre-2",
-    "ngx-logger": "^5.0.11"
+    "ngx-logger": "^5.0.11",
+    "pusher-angular": "^1.0.0",
+    "rxjs": "~7.8.0"
   },
   "devDependencies": {
     "@angular-devkit/core": "^15.2.0",

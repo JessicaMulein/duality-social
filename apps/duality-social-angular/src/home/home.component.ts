@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { MsalBroadcastService, MsalService } from '@azure/msal-angular';
 import { AuthenticationResult, EventMessage, EventType, InteractionStatus, SilentRequest } from '@azure/msal-browser';
 import { filter } from 'rxjs/operators';
-import { IDevilsAdvocateRequest, IDevilsAdvocateResponse } from '@digital-defiance/duality-social-lib';
+import { IDevilsAdvocateRequest, IDevilsAdvocateResponse } from '@duality-social/duality-social-lib';
 
 @Component({
   selector: 'app-home',

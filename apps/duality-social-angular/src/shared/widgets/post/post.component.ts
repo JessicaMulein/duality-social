@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { IPost } from "@digital-defiance/duality-social-lib";
+import { IPost } from "@duality-social/duality-social-lib";
 
 @Component({
     selector: 'app-post',

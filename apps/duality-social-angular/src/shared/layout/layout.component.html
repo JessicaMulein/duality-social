@@ -9,7 +9,7 @@
 
     <a class="navbar-brand" [routerLink]="['/']" matTooltip="Home" matTooltipPositionAtOrigin="true" style="display: contents;">
       <div><img src="/assets/favicon-150h.svg" alt="masks" style="height: 50px; position: relative; top: 5px;" /></div>
-      <a class="title" href="/"><img src="/assets/duality-banner-tx.svg" alt="Duality Social" style="height: 50px; width: 231px; position: relative; top: 5px;" /></a>
+      <a class="title" href="/"><img src="/assets/duality-banner-350x75-tx.png" alt="Duality Social" style="height: 50px; position: relative; top: 5px;" /></a>
     </a>
 
     <span class="navbar-spacer"></span>
@@ -17,7 +17,8 @@
     <!-- do not show the notifications icon if not logged in-->
     <div id="loggedInNavBarSection" *ngIf="userLoggedInDisplay">
       <button mat-icon-button [matMenuTriggerFor]="notificationMenu">
-        <mat-icon matBadge="2" matBadgeColor="accent">notifications</mat-icon>
+        <i class="fa-duotone fa-bell" aria-hidden="true"></i>
+        <span class="sr-only">Notifications</span>
       </button>
       <mat-menu #notificationMenu="matMenu" xPosition="before" yPosition="above" [overlapTrigger]="false">
 

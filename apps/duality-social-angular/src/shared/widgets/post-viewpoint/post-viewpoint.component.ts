@@ -1,5 +1,5 @@
 import { Component, Input, ViewEncapsulation } from "@angular/core";
-import { IPostViewpoint } from "@digital-defiance/duality-social-lib";
+import { IPostViewpoint } from "@duality-social/duality-social-lib";
 
 @Component({
     selector: 'app-post-viewpoint',
