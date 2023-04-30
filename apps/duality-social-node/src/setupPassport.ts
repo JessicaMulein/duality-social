@@ -1,7 +1,7 @@
 import express from 'express';
 import passport from 'passport';
 import { BearerStrategy, ITokenPayload } from 'passport-azure-ad';
-import { getUserFromDatabase } from './services/userService';
+import { getUserFromDatabase, createUser } from './services/userService';
 import { environment } from './environments/environment';
 
 export function setupPassport(app: express.Application) {
@@ -18,7 +18,13 @@ export function setupPassport(app: express.Application) {
 
         try {
             // Retrieve the user object from the database using the user ID
-            const user = await getUserFromDatabase(userId) as Express.User;
+            let user = await getUserFromDatabase(userId) as Express.User;
+
+            // If the user does not exist in the database, create a new user
+            if (!user) {
+                user = await createUser(token); // Pass the token or any other required data to create a new user
+            }
+
             done(null, user, token);
         } catch (error: Error | unknown) {
             if (error instanceof Error) {
@@ -34,4 +40,5 @@ export function setupPassport(app: express.Application) {
     // middlewares
     app.use(passport.initialize());
     app.use(passport.session());
+    //app.use(passport.authenticate('oauth-bearer', { session: environment.cookies.enabled }));
 }

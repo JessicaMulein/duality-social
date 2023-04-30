@@ -7,6 +7,7 @@ import { environment } from './environments/environment';
 import { ensureAdmin, ensureAuthenticated } from './auth.middleware';
 
 export function setupRoutes(app: express.Application) {
+    app.use('/', express.static(environment.developer.angularDir));
     app.use('/auth', authRouter);
     app.use('/admin', ensureAdmin, adminRouter);
     app.use('/api', ensureAuthenticated, apiRouter);

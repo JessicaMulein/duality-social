@@ -10,3 +10,18 @@ export const getUserFromDatabase = async (userId: string): Promise<IUser | null>
     return null;
   }
 };
+
+export const createUser = async (token: any): Promise<IUser> => {
+  try {
+    const user = await UserModel.create({
+      id: token.sub,
+      displayName: token.name,
+      email: token.email,
+      roles: ['User'],
+    });
+    return user;
+  } catch (error) {
+    console.error('Error creating user:', error);
+    throw error;
+  }
+}

@@ -48,6 +48,7 @@ export class NewPostComponent implements OnInit, OnChanges {
         }, {
           headers: {
             'Content-Type': 'application/json',
+            'Authorization': `Bearer ${this.layoutComponent.authService.instance.getAllAccounts()[0].idToken}`
           }
         }).subscribe((res) => {
           console.log(res);
