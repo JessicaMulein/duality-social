@@ -1,122 +1,81 @@
-import {
-    AccountLoginTypeEnum,
-    AccountStatusTypeEnum,
-    AdminLevelEnum,
-    BaseModelCaches,
-    HumanityTypeEnum,
-    LockTypeEnum,
-} from '@duality-social/duality-social-lib';
-import { Request, Response } from 'express';
-import { Schema } from 'mongoose';
-import axios from 'axios';
-import jwt from 'jsonwebtoken';
-import { environment } from '../environments/environment';
+import { IUser, PasswordRounds, UserModel, UserMetaModel } from '@duality-social/duality-social-lib';
+import { Router } from 'express';
+import passport from 'passport';
+import { hashSync } from 'bcryptjs';
 
-function validateMsalToken(token: string, audience: string, issuer: string, publicKey: string): boolean {
-  try {
-    // Verify the token with the public key
-    const decoded = jwt.verify(token, publicKey, {
-      audience,
-      issuer,
-      algorithms: ['RS256'],
-    });
-    console.log('MSAL token decoded:', decoded);
-    // The token is valid
-    return true;
+export const userRouter = Router();
 
-  } catch (err) {
-    // The token is not valid
-    console.error('Failed to validate MSAL token:', err);
-    return false;
-  }
-}
+// Login with Email and Password
+userRouter.post('/login/local', passport.authenticate('local', { session: false }), (req, res) => {
+  res.json({ message: 'Logged in successfully', user: req.user });
+});
 
-async function getMsalPublicKey(tenantId = 'common'): Promise<string> {
-  const url = `https:///${environment.msal.cloudInstance}/consumers/.well-known/openid-configuration`;
+// Login with MSAL Token
+userRouter.post('/login/msal', passport.authenticate('oauth-bearer', { session: false }), (req, res) => {
+  res.json({ message: 'Logged in successfully', user: req.user });
+});
+
+// Create a user with Email and Password
+userRouter.post('/register/local', async (req, res) => {
+  const { email, password, username } = req.body;
 
   try {
-    const response = await axios.get(url);
-    const jwksUri = response.data.jwks_uri;
-    const jwksResponse = await axios.get(jwksUri);
-    const publicKey = jwksResponse.data.keys[0].x5c[0];
-    return publicKey;
+    // Check if email or username already exists
+    const existingUser = await UserModel.findOne({ $or: [{ accountEmail: email }, { username }] });
 
-  } catch (err) {
-    console.error('Failed to retrieve MSAL public key:', err);
-    throw err;
-  }
-}
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email or username already exists' });
+    }
+    const hashedPassword = hashSync(password, PasswordRounds);
+    // Create a new user with email, hashed password, and username
+    const newUser = new UserModel({ accountEmail: email, accountPasswordHash: hashedPassword, username });
+    await newUser.save();
 
-// POST with no body, but must have Authorization header with Bearer token
-export async function login(req: Request, res: Response): Promise<void> {
-    // capture the event date
-    const currentDate = new Date();
-    // we should actually have the user data already in session
-    if (!req.session || !req.session.account) {
-        //res.status(401).send('Session not found');
-        //return;
-        console.log('Session not found');
-    }
-    console.log(req.session.account);
-
-    // verify if the header has the authorization token
-    const authHeader = req.headers.authorization;
-    if (authHeader === undefined) {
-        res.status(401).send('Authorization header is missing');
-        return;
-    }
-    // verify if the authorization token is valid MSAL authentication token
-    const authHeaderParts = authHeader.split(' ');
-    if (authHeaderParts.length !== 2 || authHeaderParts[0] !== 'Bearer') {
-        res.status(401).send('Authorization header is invalid');
-        return;
-    }
-    // verify if the token is valid
-    const token = authHeaderParts[1];
-
-    const msalPublicKey = await getMsalPublicKey();
-    // get the issuer from the decoded token
-    const decoded = jwt.decode(token);
-    if (decoded === null || typeof decoded === 'string') {
-        res.status(401).send('Authorization token is invalid');
-        return;
-    }
-    const issuer = decoded.iss ?? '';
-    const isValid = validateMsalToken(token, environment.msal.clientId, issuer, msalPublicKey);
-    if (!isValid) {
-        res.status(401).send('Authorization token is invalid');
-        return;
-    }
-    // get the user information from the token
-    // create a new user
-    const newUser = new BaseModelCaches.Users.Model({
-        accountStatusType: AccountStatusTypeEnum.Active,
-        accountType: AccountLoginTypeEnum.Microsoft,
-        accountEmail: decoded.email,
-        emailVerified: decoded.emailVerified,
-        userName: decoded.preferred_username,
-        adminLevel: AdminLevelEnum.User,
-        adminFreezeType: decoded.emailVerified ? LockTypeEnum.Unlocked : LockTypeEnum.PendingEmailVerification,
-        shadowBan: false,
-        userHidden: false,
-        meta: {
-            totalPosts: 0,
-            totalComments: 0,
-            totalVotes: 0,
-            totalVotesReceived: 0,
-            totalProfileViewsReceived: 0,
-            totalPostViewsReceived: 0,
-            totalReplyViewsReceived: 0,
-        },
-        createdAt: currentDate,
-        updatedAt: currentDate,
-        updatedBy: new Schema.Types.ObjectId('/users'), // placeholder
+    const newUserMeta = new UserMetaModel({
+      _id: newUser._id,
     });
-    // save the user
-    await newUser.save();
-    // update the updatedBy field now that we have an ID
-    newUser.updatedBy = newUser._id;
+    await newUserMeta.save();
+
+    // Send the response without the password
+    res.status(201).json({ message: 'User created successfully', user: { email: newUser.accountEmail, username: newUser.username } });
+  } catch (error) {
+    res.status(500).json({ message: 'Error creating user', error });
+  }
+});
+
+// Create a user with MSAL Token
+userRouter.post('/register/msal', passport.authenticate('oauth-bearer', { session: false }), async (req, res) => {
+  const { username } = req.body;
+  const email = (req.user as IUser).accountEmail;
+
+  try {
+    // Check if email or username already exists
+    const existingUser = await UserModel.findOne({ $or: [{ accountEmail: email }, { username }] });
+
+    if (existingUser) {
+      return res.status(400).json({ message: 'Email or username already exists' });
+    }
+
+    // Create a new user with email and username
+    // You may want to store the token as well for future use, but be cautious of potential security implications
+    const newUser = new UserModel({ accountEmail: email, username });
+    
+    // Since we don't have a password for the user, we can remove the password field
+    newUser.accountPasswordHash = undefined;
     await newUser.save();
 
-    res.status(200).json(newUser);
-}
+    const newUserMeta = new UserMetaModel({
+      _id: newUser._id,
+    });
+    await newUserMeta.save();
+
+    // Send the response without the password field
+    res.status(201).json({ message: 'User created successfully', user: { email: newUser.accountEmail, username: newUser.username } });
+  } catch (error: any) {
+    if (error.name === 'ValidationError') {
+      res.status(400).json({ message: 'Validation error', error: error.errors });
+    } else {
+      res.status(500).json({ message: 'Error creating user', error });
+    }
+  }
+});

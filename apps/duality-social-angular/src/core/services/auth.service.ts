@@ -34,6 +34,17 @@ export class AuthenticationService {
       },
     });
   }
+  setSession(authResult: AuthenticationResult) {
+    console.log('setSession() authResult', authResult);
+    // Set the time that the access token will expire at
+    const expiresOn = JSON.stringify(
+      authResult.expiresOn || new Date().getTime() + 3600000
+    );
+    localStorage.setItem('id_token', authResult.idToken);
+    localStorage.setItem('expires_on', expiresOn);
+    localStorage.setItem('access_token', authResult.accessToken);
+    localStorage.setItem('account', JSON.stringify(authResult.account));
+  }
 
   login(): Observable<boolean> {
     return from(

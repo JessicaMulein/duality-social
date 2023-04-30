@@ -1,7 +1,11 @@
 import { Schema } from "mongoose";
+import { IHasSoftDelete } from "./hasSoftDelete";
+import { IHasTimestampOwners } from "./hasTimestampOwners";
+import { IHasTimestamps } from "./hasTimestamps";
+import { IHasID } from "./hasId";
 
-export interface IUserMeta {
-    userId: Schema.Types.ObjectId;
+export interface IUserMeta extends IHasID, IHasTimestamps, IHasTimestampOwners, IHasSoftDelete {
+    _id: Schema.Types.ObjectId;
     /**
      * How many posts the user has made.
      */

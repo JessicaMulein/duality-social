@@ -38,7 +38,7 @@ export class LayoutComponent implements OnInit, OnDestroy, AfterViewInit {
   private _mobileQueryListener: () => void;
   public mobileQuery: MediaQueryList;
   public showSpinner = false;
-  public userName = 'Log In';
+  public username = 'Log In';
   public isAdmin = false;
   public userLoggedInDisplay = false;
   private readonly _destroying$ = new Subject<void>();
@@ -114,9 +114,9 @@ export class LayoutComponent implements OnInit, OnDestroy, AfterViewInit {
     const user: AccountInfo = this.authService.instance.getAllAccounts()[0];
     if (user === undefined) {
       this.userLoggedInDisplay = false;
-      this.userName = '';
+      this.username = '';
     } else {
-      this.userName =
+      this.username =
         user.name ??
         user.username ??
         user.localAccountId ??

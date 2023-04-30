@@ -16,7 +16,7 @@ export const createUser = async (token: any): Promise<IUser> => {
     const user = await UserModel.create({
       id: token.sub,
       displayName: token.name,
-      email: token.email,
+      accountEmail: token.email,
       roles: ['User'],
     });
     return user;

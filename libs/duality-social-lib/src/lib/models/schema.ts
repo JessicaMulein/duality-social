@@ -1,4 +1,4 @@
-import { Model, model, Schema } from 'mongoose';
+import { Document, Model, model, Schema } from 'mongoose';
 import { IAdminUser } from '../interfaces/adminUser';
 import { IInvitation } from '../interfaces/invitation';
 import { ILogin } from '../interfaces/login';
@@ -26,6 +26,8 @@ import { UserSchema } from '../schemas/user';
 import { UserNameChangeSchema } from '../schemas/userNameChange';
 import { ViewpointReactionSchema } from '../schemas/viewpointReaction';
 import { BaseModelCache } from './baseModelCache';
+import { IUserMeta } from '../interfaces/userMeta';
+import { UserMetaSchema } from '../schemas/userMeta';
 
 export const MongooseSchemaNames = [
   'AdminUsers',
@@ -39,6 +41,7 @@ export const MongooseSchemaNames = [
   'Reports',
   'SudoLogs',
   'Users',
+  'UserMetas',
   'UserNameChanges',
   'ViewpointReactions',
 ] as const;
@@ -56,6 +59,7 @@ export const MongooseModelNames = [
   'Report',
   'SudoLog',
   'User',
+  'UserMeta',
   'UserNameChange',
   'ViewpointReaction',
 ] as const;
@@ -73,6 +77,7 @@ export const MongooseSchemas: { [key: string] : Schema }  = {
   Reports: ReportSchema,
   SudoLogs: SudoLogSchema,
   Users: UserSchema,
+  UserMetas: UserMetaSchema,
   UserNameChanges: UserNameChangeSchema,
   ViewpointReactions: ViewpointReactionSchema,
 };
@@ -89,6 +94,7 @@ export const MongooseModelSchemaNames: { [key: string] : string } = {
   Report: 'Report',
   SudoLog: 'SudoLog',
   User: 'User',
+  UserMeta: 'UserMeta',
   UserNameChange: 'UserNameChange',
   ViewpointReaction: 'ViewpointReaction',
 };
@@ -105,6 +111,7 @@ export const MongooseCollectionNames: { [key: string] : string }  = {
   Reports: 'reports',
   SudoLogs: 'sudoLogs',
   Users: 'users',
+  UserMetas: 'userMetas',
   UserNameChanges: 'userNameChanges',
   ViewpointReactions: 'viewpointReactions',
 };
@@ -121,6 +128,7 @@ export const MongooseCollectionPaths: { [key: string] : string } = {
   Reports: `/${MongooseCollectionNames['Reports']}`,
   SudoLogs: `/${MongooseCollectionNames['SudoLogs']}`,
   Users: `/${MongooseCollectionNames['Users']}`,
+  UseMetas: `/${MongooseCollectionNames['UserMetas']}`,
   UserNameChanges: `/${MongooseCollectionNames['UserNameChanges']}`,
   ViewpointReactions: `/${MongooseCollectionNames['ViewpointReactions']}`,
 };
@@ -271,6 +279,13 @@ export const BaseModelCaches = {
     MongooseSchemas['Users'],
     MongooseModels['User'],
     MongooseCollectionNames['Users']
+  ),
+  UserMetas: new BaseModelCache<IUserMeta>(
+    MongooseModelSchemaNames['UserMeta'],
+    MongooseCollectionPaths['UserMetas'],
+    MongooseSchemas['UserMetas'],
+    MongooseModels['UserMeta'],
+    MongooseCollectionNames['UserMetas']
   ),
   UserNameChanges: new BaseModelCache<IUserNameChange>(
     MongooseModelSchemaNames['UserNameChange'],

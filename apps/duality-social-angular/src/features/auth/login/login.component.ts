@@ -10,6 +10,9 @@ import { AuthenticationService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
+import { lastValueFrom } from 'rxjs';
+import { AccountLoginTypeEnum, AccountStatusTypeEnum, IUser, LockTypeEnum } from '@duality-social/duality-social-lib';
+import { Schema } from 'mongoose';
 
 @Component({
   selector: 'app-login',
@@ -26,7 +29,7 @@ export class LoginComponent implements OnInit {
     private http: HttpClient,
     private notificationService: NotificationService,
     private authenticationService: AuthenticationService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.titleService.setTitle('Duality Social - Login');
@@ -47,61 +50,58 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  login() {
+  emailFlowLogin() {
+    throw new Error('Method not implemented.');
     const email = this.loginForm.get('email')?.value;
     const password = this.loginForm.get('password')?.value;
     const rememberMe = this.loginForm.get('rememberMe')?.value;
-
     this.loading = true;
-    this.authenticationService.login().subscribe(
-      (data) => {
-        if (rememberMe) {
-          localStorage.setItem('savedUserEmail', email);
-        } else {
-          localStorage.removeItem('savedUserEmail');
-        }
-        this.createUserInDB();
-        this.router.navigate(['/']);
-      },
-      (error) => {
-        this.notificationService.openSnackBar(error.error);
+    // POST to /user/login
+    this.http.post(`${environment.domainName}/users/login`, {
+      email,
+      password,
+      rememberMe,
+    }).subscribe(
+      (response: any) => {
+        console.log('response', response);
         this.loading = false;
+        this.authenticationService.setSession(response);
+        this.router.navigate(['/']);
       }
     );
   }
 
   /**
-   * TODO: call me
    * @param account
    */
-  public createUserInDB() {
-    const account = this.authenticationService.getCurrentUser();
-    if (!account) {
-      return;
-    }
-    console.log('account', account);
-    const userData = {
-      id: account.homeAccountId,
-      username: account.username,
-      email: account.nativeAccountId,
-    };
-    console.log('userData', userData);
+  public async msasFlowLogin(): Promise<void> {
+    this.loading = true;
+    try {
+      const accessToken = await this.authenticationService.getAccessToken();
 
-    this.authenticationService.getAccessToken().then((accessToken) => {
       console.log('accessToken', accessToken);
       if (accessToken) {
         const headers = {
           Authorization: `Bearer ${accessToken}`,
         };
-    
-        this.http
-          .post(`${environment.domainName}/api/users`, userData, { headers })
-          .subscribe(
-            (response) => console.log('User created in MongoDB:', response),
-            (error) => console.error('Error creating user in MongoDB:', error)
+
+        try {
+          const response$ = this.http.post(
+            `${environment.domainName}/users/login`,
+            { headers },
           );
+
+          const response = await lastValueFrom(response$);
+          console.log('User created in MongoDB:', response);
+        } catch (error) {
+          console.error('Error creating user in MongoDB:', error);
+        } finally {
+          this.loading = false;
+        }
       }
-    }).catch((error) => console.error('Error getting access token:', error));
+    } catch (error) {
+      console.error('Error getting access token:', error);
+    }
   }
 
   resetPassword() {
