@@ -87,13 +87,13 @@ export class LoginComponent implements OnInit {
     };
     console.log('userData', userData);
 
-    this.authenticationService.getAccessToken().subscribe((accessToken) => {
+    this.authenticationService.getAccessToken().then((accessToken) => {
       console.log('accessToken', accessToken);
       if (accessToken) {
         const headers = {
           Authorization: `Bearer ${accessToken}`,
         };
-
+    
         this.http
           .post(`${environment.domainName}/api/users`, userData, { headers })
           .subscribe(
@@ -101,7 +101,7 @@ export class LoginComponent implements OnInit {
             (error) => console.error('Error creating user in MongoDB:', error)
           );
       }
-    });
+    }).catch((error) => console.error('Error getting access token:', error));
   }
 
   resetPassword() {

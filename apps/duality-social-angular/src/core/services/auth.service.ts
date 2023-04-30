@@ -6,7 +6,7 @@ import {
   AccountInfo,
 } from '@azure/msal-browser';
 import { Observable, from, of } from 'rxjs';
-import { delay, map } from 'rxjs/operators';
+import { delay, map, mergeMap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 
 interface User extends AccountInfo {
@@ -74,12 +74,32 @@ export class AuthenticationService {
     );
   }
 
-  getAccessToken(): Observable<string> {
-    return from(
-      this.msalClient.acquireTokenSilent({
-        scopes: ['openid', 'profile', 'email', 'User.Read'],
-      })
-    ).pipe(map((result: AuthenticationResult) => result.accessToken));
+  // getAccessToken(): Observable<string> {
+  //   console.log('getAccessToken()');
+  //   return from(
+  //     this.msalClient.acquireTokenSilent({
+  //       scopes: ['openid', 'profile', 'email', 'User.Read'],
+  //     })
+  //   ).pipe(map((result: AuthenticationResult) => {
+  //     console.log('getAccessToken() in pipe(map()) result', result, result.accessToken);
+  //     return result.accessToken
+  //   }));
+  // }
+
+  getAccessToken(): Promise<string> {
+    return this.msalClient.acquireTokenSilent({
+      scopes: ['User.Read'],
+    }).then((result: AuthenticationResult) => {
+        console.log('Got token response...', result);
+        const accessToken = result.accessToken;
+        if (accessToken) {
+          console.log('Got access token...', accessToken);
+          return accessToken;
+        } else {
+          console.log('No access token...');
+          throw new Error('Unable to acquire access token');
+        }
+      });
   }
 
   getCurrentUser(): User | null {
