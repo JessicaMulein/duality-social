@@ -4,13 +4,21 @@ import { BearerStrategy, ITokenPayload } from 'passport-azure-ad';
 import { getUserFromDatabase, createUser } from './services/userService';
 import { environment } from './environments/environment';
 
+const realm = 'consumers';
+const version = 'v2.0';
+
 export function setupPassport(app: express.Application) {
     const config = {
-        identityMetadata: 'https://login.microsoftonline.com/consumers/v2.0/.well-known/openid-configuration',
+        identityMetadata: `https://${environment.msal.authority}/${realm}/${version}/.well-known/openid-configuration`,
+        issuer: `https://${environment.msal.authority}/9188040d-6c67-4c5b-b112-36a304b66dad/${version}`,
         clientID: environment.msal.clientId,
-        loggingLevel: 'info' as const, // Add 'as const' to the loggingLevel property
+        audience: environment.msal.clientId,
+        validateIssuer: true,
         passReqToCallback: false,
+        loggingLevel: 'info' as const, // Add 'as const' to the loggingLevel property
+        scope:[environment.msal.scope ?? `api://${environment.msal.clientId}/api.openai`]
     };
+    console.log('config', config)
 
     const bearerStrategy = new BearerStrategy(config, async (token: ITokenPayload, done: (error: Error | null, user?: Express.User, info?: unknown) => void) => {
         // Assuming the token has the user's ID stored in the `sub` field
@@ -35,10 +43,18 @@ export function setupPassport(app: express.Application) {
         }
     });
 
-    passport.use(bearerStrategy);
 
     // middlewares
     app.use(passport.initialize());
-    app.use(passport.session());
+    passport.use(bearerStrategy);
+    //app.use(passport.session());
     //app.use(passport.authenticate('oauth-bearer', { session: environment.cookies.enabled }));
+    if (!environment.production) {
+        // Enable CORS (for local testing only -remove in production/deployment)
+        app.use((req, res, next) => {
+            res.header('Access-Control-Allow-Origin', '*');
+            res.header('Access-Control-Allow-Headers', 'Authorization, Origin, X-Requested-With, Content-Type, Accept');
+            next();
+        });
+    }
 }

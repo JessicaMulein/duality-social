@@ -30,6 +30,7 @@
     "openai": "^3.1.0",
     "passport": "^0.6.0",
     "passport-azure-ad": "^4.3.5",
+    "passport-local": "^1.0.0",
     "worker-threads": "^1.0.0"
   },
   "devDependencies": {

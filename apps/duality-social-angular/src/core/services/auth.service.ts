@@ -34,6 +34,17 @@ export class AuthenticationService {
       },
     });
   }
+  setSession(authResult: AuthenticationResult) {
+    console.log('setSession() authResult', authResult);
+    // Set the time that the access token will expire at
+    const expiresOn = JSON.stringify(
+      authResult.expiresOn || new Date().getTime() + 3600000
+    );
+    localStorage.setItem('id_token', authResult.idToken);
+    localStorage.setItem('expires_on', expiresOn);
+    localStorage.setItem('access_token', authResult.accessToken);
+    localStorage.setItem('account', JSON.stringify(authResult.account));
+  }
 
   login(): Observable<boolean> {
     return from(
@@ -88,7 +99,7 @@ export class AuthenticationService {
 
   getAccessToken(): Promise<string> {
     return this.msalClient.acquireTokenSilent({
-      scopes: ['User.Read'],
+      scopes: ['api://25989269-b717-4761-8498-f83e3bfc0754/api.openai'],
     }).then((result: AuthenticationResult) => {
         console.log('Got token response...', result);
         const accessToken = result.accessToken;

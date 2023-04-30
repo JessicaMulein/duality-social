@@ -1,15 +1,15 @@
-import { Schema } from 'mongoose';
+import { Model, Schema } from 'mongoose';
 import { AccountStatusTypeEnum } from '../enumerations/accountStatusType';
 import { AccountLoginTypeEnum } from '../enumerations/accountLoginType';
 import { AdminLevelEnum } from '../enumerations/adminLevel';
 import { LockTypeEnum } from '../enumerations/lockType';
-import { BaseModelCaches } from '../models/schema';
-import { UserMetaSchema } from './userMeta';
+import { IUser } from '../interfaces/user';
+import { IHasID } from '../interfaces/hasId';
 
 /**
  * A user in the system.
  */
-export const UserSchema = new Schema(
+export const UserSchema = new Schema<IUser>(
   {
     /**
      * Whether the login is via email/password or via external authentication.
@@ -46,16 +46,33 @@ export const UserSchema = new Schema(
      * The user's password hash, used for login if accountType is email/password.
      */
     accountPasswordHash: { type: String, optional: true, default: null },
-    accountPasswordSalt: { type: String, optional: true, default: null },
     /**
      * The unique @username of the user.
      */
-    userName: {
+    username: {
       type: String,
       unique: true,
       required: true,
-      index: true,
-      null: false,
+      lowercase: true,
+      trim: true,
+      match: /^[a-z0-9]+$/, // Alphanumeric validation
+      minlength: 3,
+      maxlength: 20,
+      validate: {
+        validator: async function (value: any) {
+          const userModel = this.constructor as Model<IUser>;
+          const user = await userModel.findOne({ username: value });
+          if (user) {
+            const currentDocument = this as IHasID
+            if (user._id === currentDocument._id) {
+              return true;
+            }
+            return false;
+          }
+          return true;
+        },
+        message: 'The username is already in use.',
+      },
     },
     /**
      * Quick reference field for whether the user is an administrator.
@@ -109,7 +126,6 @@ export const UserSchema = new Schema(
       enum: LockTypeEnum,
       default: LockTypeEnum.PendingEmailVerification,
     },
-    meta: UserMetaSchema,
   },
   { timestamps: true }
 );

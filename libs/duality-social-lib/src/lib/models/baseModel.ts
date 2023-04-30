@@ -15,6 +15,9 @@ abstract class Base {
     string,
     Base&Document>();
   constructor(model: Model<unknown>) {
+    if (!model || !model.modelName) {
+      return;
+    }
     if (BaseModel.ModelRegistry.has(model.modelName)) {
       throw new Error(`Model ${model.modelName} already exists`);
     }

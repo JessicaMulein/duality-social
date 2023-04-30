@@ -182,12 +182,12 @@ authRouter.get('/signout', function (req, res) {
     });
 });
 
-// custom middleware to check auth state
-export function isAuthenticated(req: Request, res: Response, next: (error?: unknown) => void) {
-    if (!req.session.isAuthenticated) {
-        console.log('isAuthenticated: false');
-        return res.redirect('/auth/signin'); // redirect to sign-in route
-    }
-    console.log('isAuthenticated: true');
-    next();
-};
+// // custom middleware to check auth state
+// export function isAuthenticated(req: Request, res: Response, next: (error?: unknown) => void) {
+//     if (!req.session.isAuthenticated) {
+//         console.log('isAuthenticated: false');
+//         return res.redirect('/auth/signin'); // redirect to sign-in route
+//     }
+//     console.log('isAuthenticated: true');
+//     next();
+// };

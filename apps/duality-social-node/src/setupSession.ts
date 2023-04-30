@@ -1,9 +1,9 @@
 import express from 'express';
-import session from 'express-session';
+import session, { SessionOptions } from 'express-session';
 import mongoDbSession from 'connect-mongodb-session';
 import { environment } from './environments/environment';
 
-export function setupSession(app: express.Application) {
+export function setupSession(app: express.Application): SessionOptions | null {
     if (environment.cookies.enabled && environment.mongo.mongoSessions) {
         console.debug('Using MongoDB sessions');
         const MongoDBStore = mongoDbSession(session);
@@ -18,8 +18,7 @@ export function setupSession(app: express.Application) {
             console.error(error);
         });
 
-        app.use(
-            session({
+        return {
                 secret: environment.cookies.secret,
                 cookie: {
                     maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
@@ -27,18 +26,16 @@ export function setupSession(app: express.Application) {
                 store: store,
                 resave: true,
                 saveUninitialized: true,
-            })
-        );
+            };
     } else if (environment.cookies.enabled) {
         console.debug('Using in-memory sessions');
-        app.use(
-            session({
+            return {
                 resave: false,
                 saveUninitialized: true,
                 secret: environment.cookies.secret,
-            })
-        );
+            }
     } else {
         console.debug('WARNING: Using no sessions');
+        return null;
     }
 }

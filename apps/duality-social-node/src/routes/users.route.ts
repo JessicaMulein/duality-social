@@ -4,21 +4,21 @@
  */
 
 import express = require('express');
-import { Request, Response } from 'express';
+import { Request, Response, Router} from 'express';
 import { fetch } from '../fetch';
-import { isAuthenticated } from './auth.route';
 import { environment } from '../environments/environment';
-import { login } from '../controllers/user';
-export const usersRouter = express.Router();
+import { ensureAuthenticated } from '../auth.middleware';
+export const usersRouter = Router();
 
-usersRouter.post(
-  '/login', // POST /users/login
-  login // use the login POST handler
-)
+// allows unauthorized users to POST to /users/login
+// usersRouter.post(
+//   '/login', // POST /users/login
+//   login // use the login POST handler
+// )
 
 usersRouter.get(
   '/id',
-  isAuthenticated, // check if user is authenticated
+  ensureAuthenticated, // check if user is authenticated
   async function (req: Request, res: Response, next: (error: unknown) => void) {
     if (!req.session || !req.session.account) {
       next(new Error('Session not found'));
@@ -30,7 +30,7 @@ usersRouter.get(
 
 usersRouter.get(
   '/profile',
-  isAuthenticated, // check if user is authenticated
+  ensureAuthenticated, // check if user is authenticated
   async function (req, res, next) {
     try {
       const graphResponse = await fetch(

@@ -12,12 +12,16 @@ const clientId =
  */
 const cloudInstance =
   process.env.CLOUD_INSTANCE ?? 'https://login.microsoftonline.com/';
+const cloudInstanceDomain = cloudInstance.replace('https://', '').replace('/', '');
 /**
  * https://learn.microsoft.com/en-us/azure/active-directory/develop/accounts-overview
  */
 const tenantId =
   process.env.TENANT_ID ?? '87e87c07-f72e-4811-9730-85294c4c92e4';
-  const authority = process.env.MSAL_AUTHORITY ?? cloudInstance + '/consumers/';
+  // consumers, common, organizations, or tenant id
+  const authorityRealm = 'consumers';
+  const authority = process.env.MSAL_AUTHORITY ?? `${cloudInstanceDomain}/${authorityRealm}`;
+  console.log('authority', authority);
   //const authority = cloudInstance + (tenantId ?? 'common/');
 //const authority = cloudInstance + tenantId + '/';
 const host = process.env.HOST ?? 'dulity.social';
@@ -79,6 +83,7 @@ export const environment: IEnvironment = {
     graphMeEndpoint:
       (process.env.GRAPH_API_ENDPOINT ?? 'https://graph.microsoft.com/') +
       'v1.0/me',
+    scope: process.env.MSAL_SCOPE ?? `api://${clientId}/api.openai`, // 'User.Read',
   },
   pusher: {
     appId: Number.parseInt(process.env.PUSHER_APP_ID ?? '1592034'),

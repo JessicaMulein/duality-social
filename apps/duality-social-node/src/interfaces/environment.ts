@@ -35,6 +35,7 @@ export interface IEnvironment {
       postLogoutRedirectUri: string;
       tenantId: string;
       redirectUri: string;
+      scope?: string;
     };
     pusher: {
       appId: number;

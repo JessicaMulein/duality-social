@@ -11,7 +11,7 @@ export function setupRoutes(app: express.Application) {
     app.use('/auth', authRouter);
     app.use('/admin', ensureAdmin, adminRouter);
     app.use('/api', ensureAuthenticated, apiRouter);
-    app.use('/users', ensureAuthenticated, usersRouter);
+    app.use('/users', usersRouter);
     // fallback to index.html for anything unknown
     app.get('*', (req, res) => {
         res.sendFile('index.html', { root: environment.developer.angularDir });
