@@ -34,7 +34,7 @@ export type OpenAiProvider = 'azure' | 'openai';
 export const environment: IEnvironment = {
   production: production,
   developer: {
-    appFolder: process.env.APP_FOLDER ?? dirname(dirname(__filename)) +  '/duality-social-angular/',
+    angularDir: dirname(dirname(__filename)) +  '/duality-social-angular/',
     host: host,
     port: port,
     baseUrl: serverHost,

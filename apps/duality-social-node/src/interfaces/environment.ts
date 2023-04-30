@@ -3,7 +3,7 @@ export type OpenAiProvider = 'azure' | 'openai';
 export interface IEnvironment {
     production: boolean;
     developer: {
-      appFolder: string;
+      angularDir: string;
       host: string;
       port: number;
       baseUrl: string;

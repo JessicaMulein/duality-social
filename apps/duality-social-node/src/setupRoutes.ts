@@ -12,7 +12,7 @@ export function setupRoutes(app: express.Application) {
     app.use('/api', ensureAuthenticated, apiRouter);
     app.use('/users', ensureAuthenticated, usersRouter);
     // fallback to index.html for anything unknown
-    app.get('**', (req, res) => {
-        res.sendFile('index.html', { root: environment.developer.appFolder });
+    app.get('*', (req, res) => {
+        res.sendFile('index.html', { root: environment.developer.angularDir });
     });
 }

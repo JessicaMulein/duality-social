@@ -20,6 +20,7 @@ import { setupPassport } from './setupPassport';
 import { setupDatabase } from './setupDatabase';
 import { setupMiddlewares } from './setupMiddlewares';
 import { setupSession } from './setupSession';
+import { setupRoutes } from './setupRoutes';
 
 // Augment express-session with a custom SessionData object
 declare module 'express-session' {
@@ -48,6 +49,7 @@ async function configureApplication(validatedEnvironment: IEnvironment): Promise
   await setupSession(app);
   await setupPassport(app);
   await setupMiddlewares(app);
+  await setupRoutes(app);
 
   if (validatedEnvironment.developer.sslEnabled) {
     const path =
