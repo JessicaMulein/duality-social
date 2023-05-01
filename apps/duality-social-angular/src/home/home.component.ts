@@ -15,43 +15,6 @@ export class HomeComponent implements OnInit {
 
   constructor(private authService: MsalService, private msalBroadcastService: MsalBroadcastService, private http: HttpClient) { }
 
-  public async test() {
-    const accountInfo = this.authService.instance.getActiveAccount();
-    if (!accountInfo) {
-      return;
-    }
-
-    const aiRequest: IDevilsAdvocateRequest = {
-      postText: 'I love chocolate, and screw anyone who says otherwise.',
-      postId: '1234',
-      userId: accountInfo.nativeAccountId ?? '1234',
-      images: []
-    };
-    this.http.post<IDevilsAdvocateResponse>('/api/openai/devils-advocate', aiRequest, {
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      responseType: 'json'
-    })
-      .subscribe(( result: IDevilsAdvocateResponse ) => {
-        console.log({
-          request: aiRequest,
-          response: result});
-      });
-
-
-    // make a call to the API to test
-    const request: SilentRequest = {
-      scopes: ['User.Read','openid','profile'],
-      account: accountInfo,
-    };
-    await this.authService.instance.acquireTokenSilent(request).then((response) => {
-      console.log(response);
-    }).catch((error) => {
-      console.log(error);
-    });
-  }
-
   ngOnInit(): void {
     this.msalBroadcastService.msalSubject$
       .pipe(

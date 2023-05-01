@@ -99,7 +99,7 @@ export class AuthenticationService {
 
   getAccessToken(): Promise<string> {
     return this.msalClient.acquireTokenSilent({
-      scopes: ['User.Read'],
+      scopes: ['User.Read', 'api://25989269-b717-4761-8498-f83e3bfc0754/api.openai'],
     }).then((result: AuthenticationResult) => {
         console.log('Got token response...', result);
         const accessToken = result.accessToken;
