@@ -25,7 +25,7 @@ export function ensureAuthenticated(
   next: NextFunction
 ) {
   console.log('Checking authentication...');
-  passport.authenticate('oauth-bearer', { session: environment.cookies.enabled }, (err: any, user: Express.User | undefined, info: any) => {
+  passport.authenticate('oauth-bearer', { session: false }, (err: any, user: Express.User | undefined, info: any) => {
     if (err) {
       console.error(err);
       return next(err);
@@ -69,7 +69,6 @@ export function validateRole(role: string) {
     res.status(403).json({ message: 'Forbidden' });
   };
 }
-
 
 export function ensureAdmin(req: Request, res: Response, next: NextFunction): void {
   console.log('Checking admin...');

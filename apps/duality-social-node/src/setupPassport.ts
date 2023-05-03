@@ -9,12 +9,14 @@ const version = 'v2.0';
 
 export function setupPassport(app: express.Application) {
     const config = {
-        identityMetadata: `${environment.msal.authority}${realm}/${version}/.well-known/openid-configuration`,
-        issuer: `${environment.msal.authority}${environment.msal.tenantId}/${version}`,
-        audience: environment.msal.clientId,
+        identityMetadata: `https://${environment.msal.authority}/${realm}/${version}/.well-known/openid-configuration`,
+        issuer: `https://${environment.msal.authority}/9188040d-6c67-4c5b-b112-36a304b66dad/${version}`,
         clientID: environment.msal.clientId,
-        loggingLevel: 'info' as const, // Add 'as const' to the loggingLevel property
+        audience: environment.msal.clientId,
+        validateIssuer: true,
         passReqToCallback: false,
+        loggingLevel: 'info' as const, // Add 'as const' to the loggingLevel property
+        scope:[environment.msal.scope ?? `api://${environment.msal.clientId}/api.openai`]
     };
     console.log('config', config)
 
@@ -45,7 +47,7 @@ export function setupPassport(app: express.Application) {
     // middlewares
     app.use(passport.initialize());
     passport.use(bearerStrategy);
-    app.use(passport.session());
+    //app.use(passport.session());
     //app.use(passport.authenticate('oauth-bearer', { session: environment.cookies.enabled }));
     if (!environment.production) {
         // Enable CORS (for local testing only -remove in production/deployment)

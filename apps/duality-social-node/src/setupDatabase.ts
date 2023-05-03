@@ -3,10 +3,27 @@ import { environment } from './environments/environment';
 import { MongooseSchemas, PasswordRounds, UserSchema } from '@duality-social/duality-social-lib';
 import { hashSync } from 'bcryptjs';
 
+
+let db: mongoose.Mongoose | undefined;
+const Schemas = MongooseSchemas;
+
 export async function setupDatabase() {
-  const Schemas = MongooseSchemas;
   mongoose.set('strictQuery', true);
-  await mongoose.connect(environment.mongo.uri);
+  db = await mongoose.connect(environment.mongo.uri);
+}
+
+export async function getDatabase(): Promise<mongoose.Mongoose> {
+  if (!db) {
+    await setupDatabase();
+    if (db === undefined) {
+      throw new Error('Database not initialized');
+    }
+  }
+  return db;
+}
+
+export function getSchemas() {
+  return Schemas;
 }
 
 UserSchema.pre('save', function (next) {
