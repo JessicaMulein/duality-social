@@ -17,7 +17,8 @@ const cloudInstance =
  */
 const tenantId =
   process.env.TENANT_ID ?? '87e87c07-f72e-4811-9730-85294c4c92e4';
-const authority = process.env.MSAL_AUTHORITY ?? cloudInstance + '/consumers/';
+  const realm = 'consumers';
+  const authority = process.env.MSAL_AUTHORITY ?? cloudInstance +realm+'/';
 //const authority = cloudInstance + tenantId + '/';
 const host = process.env.SERVER_HOST ?? 'localhost';
 const port = Number(process.env.PORT ?? 3000);

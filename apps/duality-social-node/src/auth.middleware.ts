@@ -72,11 +72,10 @@ export function validateRole(role: string) {
 
 
 export function ensureAdmin(req: Request, res: Response, next: NextFunction): void {
-    console.log('Checking admin...');
-    const user = req.user as ITokenPayload;
-    if (req.isAuthenticated() && user['roles']?.includes('Admin')) {
-      return next();
-    }
-    res.status(403).json({ message: 'Forbidden' });
-  };
-  
+  console.log('Checking admin...');
+  const user = req.user as ITokenPayload;
+  if (req.isAuthenticated() && user['roles']?.includes('Admin')) {
+    return next();
+  }
+  res.status(403).json({ message: 'Forbidden' });
+};

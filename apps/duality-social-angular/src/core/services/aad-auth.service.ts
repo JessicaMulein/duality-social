@@ -76,7 +76,7 @@ export class AADAuthService implements OnDestroy {
     async login() {
         const isIE = window.navigator.userAgent.indexOf('MSIE ') > -1 || window.navigator.userAgent.indexOf('Trident/') > -1;
         const authParams = {
-            scopes: ['user.read', 'openid', 'profile'],
+            scopes: ['User.Read', 'openid', 'profile'],
         };
 
         if (isIE) {
