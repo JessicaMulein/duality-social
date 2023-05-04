@@ -1,5 +1,6 @@
 import { dirname } from "path";
 import { IEnvironment } from "../interfaces/environment";
+import { readFileSync } from "fs";
 
 /**
  * 6226576d-37e9-49eb-b201-ec1eeb0029b6 is the production microsoft client id
@@ -76,11 +77,12 @@ export const environment: IEnvironment = {
     postLogoutRedirectUri:
       process.env.MSAL_POST_LOGOUT_REDIRECT_URI ?? redirectUri,
     tenantId: tenantId,
-    clientSecret: process.env.MSAL_CLIENT_SECRET ?? '',
+    clientCertificateThumbprint: process.env.MSAL_CERT_THUMBPRINT ?? '',
+    clientCertificate: readFileSync(process.env.MSAL_CERT_PATH ?? '', 'utf8'),
     graphMeEndpoint:
       (process.env.GRAPH_API_ENDPOINT ?? 'https://graph.microsoft.com/') +
       'v1.0/me',
-    scope: process.env.MSAL_SCOPE ?? `api://${clientId}/api.openai`, // 'User.Read',
+    scope: process.env.MSAL_SCOPE ?? ['User.Read', 'email', 'profile', 'openid'].join(', '),
   },
   pusher: {
     appId: Number.parseInt(process.env.PUSHER_APP_ID ?? '1592034'),

@@ -10,13 +10,17 @@ const version = 'v2.0';
 export function setupPassport(app: express.Application) {
     const config = {
         identityMetadata: `https://${environment.msal.authority}/${realm}/${version}/.well-known/openid-configuration`,
-        issuer: `https://${environment.msal.authority}/9188040d-6c67-4c5b-b112-36a304b66dad/${version}`,
+        issuer: `https://${environment.msal.authority}/${environment.msal.tenantId}/${version}`,
         clientID: environment.msal.clientId,
         audience: environment.msal.clientId,
         validateIssuer: true,
         passReqToCallback: false,
         loggingLevel: 'info' as const, // Add 'as const' to the loggingLevel property
-        scope:[environment.msal.scope ?? `api://${environment.msal.clientId}/api.openai`]
+        scope: environment.msal.scope.split(', '),
+        clientCertificate: {
+            thumbprint: environment.msal.clientCertificateThumbprint,
+            privateKey: environment.msal.clientCertificate,
+        }
     };
     console.log('config', config)
 
