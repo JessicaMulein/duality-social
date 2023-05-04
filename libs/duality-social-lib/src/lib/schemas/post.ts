@@ -53,7 +53,7 @@ export const PostSchema = new Schema(
     deletedBy: {
       type: Schema.Types.ObjectId,
       ref: 'User',
-      required: true,
+      optional: true,
     },
     updatedBy: {
       type: Schema.Types.ObjectId,

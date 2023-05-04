@@ -25,7 +25,11 @@ export async function devilsAdvocate(req: Request, res: Response): Promise<void>
         });
         return;
     }
-    const post = new BaseModelCaches.Posts.Model()
+    const post = new BaseModelCaches.Posts.Model({
+        createdBy: userId,
+        updatedBy: userId,
+        deletedBy: undefined
+    })
     const newId = (await BaseModelCaches.Posts.Model.create(post))._id;
     if (newId === undefined) {
         res.status(500).json({

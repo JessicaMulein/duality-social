@@ -7,6 +7,9 @@ import { switchMap } from 'rxjs/operators';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthenticationService) {}
+  writeUser(token: string, user: any) {
+    console.log('writeUser', token, user);
+  }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<any> {
     return from(this.authService.getAccessToken()).pipe(
@@ -18,6 +21,8 @@ export class AuthInterceptor implements HttpInterceptor {
               Authorization: `Bearer ${authToken}`,
             },
           });
+          // the first time we get an auth, we need to write the user to the database
+          this.writeUser(authToken, this.authService.getCurrentUser());
           return next.handle(authReq);
         } else {
           return next.handle(req);

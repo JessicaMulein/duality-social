@@ -2,6 +2,8 @@ import { IUser, PasswordRounds, UserModel, UserMetaModel } from '@duality-social
 import { Router } from 'express';
 import passport from 'passport';
 import { hashSync } from 'bcryptjs';
+import { createUser } from '../services/userService';
+import { getUserFromDatabase } from '../services/userService';
 
 export const userRouter = Router();
 
@@ -10,9 +12,31 @@ userRouter.post('/login/local', passport.authenticate('local', { session: false 
   res.json({ message: 'Logged in successfully', user: req.user });
 });
 
-// Login with MSAL Token
-userRouter.post('/login/msal', passport.authenticate('oauth-bearer', { session: false }), (req, res) => {
+// Login with MSAL Token, TODO: actually use auth
+userRouter.post('/login/msal-auth', passport.authenticate('oauth-bearer', { session: false }), (req, res) => {
   res.json({ message: 'Logged in successfully', user: req.user });
+});
+
+userRouter.post('/login/msal', async (req, res) => {
+  // for now, accept a post from the client with the token and the user details in the body
+  // eventually we'll only take the token and get the user details from the token
+  const token = req.body.token;
+  const user = req.body.user;
+  if (token === undefined || user === undefined) {
+    res.status(400).json({ message: 'Invalid request' });
+    return;
+  }
+  // TODO: validate the token and user details
+  console.log('writeUser', token, user);
+  const existingUser = await getUserFromDatabase(user._id);
+  if (existingUser !== null) {
+    res.status(200).json({ message: 'User already exists', user: existingUser });
+    return;
+  }
+  // get an instance of the user model
+  const userModel = await createUser(user);
+  // send the response
+  res.status(200).json({ message: 'User created successfully', user: userModel });
 });
 
 // Create a user with Email and Password
