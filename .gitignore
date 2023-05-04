@@ -3,6 +3,12 @@
 .devcontainer/devcontainer.env
 .npmrc
 
+# keys
+/dev.key
+/dev.crt
+/prod.key
+/prod.crt
+
 # compiled output
 dist
 tmp

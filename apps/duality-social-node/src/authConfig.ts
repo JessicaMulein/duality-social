@@ -13,7 +13,10 @@ export const msalConfig: Configuration = {
         /**
          * Client secret generated from the app registration in Azure portal
          */
-        clientSecret: environment.msal.clientSecret,
+        clientCertificate: {
+            thumbprint: environment.msal.clientCertificateThumbprint,
+            privateKey: environment.msal.clientCertificate,
+        }
     },
     system: {
         loggerOptions: {
