@@ -3,7 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import express = require('express');
+import express from 'express';
 import { Request, Response } from 'express';
 import { AuthorizationUrlRequest, ConfidentialClientApplication, CryptoProvider } from '@azure/msal-node';
 

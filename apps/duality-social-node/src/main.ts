@@ -21,21 +21,7 @@ import { setupDatabase } from './setupDatabase';
 import { setupMiddlewares } from './setupMiddlewares';
 import { setupSession } from './setupSession';
 import { setupRoutes } from './setupRoutes';
-import session from 'express-session';
-
-// Augment express-session with a custom SessionData object
-declare module 'express-session' {
-  interface SessionData {
-    pkceCodes?: PkceCodes;
-    authCodeUrlRequest?: AuthorizationUrlRequest;
-    authCodeRequest?: AuthorizationCodeRequest;
-    accessToken?: string;
-    account?: AccountInfo | null;
-    csrfToken?: string;
-    idToken?: string;
-    isAuthenticated?: boolean;
-  }
-}
+import './types';
 
 declare global {
   namespace Express {
