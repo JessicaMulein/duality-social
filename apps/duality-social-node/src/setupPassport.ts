@@ -4,7 +4,7 @@ import { BearerStrategy, ITokenPayload } from 'passport-azure-ad';
 import { getUserFromDatabase, createUser } from './services/userService';
 import { environment } from './environments/environment';
 
-const realm = 'consumers';
+const realm = 'consumers'; // the tenantId for this should be 9188040d-6c67-4c5b-b112-36a304b66dad
 const version = 'v2.0';
 
 export function setupPassport(app: express.Application) {
