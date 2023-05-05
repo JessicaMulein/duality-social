@@ -9,7 +9,11 @@ const Schemas = MongooseSchemas;
 
 export async function setupDatabase() {
   mongoose.set('strictQuery', true);
-  db = await mongoose.connect(environment.mongo.uri);
+  db = await mongoose.connect(environment.mongo.uri, {
+    socketTimeoutMS: 30000,
+    connectTimeoutMS: 30000,
+    waitQueueTimeoutMS: 30000,
+  });
 }
 
 export async function getDatabase(): Promise<mongoose.Mongoose> {

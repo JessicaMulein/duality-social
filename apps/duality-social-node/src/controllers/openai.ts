@@ -6,6 +6,7 @@ import {
 import { BaseModelCaches, IDevilsAdvocateRequest, IDevilsAdvocateResponse, HumanityTypeEnum } from '@duality-social/duality-social-lib';
 import { Schema, Types as MongooseTypes } from 'mongoose';
 import { ObjectId } from 'bson';
+import { ViewpointTypeEnum } from 'libs/duality-social-lib/src/lib/enumerations/viewpointType';
 
 
 
@@ -30,9 +31,11 @@ export async function devilsAdvocate(req: Request, res: Response): Promise<void>
     }
     const postId = new MongooseTypes.ObjectId(new ObjectId().toString());
     const humanViewpoint = new BaseModelCaches.PostViewpoints.Model({
-        postId: postId,
+        post: postId,
         humanityType: HumanityTypeEnum.Human,
         content: body.postContent,
+        language: 'en',
+        viewpointType: ViewpointTypeEnum.HumanSource,
         createdBy: userId,
         updatedBy: userId
     });
