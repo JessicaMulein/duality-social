@@ -4,7 +4,8 @@ import {
     getOppositeResponseFromOpenAI
 } from '../services/openai';
 import { BaseModelCaches, IDevilsAdvocateRequest, IDevilsAdvocateResponse, HumanityTypeEnum } from '@duality-social/duality-social-lib';
-import { Schema } from 'mongoose';
+import { Schema, Types as MongooseTypes } from 'mongoose';
+import { ObjectId } from 'bson';
 
 
 
@@ -16,30 +17,20 @@ export async function devilsAdvocate(req: Request, res: Response): Promise<void>
     // the Post will have a reference to the response viewpoint
     // I say input viewpoint because we may have bots allowed on the platform.
 
-
     const body = req.body;
-    const userId = new Schema.Types.ObjectId(BaseModelCaches.Users.Path); // TODO: get from auth
+    const parentId: MongooseTypes.ObjectId | undefined = new MongooseTypes.ObjectId(req.params.parentId) ?? undefined;
+    const user = req.user;
+    const userId = new MongooseTypes.ObjectId(new ObjectId().toString()); // TODO: get from auth
+    console.log('user', user, userId);
     if (body === undefined) {
         res.status(400).json({
             error: 'No request body'
         });
         return;
     }
-    const post = new BaseModelCaches.Posts.Model({
-        createdBy: userId,
-        updatedBy: userId,
-        deletedBy: undefined
-    })
-    const newId = (await BaseModelCaches.Posts.Model.create(post))._id;
-    if (newId === undefined) {
-        res.status(500).json({
-            error: 'Failed to create post'
-        });
-        return;
-    }
-    post._id = newId;
+    const postId = new MongooseTypes.ObjectId(new ObjectId().toString());
     const humanViewpoint = new BaseModelCaches.PostViewpoints.Model({
-        postId: newId,
+        postId: postId,
         humanityType: HumanityTypeEnum.Human,
         content: body.postContent,
         createdBy: userId,
@@ -52,14 +43,20 @@ export async function devilsAdvocate(req: Request, res: Response): Promise<void>
         });
         return;
     }
-    post.inputViewpoint = humanViewpointId;
-    const updateStatus = await BaseModelCaches.PostViewpoints.Model.updateOne(
-        { _id: humanViewpointId },
-        { $set: { postId: newId, inputViewpoint: humanViewpointId } }
-    );
-    if (updateStatus.modifiedCount !== 1) {
+    const post = await BaseModelCaches.Posts.Model.create({
+        _id: postId,
+        inputViewpoint: humanViewpointId,
+        imageUrls: [],
+        parent: parentId,
+        parents: [],
+        viewpointParents: [],
+        createdBy: userId,
+        updatedBy: userId,
+        deletedBy: undefined
+    });
+    if (post === undefined || post._id === undefined) {
         res.status(500).json({
-            error: 'Failed to update post'
+            error: 'Failed to create post'
         });
         return;
     }
@@ -74,18 +71,18 @@ export async function devilsAdvocate(req: Request, res: Response): Promise<void>
     try {
         const openaiResponse = await getOppositeResponseFromOpenAI(
             aiRequest.postText,
-            newId,
+            post._id,
             userId);
         const aiPostText = openaiResponse.aiResponse;
         const dallEPrompt = DevilsAdvocateImagePrompt.concat("\n\n", aiPostText);
         // if post has embedded image, generate an image using DALL-E
         // TODO: change await pattern to Promise.all
         const response: IDevilsAdvocateResponse = {
-            postId: newId.toString(),
+            postId: postId.toString(),
             aiPostText: aiPostText,
         };
         const aiViewpoint = new BaseModelCaches.PostViewpoints.Model({
-            postId: newId,
+            postId: postId,
             humanityType: HumanityTypeEnum.Ai,
             content: aiPostText,
             createdBy: userId,
