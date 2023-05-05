@@ -13,6 +13,14 @@ export const environment: IEnvironment = {
     appId: 'dualitysocial-djqzy',
     redirectUri: 'http://localhost:3000',
     postLogoutRedirectUri: 'http://localhost:3000/auth/signout',
+    auth: {
+      facebook: {
+        clientId: '602183485306096',
+      },
+      google: {
+        clientId: '1087753896702-4e2amh2tmq7u1atm8ut1uim45j7ms398.apps.googleusercontent.com',
+      }
+    }
   },
   domainName: 'http://localhost:3000',
   apiUrl: 'http://localhost:3000/api',

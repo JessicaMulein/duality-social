@@ -8,6 +8,14 @@ export interface IEnvironment {
     appId: string;
     redirectUri: string;
     postLogoutRedirectUri: string;
+    auth: {
+      facebook?: {
+        clientId: string;
+      }
+      google?: {
+        clientId: string;
+      }
+    }
   };
   domainName: string;
   apiUrl: string;

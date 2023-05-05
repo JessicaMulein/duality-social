@@ -17,7 +17,7 @@ import { CoreModule } from '../core/core.module';
 import { SharedModule } from '../shared/shared.module';
 import { CustomMaterialModule } from '../custom-material/custom-material.module';
 import { LoggerModule } from 'ngx-logger';
-import { SocialLoginModule } from 'angularx-social-login';
+import { FacebookLoginProvider, GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from 'angularx-social-login';
 import { AuthInterceptor } from '../core/interceptors/auth.interceptor';
 
 @NgModule({
@@ -49,6 +49,22 @@ import { AuthInterceptor } from '../core/interceptors/auth.interceptor';
     SocialLoginModule,
   ],
   providers: [
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(environment.realm.auth.google?.clientId ?? ''),
+          },
+          {
+            id: FacebookLoginProvider.PROVIDER_ID,
+            provider: new FacebookLoginProvider(environment.realm.auth.facebook?.clientId ?? ''),
+          },
+        ],
+      } as SocialAuthServiceConfig,
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

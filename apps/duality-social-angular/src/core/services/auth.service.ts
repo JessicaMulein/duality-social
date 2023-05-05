@@ -39,6 +39,30 @@ export class AuthenticationService {
     }
   }
 
+  public async loginFacebook(accessToken: string): Promise<boolean> {
+    try {
+      const credentials = Realm.Credentials.facebook(accessToken);
+      const user = await this.realmApp.logIn(credentials);
+      return user ? true : false;
+    } catch (error) {
+      console.error('Failed to log in', error);
+      return false;
+    }
+  }
+
+  public async loginApiKeys(apiKey: string): Promise<boolean> {
+    try {
+      const credentials = Realm.Credentials.apiKey(
+        apiKey
+      );
+      const user = await this.realmApp.logIn(credentials);
+      return user ? true : false;
+    } catch (error) {
+      console.error('Failed to log in', error);
+      return false;
+    }
+  }
+
   public async loginEmail(email: string, password: string): Promise<boolean> {
     try {
       const credentials = Realm.Credentials.emailPassword(email, password);
