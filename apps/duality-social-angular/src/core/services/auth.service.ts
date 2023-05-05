@@ -9,13 +9,32 @@ interface User extends RealmUser {
   isAdmin: boolean;
 }
 
+
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthenticationService {
+  
+  private _isAnonymous: boolean|undefined = undefined;
   private realmApp: App;
+  private _redirectUrl: string = environment.realm.redirectUri;
+
+  public get redirectUrl(): string {
+    return this._redirectUrl;
+  }
+
+  public set redirectUrl(value: string) {
+    console.log('set redirectUrl', value);
+    this._redirectUrl = value;
+  }
+  
   constructor(private http: HttpClient) {
     this.realmApp = new App({ id: environment.realm.appId });
+  }
+
+  public get isAnonymous(): boolean {
+    return this._isAnonymous === true;
   }
 
   public get loggedIn(): boolean {
@@ -24,6 +43,18 @@ export class AuthenticationService {
 
   public get redirectUri(): string {
     return environment.realm.redirectUri;
+  }
+
+  public async loginAnonymous(): Promise<boolean> {
+    try {
+      const user = await this.realmApp.logIn(Realm.Credentials.anonymous());
+      this._isAnonymous = user ? true : false;
+      return this._isAnonymous;
+    } catch (error) {
+      console.error('Failed to log in', error);
+      this._isAnonymous = false;
+      return false;
+    }
   }
 
   public async loginGoogle(authCode: string): Promise<boolean> {
@@ -64,14 +95,19 @@ export class AuthenticationService {
   }
 
   public async loginEmail(email: string, password: string): Promise<boolean> {
+    let _error;
     try {
       const credentials = Realm.Credentials.emailPassword(email, password);
       const user = await this.realmApp.logIn(credentials);
-      return user ? true : false;
+      if (user) {
+        this._isAnonymous = false;
+        return true;
+      }
     } catch (error) {
-      console.error('Failed to log in', error);
-      return false;
+      _error = error;
     }
+    console.error('Failed to log in', _error);
+    return false;
   }
 
   public async registerUser(email: string, password: string): Promise<boolean> {
@@ -90,6 +126,7 @@ export class AuthenticationService {
   public async logout(): Promise<void> {
     if (this.realmApp.currentUser) {
       await this.realmApp.currentUser.logOut();
+      this._isAnonymous = undefined;
     }
   }
 
