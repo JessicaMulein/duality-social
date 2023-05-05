@@ -29,10 +29,10 @@ export function loggerCallback(logLevel: LogLevel, message: string) {
 export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication({
     auth: {
-      clientId: environment.msal.clientId,
-      authority: environment.msal.authority,
-      redirectUri: environment.msal.redirectUri,
-      postLogoutRedirectUri: environment.msal.postLogoutRedirectUri
+      clientId: environment.realm.clientId,
+      authority: environment.realm.authority,
+      redirectUri: environment.realm.redirectUri,
+      postLogoutRedirectUri: environment.realm.postLogoutRedirectUri
     },
     cache: {
       cacheLocation: BrowserCacheLocation.LocalStorage,

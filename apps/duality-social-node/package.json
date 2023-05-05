@@ -34,7 +34,6 @@
     "worker-threads": "^1.0.0"
   },
   "devDependencies": {
-    "@azure/msal-node": "^1.15.0",
     "@types/compression": "^1.7.2",
     "@types/connect-mongodb-session": "^2.4.4",
     "@types/cors": "^2.8.13",
