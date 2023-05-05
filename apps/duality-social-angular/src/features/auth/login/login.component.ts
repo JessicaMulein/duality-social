@@ -65,43 +65,10 @@ export class LoginComponent implements OnInit {
       (response: any) => {
         console.log('response', response);
         this.loading = false;
-        this.authenticationService.setSession(response);
+        //this.authenticationService.setSession(response);
         this.router.navigate(['/']);
       }
     );
-  }
-
-  /**
-   * @param account
-   */
-  public async msasFlowLogin(): Promise<void> {
-    this.loading = true;
-    try {
-      const accessToken = await this.authenticationService.getAccessToken();
-
-      console.log('accessToken', accessToken);
-      if (accessToken) {
-        const headers = {
-          Authorization: `Bearer ${accessToken}`,
-        };
-
-        try {
-          const response$ = this.http.post(
-            `${environment.domainName}/users/login`,
-            { headers },
-          );
-
-          const response = await lastValueFrom(response$);
-          console.log('User created in MongoDB:', response);
-        } catch (error) {
-          console.error('Error creating user in MongoDB:', error);
-        } finally {
-          this.loading = false;
-        }
-      }
-    } catch (error) {
-      console.error('Error getting access token:', error);
-    }
   }
 
   resetPassword() {

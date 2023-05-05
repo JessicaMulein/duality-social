@@ -26,6 +26,19 @@ export interface IEnvironment {
       enabled: boolean;
       secret: string;
     };
+    realm: {
+      appId: string;
+      redirectUri: string;
+      postLogoutRedirectUri: string;
+      auth: {
+        facebook?: {
+          clientId: string;
+        }
+        google?: {
+          clientId: string;
+        }
+      }
+    }
     msal: {
       clientId: string;
       clientCertificateThumbprint: string;

@@ -69,20 +69,18 @@ export const environment: IEnvironment = {
     secret:
       process.env.EXPRESS_SESSION_SECRET ?? '',
   },
-  msal: {
-    clientId: clientId,
-    cloudInstance: cloudInstance,
-    authority: authority,
-    redirectUri: process.env.MSAL_REDIRECT_URI ?? redirectUri,
-    postLogoutRedirectUri:
-      process.env.MSAL_POST_LOGOUT_REDIRECT_URI ?? redirectUri,
-    tenantId: tenantId,
-    clientCertificateThumbprint: process.env.MSAL_CERT_THUMBPRINT ?? '',
-    clientCertificate: readFileSync(process.env.MSAL_CERT_PATH ?? '', 'utf8'),
-    graphMeEndpoint:
-      (process.env.GRAPH_API_ENDPOINT ?? 'https://graph.microsoft.com/') +
-      'v1.0/me',
-    scope: process.env.MSAL_SCOPE ?? ['User.Read', 'email', 'profile', 'openid'].join(', '),
+  realm: {
+    appId: 'dualitysocial-djqzy',
+    redirectUri: 'http://localhost:3000',
+    postLogoutRedirectUri: 'http://localhost:3000/auth/signout',
+    auth: {
+      facebook: {
+        clientId: '602183485306096',
+      },
+      google: {
+        clientId: '1087753896702-4e2amh2tmq7u1atm8ut1uim45j7ms398.apps.googleusercontent.com',
+      }
+    }
   },
   pusher: {
     appId: Number.parseInt(process.env.PUSHER_APP_ID ?? '1592034'),

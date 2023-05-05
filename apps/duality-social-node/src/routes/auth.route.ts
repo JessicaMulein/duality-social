@@ -5,7 +5,6 @@
 
 import express from 'express';
 import { Request, Response } from 'express';
-import { AuthorizationUrlRequest, ConfidentialClientApplication, CryptoProvider } from '@azure/msal-node';
 
 import {
     msalConfig,

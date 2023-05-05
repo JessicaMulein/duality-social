@@ -81,19 +81,6 @@ export class AuthenticationService {
     }
   }
 
-  public async loginApiKeys(apiKey: string): Promise<boolean> {
-    try {
-      const credentials = Realm.Credentials.apiKey(
-        apiKey
-      );
-      const user = await this.realmApp.logIn(credentials);
-      return user ? true : false;
-    } catch (error) {
-      console.error('Failed to log in', error);
-      return false;
-    }
-  }
-
   public async loginEmail(email: string, password: string): Promise<boolean> {
     let _error;
     try {
