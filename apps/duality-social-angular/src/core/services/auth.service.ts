@@ -26,7 +26,20 @@ export class AuthenticationService {
     return environment.realm.redirectUri;
   }
 
-  async login(email: string, password: string): Promise<boolean> {
+  public async loginGoogle(authCode: string): Promise<boolean> {
+    try {
+      const credentials = Realm.Credentials.google({
+        authCode: authCode
+      });
+      const user = await this.realmApp.logIn(credentials);
+      return user ? true : false;
+    } catch (error) {
+      console.error('Failed to log in', error);
+      return false;
+    }
+  }
+
+  public async loginEmail(email: string, password: string): Promise<boolean> {
     try {
       const credentials = Realm.Credentials.emailPassword(email, password);
       const user = await this.realmApp.logIn(credentials);
@@ -37,7 +50,7 @@ export class AuthenticationService {
     }
   }
 
-  async registerUser(email: string, password: string): Promise<boolean> {
+  public async registerUser(email: string, password: string): Promise<boolean> {
     try {
       await this.realmApp.emailPasswordAuth.registerUser({
         email,
@@ -50,7 +63,7 @@ export class AuthenticationService {
     }
   }
 
-  async logout(): Promise<void> {
+  public async logout(): Promise<void> {
     if (this.realmApp.currentUser) {
       await this.realmApp.currentUser.logOut();
     }
@@ -73,18 +86,6 @@ export class AuthenticationService {
       { email }
     );
   }
-
-  // getAccessToken(): Observable<string> {
-  //   console.log('getAccessToken()');
-  //   return from(
-  //     this.msalClient.acquireTokenSilent({
-  //       scopes: ['openid', 'profile', 'email', 'User.Read'],
-  //     })
-  //   ).pipe(map((result: AuthenticationResult) => {
-  //     console.log('getAccessToken() in pipe(map()) result', result, result.accessToken);
-  //     return result.accessToken
-  //   }));
-  // }
 
   getCurrentUser(): User | null {
     const account = this.realmApp.currentUser;

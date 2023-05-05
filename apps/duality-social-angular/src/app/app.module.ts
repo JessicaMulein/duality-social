@@ -11,63 +11,14 @@ import { AppRoutingModule } from './app.routes';
 import { ProfileComponent } from '../profile/profile.component';
 
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { IPublicClientApplication, PublicClientApplication, InteractionType, BrowserCacheLocation, LogLevel } from '@azure/msal-browser';
-import { MsalGuard, MsalInterceptor, MsalBroadcastService, MsalInterceptorConfiguration, MsalModule, MsalService, MSAL_GUARD_CONFIG, MSAL_INSTANCE, MSAL_INTERCEPTOR_CONFIG, MsalGuardConfiguration, MsalRedirectComponent } from '@azure/msal-angular';
 import { FailedComponent } from '../failed/failed.component';
 import { environment } from '../environments/environment';
 import { CoreModule } from '../core/core.module';
 import { SharedModule } from '../shared/shared.module';
 import { CustomMaterialModule } from '../custom-material/custom-material.module';
 import { LoggerModule } from 'ngx-logger';
-
-const isIE = window.navigator.userAgent.indexOf("MSIE ") > -1 || window.navigator.userAgent.indexOf("Trident/") > -1; // Remove this line to use Angular Universal
-
-export function loggerCallback(logLevel: LogLevel, message: string) {
-  console.log(message);
-}
-
-export function MSALInstanceFactory(): IPublicClientApplication {
-  return new PublicClientApplication({
-    auth: {
-      clientId: environment.realm.clientId,
-      authority: environment.realm.authority,
-      redirectUri: environment.realm.redirectUri,
-      postLogoutRedirectUri: environment.realm.postLogoutRedirectUri
-    },
-    cache: {
-      cacheLocation: BrowserCacheLocation.LocalStorage,
-      storeAuthStateInCookie: isIE, // set to true for IE 11. Remove this line to use Angular Universal
-    },
-    system: {
-      loggerOptions: {
-        loggerCallback,
-        logLevel: LogLevel.Info,
-        piiLoggingEnabled: false
-      }
-    }
-  });
-}
-
-export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {
-  const protectedResourceMap = new Map<string, Array<string>>();
-  protectedResourceMap.set('https://graph.microsoft.com/v1.0/me', ['User.Read','email','openid','profile']); // Prod environment. Uncomment to use.
-  //protectedResourceMap.set('https://graph.microsoft-ppe.com/v1.0/me', ['user.read']);
-
-  return {
-    interactionType: InteractionType.Redirect,
-    protectedResourceMap
-  };
-}
-
-export function MSALGuardConfigFactory(): MsalGuardConfiguration {
-  return {
-    interactionType: InteractionType.Redirect,
-    authRequest: {
-      scopes: ['User.Read','openid','profile','email']
-    },
-    loginFailedRoute: '/login-failed'
-  };
-}
+import { SocialLoginModule } from 'angularx-social-login';
+import { AuthInterceptor } from '../core/interceptors/auth.interceptor';
 
 @NgModule({
   declarations: [
@@ -95,34 +46,15 @@ export function MSALGuardConfigFactory(): MsalGuardConfiguration {
     }),
     //
     HttpClientModule,
-    MsalModule.forRoot(
-      MSALInstanceFactory(),
-      MSALGuardConfigFactory(),
-      MSALInterceptorConfigFactory()
-    ),
+    SocialLoginModule,
   ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: MsalInterceptor,
+      useClass: AuthInterceptor,
       multi: true
     },
-    {
-      provide: MSAL_INSTANCE,
-      useFactory: MSALInstanceFactory
-    },
-    {
-      provide: MSAL_GUARD_CONFIG,
-      useFactory: MSALGuardConfigFactory
-    },
-    {
-      provide: MSAL_INTERCEPTOR_CONFIG,
-      useFactory: MSALInterceptorConfigFactory
-    },
-    MsalService,
-    MsalGuard,
-    MsalBroadcastService
   ],
-  bootstrap: [AppComponent, MsalRedirectComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }
