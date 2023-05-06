@@ -14,7 +14,7 @@
     "build": "yarn all:build",
     "serve": "npx nx serve duality-social-node",
     "serve:dev": "npx nx serve duality-social-node --configuration development",
-    "npm-globals": "npm install -g yarn @angular/cli @nrwl/cli npx nx jest cmake-js realm-cli",
+    "npm-globals": "npm install -g yarn @angular/cli @nrwl/cli npx nx jest cmake-js mongodb-realm-cli",
     "azure:login": "az login"
   },
   "private": true,
