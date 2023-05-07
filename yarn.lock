@@ -10502,6 +10502,11 @@ mongodb@5.3.0:
   optionalDependencies:
     saslprep "^1.0.3"
 
+mongoose-graphql-transformer@^1.0.8:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/mongoose-graphql-transformer/-/mongoose-graphql-transformer-1.0.8.tgz#588434b7769b77d5a70d0727d25abb8a245fc1cd"
+  integrity sha512-PylnsRkCfzZq2edRZgNvNxH9xhcJ5cw2nCIBbYkTi840GMWJ4qkvDK3uTqOXyXcKXKzQPQlKgBPSFiMyTGl1mw==
+
 mongoose@^7.0.4:
   version "7.1.0"
   resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-7.1.0.tgz#ad7f23184a0c19eb8efbbad4f1ff2113ede1515d"

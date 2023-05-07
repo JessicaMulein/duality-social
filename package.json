@@ -42,6 +42,7 @@
     "clsx": "^1.2.1",
     "express": "~4.18.1",
     "mongoose": "^7.0.4",
+    "mongoose-graphql-transformer": "^1.0.8",
     "prism-react-renderer": "^1.3.5",
     "pusher": "^5.1.2",
     "pusher-js": "^8.0.2",
