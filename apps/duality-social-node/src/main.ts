@@ -14,24 +14,15 @@ import { setupMiddlewares } from './setupMiddlewares';
 import { setupSession } from './setupSession';
 import { setupRoutes } from './setupRoutes';
 import session from 'express-session';
-import { ApolloServer, gql } from 'apollo-server-express';
+import { ApolloServer } from 'apollo-server-express';
 import './types';
-import { allGraphQlModels } from 'libs/duality-social-lib/src/lib/db_functions';
-import { mergeTypeDefs } from '@graphql-tools/merge';
-import { DocumentNode } from 'graphql';
+import { GraphQLSchema } from 'graphql';
+import { OverallGraphQlSchema } from '@duality-social/duality-social-lib';
 
 declare global {
   namespace Express {
     interface User { }
   }
-}
-
-// go through the models we have in and use the ModelDatas we have to create a full schema of graphql objects in gql
-
-function allGraphQlModelsToGql(): DocumentNode {
-  const typeDefs = allGraphQlModels().map((value) => gql`${value}`);
-  const mergedTypeDefs = mergeTypeDefs(typeDefs);
-  return mergedTypeDefs;
 }
 
 async function configureApplication(
@@ -60,22 +51,11 @@ async function configureApplication(
     app.set('trust proxy', 1); // trust first proxy e.g. App Service
   }
 
-  const typeDefs = allGraphQlModelsToGql();
-  const resolvers = {
-    Query: {
-      currentUser: async (_: any, __: any, context: any) => {
-        // Fetch user data from MongoDB using context.user
-        console.log(context.user);
-        throw new Error('not implemented');
-      },
-    },
-  };
   const server = new ApolloServer({
-    typeDefs,
-    resolvers,
+    schema: OverallGraphQlSchema,
     context: ({ req }) => {
       const user = req.user;
-
+      console.log('user', user);
       return {
         user,
       };

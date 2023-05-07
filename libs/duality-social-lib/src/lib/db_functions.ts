@@ -7,8 +7,8 @@ import { Document, Schema, Model, model as mongooseModel } from 'mongoose';
 import { IModelData } from './interfaces/modelData';
 import { ModelNames } from './schema';
 import { ModelData } from './models/modelData';
-import { schemaComposer } from "graphql-compose";
-import { composeMongoose } from "graphql-compose-mongoose";
+import { composeWithMongoose } from "graphql-compose-mongoose";
+import { ObjectTypeComposer, SchemaComposer } from 'graphql-compose';
 
 /**
  * A map of schema names to their corresponding mongoose models
@@ -16,14 +16,14 @@ import { composeMongoose } from "graphql-compose-mongoose";
  */
 const modelMap: Map<string, object> = new Map();
 const modelDataMap: Map<string, ModelData> = new Map();
-const graphQlMap: Map<string, object> = new Map();
+const graphQlMap: Map<string, ObjectTypeComposer> = new Map();
 
-export function registerModel<T>(modelData: IModelData): Model<T&Document> {
+export function registerModel<T>(modelData: IModelData, schemaComposer: SchemaComposer): Model<T&Document> {
     const newModel = mongooseModel<T&Document>(modelData.name, modelData.schema, modelData.pluralName);
     const newModelData = new ModelData(modelData);
     modelDataMap.set(modelData.name, newModelData);
     modelMap.set(modelData.name, newModel);
-    const graphQl = modelDataToGraphQl(newModelData);
+    const graphQl = modelDataToGraphQl(newModelData, schemaComposer);
     graphQlMap.set(modelData.name, graphQl);
     return newModel;
 }
@@ -105,10 +105,24 @@ export function modelToGraphQl<T>(model: Model<T>): object {
     return nameToGraphQl(modelName);
 }
 
-export function allGraphQlModels(): object[] { const result: object[] = []; graphQlMap.forEach((value) => result.push(value)); return result; }
+export function allGraphQlModels(): ObjectTypeComposer[] { const result: ObjectTypeComposer[] = []; graphQlMap.forEach((value) => result.push(value)); return result; }
 
-export function modelDataToGraphQl<T extends Document>(modelData: ModelData) { 
+export function modelDataToGraphQl<T extends Document>(modelData: ModelData, schemaComposer: SchemaComposer): ObjectTypeComposer { 
     const model = nameToModel<T>(modelData.name);
-    // how would I get the correct type here from the model?
-    return composeMongoose(model);
-  }
+    const customizationOptions = {}; // Customize your mongoose schema if needed.
+    const ModelTC = composeWithMongoose(model, customizationOptions);
+      
+    // Get the count resolver
+    const countResolver = ModelTC.getResolver('count');
+    
+    // Update the filter argument type
+    countResolver.setArg('filter', {
+        type: ModelTC.getITC(),
+    });
+    
+    schemaComposer.Query.addFields({
+        [`${model.modelName}Count`]: countResolver,
+    });
+
+    return ModelTC;
+}

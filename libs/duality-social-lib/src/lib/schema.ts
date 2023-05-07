@@ -32,8 +32,10 @@ import { ViewpointReactionSchema } from './schemas/viewpointReaction';
 import { BaseModelCache } from './models/baseModelCache';
 import { IUserMeta } from './interfaces/userMeta';
 import { UserMetaSchema } from './schemas/userMeta';
-import { registerModel } from './db_functions';
+import { allGraphQlModels, registerModel } from './db_functions';
 import { IModelData } from './interfaces/modelData';
+import { GraphQLDate, GraphQLJSON, GraphQLJSONObject, ObjectTypeComposer, SchemaComposer } from 'graphql-compose';
+import { GraphQLSchema } from 'graphql';
 
 /**
  * The schema for all models in the system.
@@ -205,27 +207,65 @@ export const MongooseCollectionNames: { [key: string]: string } = {
   ViewpointReactions: ModelData['ViewpointReaction'].apiName,
 };
 
+// go through the models we have in and use the ModelDatas we have to create a full schema of graphql objects in gql
+export function allGraphQlModelsToGql(): string {
+  const typeDefStrings: string[] = [];
+  let countSuccess = 0;
+  let countFailure = 0;
+  allGraphQlModels().forEach((model: ObjectTypeComposer) => {
+    try {
+      const typeDefString = model.getInputTypeComposer().toSDL();
+      typeDefStrings.push(typeDefString);
+      countSuccess++;
+    } catch (e) {
+      countFailure++;
+    }
+  });
+  console.log(`Successfully parsed ${countSuccess} models`);
+  console.log(`Failed to parse ${countFailure} models`);
+  return typeDefStrings.join('\n');
+}
+
+const schemaComposer = new SchemaComposer();
+schemaComposer.add(GraphQLDate);
+schemaComposer.add(GraphQLJSON);
+schemaComposer.add(GraphQLJSONObject);
+
 /**
  * A simple dictionary of models for all models in the system.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const MongooseModels: { [key: string]: Model<any> } = {
-  AdminUser: registerModel<IAdminUser>(ModelData['AdminUser']),
-  Invitation: registerModel<IInvitation>(ModelData['Invitation']),
-  Login: registerModel<ILogin>(ModelData['Login']),
-  Post: registerModel<IPost>(ModelData['Post']),
-  PostExpand: registerModel<IPostExpand>(ModelData['PostExpand']),
-  PostImpression: registerModel<IPostImpression>(ModelData['PostImpression']),
-  PostViewpoint: registerModel<IPostViewpoint>(ModelData['PostViewpoint']),
-  Profile: registerModel<IProfile>(ModelData['Profile']),
-  Report: registerModel<IReport>(ModelData['Report']),
-  SudoLog: registerModel<ISudoLog>(ModelData['SudoLog']),
-  User: registerModel<IUser>(ModelData['User']),
-  UserNameChange: registerModel<IUserNameChange>(ModelData['UserNameChange']),
+  AdminUser: registerModel<IAdminUser>(ModelData['AdminUser'], schemaComposer),
+  Invitation: registerModel<IInvitation>(ModelData['Invitation'], schemaComposer),
+  Login: registerModel<ILogin>(ModelData['Login'], schemaComposer),
+  Post: registerModel<IPost>(ModelData['Post'], schemaComposer),
+  PostExpand: registerModel<IPostExpand>(ModelData['PostExpand'], schemaComposer),
+  PostImpression: registerModel<IPostImpression>(ModelData['PostImpression'], schemaComposer),
+  PostViewpoint: registerModel<IPostViewpoint>(ModelData['PostViewpoint'], schemaComposer),
+  Profile: registerModel<IProfile>(ModelData['Profile'], schemaComposer),
+  Report: registerModel<IReport>(ModelData['Report'], schemaComposer),
+  SudoLog: registerModel<ISudoLog>(ModelData['SudoLog'], schemaComposer),
+  User: registerModel<IUser>(ModelData['User'], schemaComposer),
+  UserNameChange: registerModel<IUserNameChange>(ModelData['UserNameChange'], schemaComposer),
   ViewpointReaction: registerModel<IViewpointReaction>(
-    ModelData['ViewpointReaction']
+    ModelData['ViewpointReaction'], schemaComposer
   ),
 };
+
+const typeDefs = allGraphQlModelsToGql();
+const resolvers = {
+  Query: {
+    currentUser: async (_: any, __: any, context: any) => {
+      // Fetch user data from MongoDB using context.user
+      console.log(context.user);
+      return context.user;
+    },
+  },
+};
+schemaComposer.addTypeDefs(typeDefs);
+schemaComposer.addResolveMethods(resolvers);
+export const OverallGraphQlSchema: GraphQLSchema = schemaComposer.buildSchema();
 
 /**
  * A simple dictionary of caches for each of the models in the system.
