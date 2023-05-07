@@ -17,6 +17,8 @@ import session from 'express-session';
 import { ApolloServer, gql } from 'apollo-server-express';
 import './types';
 import { allGraphQlModels } from 'libs/duality-social-lib/src/lib/db_functions';
+import { mergeTypeDefs } from '@graphql-tools/merge';
+import { DocumentNode } from 'graphql';
 
 declare global {
   namespace Express {
@@ -25,14 +27,11 @@ declare global {
 }
 
 // go through the models we have in and use the ModelDatas we have to create a full schema of graphql objects in gql
-function allGraphQlModelsToGql(): string {
-  let result = '';
-  allGraphQlModels().forEach((value) => {
-    result += gql`
-      ${value}
-    `;
-  });
-  return result;
+
+function allGraphQlModelsToGql(): DocumentNode {
+  const typeDefs = allGraphQlModels().map((value) => gql`${value}`);
+  const mergedTypeDefs = mergeTypeDefs(typeDefs);
+  return mergedTypeDefs;
 }
 
 async function configureApplication(

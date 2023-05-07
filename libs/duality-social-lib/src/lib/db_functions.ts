@@ -24,7 +24,6 @@ export function registerModel<T>(modelData: IModelData): Model<T&Document> {
     modelDataMap.set(modelData.name, newModelData);
     modelMap.set(modelData.name, newModel);
     const graphQl = modelDataToGraphQl(newModelData);
-    console.log(graphQl);
     graphQlMap.set(modelData.name, graphQl);
     return newModel;
 }
@@ -108,7 +107,8 @@ export function modelToGraphQl<T>(model: Model<T>): object {
 
 export function allGraphQlModels(): object[] { const result: object[] = []; graphQlMap.forEach((value) => result.push(value)); return result; }
 
-export function modelDataToGraphQl(modelData: ModelData) { 
-    const model = nameToModel<Document<any,any,any>>(modelData.name);
+export function modelDataToGraphQl<T extends Document>(modelData: ModelData) { 
+    const model = nameToModel<T>(modelData.name);
+    // how would I get the correct type here from the model?
     return composeMongoose(model);
   }
