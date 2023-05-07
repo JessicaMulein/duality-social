@@ -6659,6 +6659,11 @@ data-urls@^3.0.2:
     whatwg-mimetype "^3.0.0"
     whatwg-url "^11.0.0"
 
+dataloader@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/dataloader/-/dataloader-2.2.2.tgz#216dc509b5abe39d43a9b9d97e6e5e473dfbe3e0"
+  integrity sha512-8YnDaaf7N3k/q5HnTJVuzSyLETjoZjVmHc4AeKAzOvKHEFQKcn64OKBfzHYtE9zGjctNM7V9I0MfnUVLpi7M5g==
+
 dayjs@^1.10.4:
   version "1.11.7"
   resolved "https://registry.yarnpkg.com/dayjs/-/dayjs-1.11.7.tgz#4b296922642f70999544d1144a2c25730fce63e2"
@@ -8293,12 +8298,43 @@ grapheme-splitter@^1.0.4:
   resolved "https://registry.yarnpkg.com/grapheme-splitter/-/grapheme-splitter-1.0.4.tgz#9cf3a665c6247479896834af35cf1dbb4400767e"
   integrity sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==
 
+graphql-compose-connection@8.2.1:
+  version "8.2.1"
+  resolved "https://registry.yarnpkg.com/graphql-compose-connection/-/graphql-compose-connection-8.2.1.tgz#ca78363f4f94a209e31d9dc8905de2e26bcb8b81"
+  integrity sha512-75QOx1HusfkLzDlF+RMGoC0UowbZ2R7/xFRIMfbQf1gc6eeRqiGmTWFxHaUYk2WjTAB4dGO7p/gllfwqO0W/TA==
+
+graphql-compose-mongoose@^9.8.0:
+  version "9.8.0"
+  resolved "https://registry.yarnpkg.com/graphql-compose-mongoose/-/graphql-compose-mongoose-9.8.0.tgz#a172dba93a105a5f7f90c9d850f2435ecd3ecd75"
+  integrity sha512-gf5ss5UkMNqOjdr3AO7K2eF5Ak5bGT8f+eO55oMWtA8CivH5klTfP7d6+p81KaCAN0ClrAyb6qDhWosD4TYL9A==
+  dependencies:
+    dataloader "^2.2.2"
+    graphql-compose-connection "8.2.1"
+    graphql-compose-pagination "8.3.0"
+
+graphql-compose-pagination@8.3.0:
+  version "8.3.0"
+  resolved "https://registry.yarnpkg.com/graphql-compose-pagination/-/graphql-compose-pagination-8.3.0.tgz#a58c786256b4dba1843d495ae81cb0fc67ac1369"
+  integrity sha512-zZoBhlWD9KnAJ9AUOeFNeoE4Q/zMxZaxg0tR+HFMVNFnw7ENUnIChMWnD2uvmvik+k8Yv304hMF4n81okGVsJw==
+
+graphql-compose@^9.0.10:
+  version "9.0.10"
+  resolved "https://registry.yarnpkg.com/graphql-compose/-/graphql-compose-9.0.10.tgz#1e870166deb1785761865fe742dea0601d2c77f2"
+  integrity sha512-UsVoxfi2+c8WbHl2pEB+teoRRZoY4mbWBoijeLDGpAZBSPChnqtSRjp+T9UcouLCwGr5ooNyOQLoI3OVzU1bPQ==
+  dependencies:
+    graphql-type-json "0.3.2"
+
 graphql-tag@^2.11.0, graphql-tag@^2.12.6:
   version "2.12.6"
   resolved "https://registry.yarnpkg.com/graphql-tag/-/graphql-tag-2.12.6.tgz#d441a569c1d2537ef10ca3d1633b48725329b5f1"
   integrity sha512-FdSNcu2QQcWnM2VNvSCCDCVS5PpPqpzgFT8+GXzqJuoDd0CBncxCY278u4mhRO7tMgo2JjgJA5aZ+nWSQ/Z+xg==
   dependencies:
     tslib "^2.1.0"
+
+graphql-type-json@0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/graphql-type-json/-/graphql-type-json-0.3.2.tgz#f53a851dbfe07bd1c8157d24150064baab41e115"
+  integrity sha512-J+vjof74oMlCWXSvt0DOf2APEdZOCdubEvGDUAlqH//VBYcOYsGgRW7Xzorr44LvkjiuvecWc8fChxuZZbChtg==
 
 graphql@^16.6.0:
   version "16.6.0"
@@ -10989,11 +11025,6 @@ mongodb@5.3.0:
     socks "^2.7.1"
   optionalDependencies:
     saslprep "^1.0.3"
-
-mongoose-graphql-transformer@^1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/mongoose-graphql-transformer/-/mongoose-graphql-transformer-1.0.8.tgz#588434b7769b77d5a70d0727d25abb8a245fc1cd"
-  integrity sha512-PylnsRkCfzZq2edRZgNvNxH9xhcJ5cw2nCIBbYkTi840GMWJ4qkvDK3uTqOXyXcKXKzQPQlKgBPSFiMyTGl1mw==
 
 mongoose@^7.0.4:
   version "7.1.0"

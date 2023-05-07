@@ -3,11 +3,12 @@
 // description: This file contains helper functions that make use of the schema defined in ./schema.ts
 // see also: ./schema.ts
 // ---------------------------------------------------------------------------------------------------
-import { Schema, Model, model as mongooseModel } from 'mongoose';
+import { Document, Schema, Model, model as mongooseModel } from 'mongoose';
 import { IModelData } from './interfaces/modelData';
 import { ModelNames } from './schema';
 import { ModelData } from './models/modelData';
-import mongooseGraphQLTransform from 'mongoose-graphql-transformer';
+import { schemaComposer } from "graphql-compose";
+import { composeMongoose } from "graphql-compose-mongoose";
 
 /**
  * A map of schema names to their corresponding mongoose models
@@ -108,10 +109,6 @@ export function modelToGraphQl<T>(model: Model<T>): object {
 export function allGraphQlModels(): object[] { const result: object[] = []; graphQlMap.forEach((value) => result.push(value)); return result; }
 
 export function modelDataToGraphQl(modelData: ModelData) { 
-    return mongooseGraphQLTransform({
-      class: 'GraphQLObjectType',
-      description: modelData.description,
-      name: modelData.name,
-      schema: modelData.schema,
-    });
+    const model = nameToModel<Document<any,any,any>>(modelData.name);
+    return composeMongoose(model);
   }
