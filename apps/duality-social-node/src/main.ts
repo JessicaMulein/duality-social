@@ -3,16 +3,20 @@
 import express from 'express';
 import https from 'https';
 import fs from 'fs';
-import { environment, environment as environmentToValidate } from './environments/environment';
+import {
+  environment,
+  environment as environmentToValidate,
+} from './environments/environment';
 import { IEnvironment, validateEnvironment } from './interfaces/environment';
 import { setupPusher } from './setupPusher';
-import { setupPassport } from './setupPassport';
 import { setupDatabase } from './setupDatabase';
 import { setupMiddlewares } from './setupMiddlewares';
 import { setupSession } from './setupSession';
 import { setupRoutes } from './setupRoutes';
 import session from 'express-session';
+import { ApolloServer, gql } from 'apollo-server-express';
 import './types';
+import { allGraphQlModels } from 'libs/duality-social-lib/src/lib/db_functions';
 
 declare global {
   namespace Express {
@@ -20,7 +24,20 @@ declare global {
   }
 }
 
-async function configureApplication(validatedEnvironment: IEnvironment): Promise<void> {
+// go through the models we have in and use the ModelDatas we have to create a full schema of graphql objects in gql
+function allGraphQlModelsToGql(): string {
+  let result = '';
+  allGraphQlModels().forEach((value) => {
+    result += gql`
+      ${value}
+    `;
+  });
+  return result;
+}
+
+async function configureApplication(
+  validatedEnvironment: IEnvironment
+): Promise<void> {
   const app = express();
   await setupDatabase();
   await setupPusher(app);
@@ -28,11 +45,10 @@ async function configureApplication(validatedEnvironment: IEnvironment): Promise
   if (sessionConfig !== null) {
     if (environment.production) {
       // enable secure cookies in production
-      sessionConfig.cookie = {...sessionConfig.cookie, ...{secure: true} };
+      sessionConfig.cookie = { ...sessionConfig.cookie, ...{ secure: true } };
     }
     app.use(session(sessionConfig));
   }
-  await setupPassport(app);
   await setupMiddlewares(app);
   await setupRoutes(app);
 
@@ -42,8 +58,30 @@ async function configureApplication(validatedEnvironment: IEnvironment): Promise
      * The line below is needed for getting the correct absolute URL for redirectUri configuration. For more information, visit:
      * https://docs.microsoft.com/azure/app-service/configure-language-nodejs?pivots=platform-linux#detect-https-session
      */
-      app.set('trust proxy', 1) // trust first proxy e.g. App Service
+    app.set('trust proxy', 1); // trust first proxy e.g. App Service
   }
+
+  const typeDefs = allGraphQlModelsToGql();
+  const resolvers = {
+    Query: {
+      currentUser: async (_: any, __: any, context: any) => {
+        // Fetch user data from MongoDB using context.user
+        console.log(context.user);
+        throw new Error('not implemented');
+      },
+    },
+  };
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context: ({ req }) => {
+      const user = req.user;
+
+      return {
+        user,
+      };
+    },
+  });
 
   if (validatedEnvironment.developer.sslEnabled) {
     const path =
@@ -73,6 +111,9 @@ async function configureApplication(validatedEnvironment: IEnvironment): Promise
   }
 }
 
-validateEnvironment(environmentToValidate, async (validatedEnvironment: IEnvironment) => {
-  return await configureApplication(validatedEnvironment);
-});
+validateEnvironment(
+  environmentToValidate,
+  async (validatedEnvironment: IEnvironment) => {
+    return await configureApplication(validatedEnvironment);
+  }
+);

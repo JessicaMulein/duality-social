@@ -20,11 +20,11 @@ usersRouter.get(
   '/id',
   ensureAuthenticated, // check if user is authenticated
   async function (req: Request, res: Response, next: (error: unknown) => void) {
-    if (!req.session || !req.session.account) {
+    if (!req.session || !req.session.realmUser) {
       next(new Error('Session not found'));
       return;
     }
-    res.render('id', { idTokenClaims: req.session.account.idTokenClaims });
+    res.render('id', { idTokenClaims: req.session.realmUser?.id });
   }
 );
 
@@ -33,12 +33,9 @@ usersRouter.get(
   ensureAuthenticated, // check if user is authenticated
   async function (req, res, next) {
     try {
-      const graphResponse = await fetch(
-        environment.msal.graphMeEndpoint,
-        req.session?.accessToken ?? ''
-      );
-      res.render('profile', { profile: graphResponse });
-      console.log(graphResponse);
+      // TODO we're going to have apollo client do this
+      
+      res.render('profile', { profile: {} });
     } catch (error) {
       next(error);
     }

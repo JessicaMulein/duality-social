@@ -22,12 +22,9 @@ export function registerModel<T>(modelData: IModelData): Model<T&Document> {
     const newModelData = new ModelData(modelData);
     modelDataMap.set(modelData.name, newModelData);
     modelMap.set(modelData.name, newModel);
-    graphQlMap.set(modelData.name, mongooseGraphQLTransform({
-        class: 'GraphQLObjectType',
-        description: modelData.description,
-        name: modelData.name,
-        schema: modelData.schema,
-      }));
+    const graphQl = modelDataToGraphQl(newModelData);
+    console.log(graphQl);
+    graphQlMap.set(modelData.name, graphQl);
     return newModel;
 }
 
@@ -107,3 +104,14 @@ export function modelToGraphQl<T>(model: Model<T>): object {
     }
     return nameToGraphQl(modelName);
 }
+
+export function allGraphQlModels(): object[] { const result: object[] = []; graphQlMap.forEach((value) => result.push(value)); return result; }
+
+export function modelDataToGraphQl(modelData: ModelData) { 
+    return mongooseGraphQLTransform({
+      class: 'GraphQLObjectType',
+      description: modelData.description,
+      name: modelData.name,
+      schema: modelData.schema,
+    });
+  }

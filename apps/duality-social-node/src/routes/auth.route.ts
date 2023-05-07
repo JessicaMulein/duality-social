@@ -19,7 +19,7 @@ authRouter.get('/signin', async (req: Request, res: Response) => {
 
     res.redirect('/');
   } catch (error) {
-    res.status(500).send('Failed to log in: ' + error.message);
+    res.status(500).send('Failed to log in: ' + error);
   }
 });
 
@@ -33,7 +33,7 @@ authRouter.get('/signout', async (req: Request, res: Response) => {
       res.redirect('/');
     });
   } catch (error) {
-    res.status(500).send('Failed to log out: ' + error.message);
+    res.status(500).send('Failed to log out: ' + error);
   }
 });
 

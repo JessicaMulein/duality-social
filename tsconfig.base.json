@@ -17,6 +17,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "paths": {
       "@duality-social/duality-social-lib": [
         "libs/duality-social-lib/src/index.ts"

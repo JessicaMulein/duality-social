@@ -1,4 +1,4 @@
-import { AccountInfo, AuthorizationCodeRequest, AuthorizationUrlRequest } from '@azure/msal-node';
+import { User } from "realm-web";
 
 declare module 'express-session' {
   export interface SessionData {
@@ -7,12 +7,10 @@ declare module 'express-session' {
       challenge: string;
     };
     csrfToken?: string;
-    authCodeUrlRequest?: AuthorizationUrlRequest;
-    authCodeRequest?: AuthorizationCodeRequest;
     accessToken?: string;
     idToken?: string;
-    account?: AccountInfo | null;
     isAuthenticated?: boolean;
     views?: number;
+    realmUser?: User;
   }
 }
