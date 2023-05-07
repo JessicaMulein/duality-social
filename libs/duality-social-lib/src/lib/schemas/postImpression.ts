@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-import { BaseModelCaches } from '../models/schema';
+import { BaseModelCaches } from '../schema';
 
 /**
  * Represents a post being viewed.

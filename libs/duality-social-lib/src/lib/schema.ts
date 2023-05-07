@@ -1,36 +1,44 @@
+// file: schema.ts
+// description: This file contains the schema for all models in the system
+// see also: ./db_functions.ts
+// ---------------------------------------------------------------------------------------------
 import { Model, Schema } from 'mongoose';
-import { IAdminUser } from '../interfaces/adminUser';
-import { IInvitation } from '../interfaces/invitation';
-import { ILogin } from '../interfaces/login';
-import { IPost } from '../interfaces/post';
-import { IPostExpand } from '../interfaces/postExpand';
-import { IPostImpression } from '../interfaces/postImpression';
-import { IPostViewpoint } from '../interfaces/postViewpoint';
-import { IProfile } from '../interfaces/profile';
-import { IReport } from '../interfaces/report';
-import { ISudoLog } from '../interfaces/sudoLog';
-import { IUser } from '../interfaces/user';
-import { IUserNameChange } from '../interfaces/userNameChange';
-import { IViewpointReaction } from '../interfaces/viewpointReaction';
-import { AdminUserSchema } from '../schemas/adminUser';
-import { InvitationSchema } from '../schemas/invitation';
-import { LoginSchema } from '../schemas/login';
-import { PostSchema } from '../schemas/post';
-import { PostExpandSchema } from '../schemas/postExpand';
-import { PostImpressionSchema } from '../schemas/postImpression';
-import { PostViewpointSchema } from '../schemas/postViewpoint';
-import { ProfileSchema } from '../schemas/profile';
-import { ReportSchema } from '../schemas/report';
-import { SudoLogSchema } from '../schemas/sudoLog';
-import { UserSchema } from '../schemas/user';
-import { UserNameChangeSchema } from '../schemas/userNameChange';
-import { ViewpointReactionSchema } from '../schemas/viewpointReaction';
-import { BaseModelCache } from './baseModelCache';
-import { IUserMeta } from '../interfaces/userMeta';
-import { UserMetaSchema } from '../schemas/userMeta';
-import { registerModel } from '../db_functions';
-import { IModelData } from '../interfaces/modelData';
+import { IAdminUser } from './interfaces/adminUser';
+import { IInvitation } from './interfaces/invitation';
+import { ILogin } from './interfaces/login';
+import { IPost } from './interfaces/post';
+import { IPostExpand } from './interfaces/postExpand';
+import { IPostImpression } from './interfaces/postImpression';
+import { IPostViewpoint } from './interfaces/postViewpoint';
+import { IProfile } from './interfaces/profile';
+import { IReport } from './interfaces/report';
+import { ISudoLog } from './interfaces/sudoLog';
+import { IUser } from './interfaces/user';
+import { IUserNameChange } from './interfaces/userNameChange';
+import { IViewpointReaction } from './interfaces/viewpointReaction';
+import { AdminUserSchema } from './schemas/adminUser';
+import { InvitationSchema } from './schemas/invitation';
+import { LoginSchema } from './schemas/login';
+import { PostSchema } from './schemas/post';
+import { PostExpandSchema } from './schemas/postExpand';
+import { PostImpressionSchema } from './schemas/postImpression';
+import { PostViewpointSchema } from './schemas/postViewpoint';
+import { ProfileSchema } from './schemas/profile';
+import { ReportSchema } from './schemas/report';
+import { SudoLogSchema } from './schemas/sudoLog';
+import { UserSchema } from './schemas/user';
+import { UserNameChangeSchema } from './schemas/userNameChange';
+import { ViewpointReactionSchema } from './schemas/viewpointReaction';
+import { BaseModelCache } from './models/baseModelCache';
+import { IUserMeta } from './interfaces/userMeta';
+import { UserMetaSchema } from './schemas/userMeta';
+import { registerModel } from './db_functions';
+import { IModelData } from './interfaces/modelData';
 
+/**
+ * The schema for all models in the system.
+ * This includes the name, description, plural name, and api name of each model.
+ */
 export const ModelData: { [key: string]: IModelData } = {
   AdminUser: {
     name: 'AdminUser',
@@ -131,8 +139,15 @@ export const ModelData: { [key: string]: IModelData } = {
     schema: ViewpointReactionSchema,
   },
 };
+
+/**
+ * The names of all models in the system.
+ */
 export type ModelNames = keyof typeof ModelData;
 
+/**
+ * A simple dictionary of schemas for all models in the system.
+ */
 export const MongooseSchemas: { [key: string]: Schema } = {
   AdminUsers: AdminUserSchema,
   Invitations: InvitationSchema,
@@ -150,6 +165,9 @@ export const MongooseSchemas: { [key: string]: Schema } = {
   ViewpointReactions: ViewpointReactionSchema,
 };
 
+/**
+ * A simple dictionary of schema names for all models in the system.
+ */
 export const MongooseModelSchemaNames: { [key: string]: string } = {
   AdminUser: ModelData.AdminUser.name,
   Invitation: ModelData.Invitation.name,
@@ -167,6 +185,9 @@ export const MongooseModelSchemaNames: { [key: string]: string } = {
   ViewpointReaction: ModelData.ViewpointReaction.name,
 };
 
+/**
+ * A simple dictionary of plural collection names for all models in the system.
+ */
 export const MongooseCollectionNames: { [key: string]: string } = {
   AdminUsers: ModelData.AdminUser.apiName,
   Invitations: ModelData.invitations.apiName,
@@ -184,6 +205,9 @@ export const MongooseCollectionNames: { [key: string]: string } = {
   ViewpointReactions: ModelData.viewpointReactions.apiName,
 };
 
+/**
+ * A simple dictionary of models for all models in the system.
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const MongooseModels: { [key: string]: Model<any> } = {
   AdminUser: registerModel<IAdminUser>(ModelData.AdminUser),
@@ -203,6 +227,10 @@ export const MongooseModels: { [key: string]: Model<any> } = {
   ),
 };
 
+/**
+ * A simple dictionary of caches for each of the models in the system.
+ * These model caches are used to cache model instances in memory.
+ */
 export const BaseModelCaches = {
   AdminUsers: BaseModelCache.make<IAdminUser>(
     ModelData.AdminUser,

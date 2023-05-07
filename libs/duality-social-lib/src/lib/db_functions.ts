@@ -1,21 +1,19 @@
 
+// file: db_functions.ts
+// description: This file contains helper functions that make use of the schema defined in ./schema.ts
+// see also: ./schema.ts
+// ---------------------------------------------------------------------------------------------------
 import { Schema, Model, model as mongooseModel } from 'mongoose';
 import { IModelData } from './interfaces/modelData';
-import { ModelNames } from './models/schema';
+import { ModelNames } from './schema';
 import { ModelData } from './models/modelData';
 import mongooseGraphQLTransform from 'mongoose-graphql-transformer';
 
-// not exported module level variables
 /**
  * A map of schema names to their corresponding mongoose models
  * Objects are all Model<T> where T extends Document
  */
 const modelMap: Map<string, object> = new Map();
-/**
- * A map of schema names to their corresponding mongoose schemas
- */
-const schemaMap: Map<string, Schema> = new Map();
-const pathMap: Map<string, string> = new Map();
 const modelDataMap: Map<string, ModelData> = new Map();
 const graphQlMap: Map<string, object> = new Map();
 
@@ -24,8 +22,6 @@ export function registerModel<T>(modelData: IModelData): Model<T&Document> {
     const newModelData = new ModelData(modelData);
     modelDataMap.set(modelData.name, newModelData);
     modelMap.set(modelData.name, newModel);
-    schemaMap.set(modelData.name, modelData.schema);
-    pathMap.set(modelData.name, newModelData.path);
     graphQlMap.set(modelData.name, mongooseGraphQLTransform({
         class: 'GraphQLObjectType',
         description: modelData.description,
@@ -88,9 +84,26 @@ export function nameToModel<T>(modelName: ModelNames): Model<T> {
  */
 export function nameToSchema<T>(modelName: ModelNames): Schema<T> {
     const modelNameString = modelName as string;
-    const schema = schemaMap.get(modelNameString);
-    if (!schema) {
+    const modelData = modelDataMap.get(modelNameString);
+    if (!modelData) {
         throw new Error(`Could not find model ${modelName}`);
     }
-    return schema as Schema<T>;
+    return modelData.schema as Schema<T>;
+}
+
+export function nameToGraphQl(modelName: ModelNames): object {
+    const modelNameString = modelName as string;
+    const graphQl = graphQlMap.get(modelNameString);
+    if (!graphQl) {
+        throw new Error(`Could not find model ${modelName}`);
+    }
+    return graphQl;
+}
+
+export function modelToGraphQl<T>(model: Model<T>): object {
+    const modelName = findModelName(model);
+    if (modelName === undefined) {
+        throw new Error(`Could not find model ${model}`);
+    }
+    return nameToGraphQl(modelName);
 }
