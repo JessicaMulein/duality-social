@@ -6,6 +6,7 @@
     "fontawesome:setup": "scripts/setup-fa-npm.sh",
     "newSecret": "node -e \"console.log (require('crypto').randomBytes(32).toString ('hex'));\"",
     "all": "yarn && cd libs/duality-social-lib && yarn && cd ../../apps/duality-social-angular && yarn && cd ../../apps/duality-social-node && yarn && cd ../..",
+    "all:clean": "yarn cache clean && rm -rf node_modules libs/duality-social-lib/node_modules apps/duality-social-angular/node_modules apps/duality-social-node/node_modules",
     "all:upgrade": "yarn upgrade && cd libs/duality-social-lib && yarn upgrade && cd ../../apps/duality-social-angular && yarn upgrade && cd ../duality-social-node && yarn upgrade && cd ../..",
     "all:build": "npx nx build duality-social-lib && npx nx build duality-social-angular && npx nx build duality-social-node",
     "all:build:verbose": "npx nx build duality-social-lib --verbose && npx nx build duality-social-angular --verbose && npx nx build duality-social-node --verbose",
@@ -15,7 +16,10 @@
     "serve": "npx nx serve duality-social-node",
     "serve:dev": "npx nx serve duality-social-node --configuration development",
     "npm-globals": "npm install -g yarn @angular/cli @nrwl/cli npx nx jest cmake-js mongodb-realm-cli",
-    "azure:login": "az login"
+    "azure:login": "az login",
+    "realm:login": "realm-cli login",
+    "realm:pull": "realm-cli pull --remote=soundstorm-wdkhs",
+    "realm:pull:dev": "realm-cli pull --remote=soundstorm-dev-udikj"
   },
   "private": true,
   "dependencies": {
