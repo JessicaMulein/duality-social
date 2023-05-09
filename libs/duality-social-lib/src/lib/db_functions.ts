@@ -88,7 +88,7 @@ export function nameToSchema<T>(modelName: ModelNames): Schema<T> {
     return modelData.schema as Schema<T>;
 }
 
-export function nameToGraphQl(modelName: ModelNames): object {
+export function nameToGraphQl(modelName: ModelNames): ObjectTypeComposer {
     const modelNameString = modelName as string;
     const graphQl = graphQlMap.get(modelNameString);
     if (!graphQl) {
