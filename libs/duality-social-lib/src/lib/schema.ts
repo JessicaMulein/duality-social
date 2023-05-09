@@ -234,6 +234,7 @@ const UserModel = registerModel<IUser>(ModelData['User'], ObjectTypeComposerInst
 const UserTC: ObjectTypeComposer = nameToGraphQl('User');
 type TArgs = {
   filter: any; // specify the type for your filter argument
+  tc: ObjectTypeComposer;
 };
 
 /**
@@ -268,6 +269,8 @@ const resolveMethods = {
     countUsers: async (_: any, args: TArgs) => {
       const { filter } = args;
       console.log(filter);
+      const count = await UserModel.count(filter);
+      return count;
     },
     currentUser: async (_: any, __: any, context: any) => {
       // Fetch user data from MongoDB using context.user
