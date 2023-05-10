@@ -1,29 +1,6 @@
 import { dirname } from "path";
 import { IEnvironment } from "../interfaces/environment";
-import { readFileSync } from "fs";
-
-/**
- * 6226576d-37e9-49eb-b201-ec1eeb0029b6 is the production microsoft client id
- * The other client id possibility is found under the Web App > Authentication under "App (client) ID"
- */
-const clientId =
-  process.env.CLIENT_ID ?? 'dc60f3f2-3089-47dd-8151-3e7e3b29c2e8';
-/**
- * // https://learn.microsoft.com/en-us/azure/active-directory/develop/msal-client-application-configuration
- */
-const cloudInstance =
-  process.env.CLOUD_INSTANCE ?? 'https://login.microsoftonline.com/';
-const cloudInstanceDomain = cloudInstance.replace('https://', '').replace('/', '');
-/**
- * https://learn.microsoft.com/en-us/azure/active-directory/develop/accounts-overview
- */
-const tenantId =
-  process.env.TENANT_ID ?? '87e87c07-f72e-4811-9730-85294c4c92e4';
-  // consumers, common, organizations, or tenant id
-  const authorityRealm = 'consumers';
-  const authority = process.env.MSAL_AUTHORITY ?? `${cloudInstanceDomain}/${authorityRealm}`;
-  console.log('authority', authority);
-  //const authority = cloudInstance + (tenantId ?? 'common/');
+//const authority = cloudInstance + (tenantId ?? 'common/');
 //const authority = cloudInstance + tenantId + '/';
 const host = process.env.HOST ?? 'dulity.social';
 const port = Number(process.env.PORT ?? 3000);
@@ -33,7 +10,6 @@ const urlProto = sslEnabled ? 'https://' : 'http://';
 const serverHost = sslEnabled
   ? `${urlProto}${host}:${port === 443 ? '' : port}/`
   : `${urlProto}${host}:${port === 80 ? '' : port}/`;
-const redirectUri = serverHost;
 export type OpenAiProvider = 'azure' | 'openai';
 
 export const environment: IEnvironment = {
@@ -74,8 +50,8 @@ export const environment: IEnvironment = {
   },
   realm: {
     appId: 'dualitysocial-djqzy',
-    redirectUri: 'http://duality.social',
-    postLogoutRedirectUri: 'http://duality.social/auth/signout',
+    redirectUri: process.env.REDIRECT_URI ?? serverHost,
+    postLogoutRedirectUri: process.env.POST_LOGOUT_REDIRECT_URI ?? `${serverHost}/auth/signout`,
     auth: {
       facebook: {
         clientId: '602183485306096',

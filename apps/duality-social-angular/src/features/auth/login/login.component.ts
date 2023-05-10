@@ -51,27 +51,18 @@ export class LoginComponent implements OnInit {
   }
 
   emailFlowLogin() {
-    throw new Error('Method not implemented.');
     const email = this.loginForm.get('email')?.value;
     const password = this.loginForm.get('password')?.value;
     const rememberMe = this.loginForm.get('rememberMe')?.value;
     this.loading = true;
-    // POST to /user/login
-    this.http.post(`${environment.domainName}/users/login`, {
-      email,
-      password,
-      rememberMe,
-    }).subscribe(
-      (response: any) => {
-        console.log('response', response);
-        this.loading = false;
-        //this.authenticationService.setSession(response);
-        this.router.navigate(['/']);
-      }
-    );
+    this.authenticationService.loginEmail(email, password);
+    if (rememberMe) {
+      localStorage.setItem('savedUserEmail', email);
+    }
   }
 
   resetPassword() {
-    this.router.navigate(['/auth/password-reset-request']);
+    const email = this.loginForm.get('email')?.value;
+    this.authenticationService.passwordResetRequest(email);
   }
 }

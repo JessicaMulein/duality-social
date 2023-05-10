@@ -9,7 +9,9 @@ interface User extends RealmUser {
   isAdmin: boolean;
 }
 
-
+interface IError {
+  message: string;
+}
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +20,7 @@ export class AuthenticationService {
   
   private _isAnonymous: boolean|undefined = undefined;
   private realmApp: App;
+  private user: User | null;
   private _redirectUrl: string = environment.realm.redirectUri;
 
   public get redirectUrl(): string {
@@ -31,14 +34,15 @@ export class AuthenticationService {
   
   constructor(private http: HttpClient) {
     this.realmApp = new App({ id: environment.realm.appId });
+    this.user = null;
   }
 
   public get isAnonymous(): boolean {
     return this._isAnonymous === true;
   }
 
-  public get loggedIn(): boolean {
-    return this.realmApp.currentUser !== null;
+  public get loggedIn(): Observable<boolean> {
+    return of(this.user !== null);
   }
 
   public get redirectUri(): string {
@@ -49,6 +53,8 @@ export class AuthenticationService {
     try {
       const user = await this.realmApp.logIn(Realm.Credentials.anonymous());
       this._isAnonymous = user ? true : false;
+      console.log('anonymous user', user);
+      this.user = user as User;
       return this._isAnonymous;
     } catch (error) {
       console.error('Failed to log in', error);
@@ -63,6 +69,8 @@ export class AuthenticationService {
         authCode: authCode
       });
       const user = await this.realmApp.logIn(credentials);
+      console.log('google user', user);
+      this.user = user as User;
       return user ? true : false;
     } catch (error) {
       console.error('Failed to log in', error);
@@ -74,6 +82,8 @@ export class AuthenticationService {
     try {
       const credentials = Realm.Credentials.facebook(accessToken);
       const user = await this.realmApp.logIn(credentials);
+      console.log('facebook user', user);
+      this.user = user as User;
       return user ? true : false;
     } catch (error) {
       console.error('Failed to log in', error);
@@ -81,19 +91,24 @@ export class AuthenticationService {
     }
   }
 
-  public async loginEmail(email: string, password: string): Promise<boolean> {
-    let _error;
+  public loginEmail(email: string, password: string): Observable<boolean | string> {
+    return from(this._loginEmail(email, password));
+  }
+  
+  public async _loginEmail(email: string, password: string): Promise<boolean | string> {
     try {
       const credentials = Realm.Credentials.emailPassword(email, password);
       const user = await this.realmApp.logIn(credentials);
+      console.log("email user", user);
       if (user) {
         this._isAnonymous = false;
+        this.user = user as User;
         return true;
       }
-    } catch (error) {
-      _error = error;
+    } catch (error: unknown) {
+      console.error('Failed to log in', error);
+      return ((error as IError).message) ?? false;
     }
-    console.error('Failed to log in', _error);
     return false;
   }
 
@@ -114,29 +129,46 @@ export class AuthenticationService {
     if (this.realmApp.currentUser) {
       await this.realmApp.currentUser.logOut();
       this._isAnonymous = undefined;
+      this.user = null;
     }
   }
 
   passwordReset(
-    email: string,
     token: string,
+    tokenId: string,
     password: string,
     confirmPassword: string
-  ): any {
-    // TODO implement on backend
-    return of(true).pipe(delay(1000));
+  ): Observable<boolean> {
+    if (password != confirmPassword) {
+      return of(false);
+    }
+    this.realmApp.emailPasswordAuth.resetPassword({
+      token: token,
+      tokenId: tokenId,
+      password: confirmPassword,
+    });
+    return of(true);
   }
 
-  passwordResetRequest(email: string) {
+  passwordResetRequest(email: string): Observable<boolean> {
     // TODO implement on backend // deduplicate from above?
-    return this.http.post(
-      `${environment.domainName}/api/password-reset/request`,
-      { email }
-    );
+    this.realmApp.emailPasswordAuth.sendResetPasswordEmail({
+      email: email
+    });
+    return of(true);
+  }
+
+  get currentUser(): Observable<User | null> {
+    let _user = this.user;
+    if (_user === null) {
+      _user = this.getCurrentUser();
+    }
+    return of(this.user);
   }
 
   getCurrentUser(): User | null {
     const account = this.realmApp.currentUser;
-    return account ? (account as User) : null;
+    this.user = account ? (account as User) : null 
+    return this.user;
   }
 }

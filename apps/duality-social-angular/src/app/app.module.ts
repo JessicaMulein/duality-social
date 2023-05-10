@@ -20,6 +20,20 @@ import { LoggerModule } from 'ngx-logger';
 import { FacebookLoginProvider, GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule } from 'angularx-social-login';
 import { AuthInterceptor } from '../core/interceptors/auth.interceptor';
 
+const authConfig: SocialAuthServiceConfig = {
+  autoLogin: false,
+  providers: [
+    {
+      id: GoogleLoginProvider.PROVIDER_ID,
+      provider: new GoogleLoginProvider(environment.realm.auth.google?.clientId ?? ''),
+    },
+    {
+      id: FacebookLoginProvider.PROVIDER_ID,
+      provider: new FacebookLoginProvider(environment.realm.auth.facebook?.clientId ?? ''),
+    },
+  ],
+};
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -51,19 +65,7 @@ import { AuthInterceptor } from '../core/interceptors/auth.interceptor';
   providers: [
     {
       provide: 'SocialAuthServiceConfig',
-      useValue: {
-        autoLogin: false,
-        providers: [
-          {
-            id: GoogleLoginProvider.PROVIDER_ID,
-            provider: new GoogleLoginProvider(environment.realm.auth.google?.clientId ?? ''),
-          },
-          {
-            id: FacebookLoginProvider.PROVIDER_ID,
-            provider: new FacebookLoginProvider(environment.realm.auth.facebook?.clientId ?? ''),
-          },
-        ],
-      } as SocialAuthServiceConfig,
+      useValue: authConfig,
     },
     {
       provide: HTTP_INTERCEPTORS,

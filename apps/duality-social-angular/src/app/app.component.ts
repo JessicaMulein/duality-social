@@ -24,7 +24,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   updateUserLoggedIn() {
-    this.userLoggedIn = this.authService.loggedIn;
+    this.userLoggedIn = this.authService.getCurrentUser() !== undefined;
   }
 
   loginRedirect() {
