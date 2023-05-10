@@ -32,10 +32,8 @@ import { ViewpointReactionSchema } from './schemas/viewpointReaction';
 import { BaseModelCache } from './models/baseModelCache';
 import { IUserMeta } from './interfaces/userMeta';
 import { UserMetaSchema } from './schemas/userMeta';
-import { allGraphQlModels, nameToGraphQl, registerModel } from './db_functions';
+import { registerModel } from './db_functions';
 import { IModelData } from './interfaces/modelData';
-import { GraphQLDate, GraphQLJSON, GraphQLJSONObject, ObjectTypeComposer, SchemaComposer } from 'graphql-compose';
-import { GraphQLSchema } from 'graphql';
 
 /**
  * The schema for all models in the system.
@@ -207,100 +205,27 @@ export const MongooseCollectionNames: { [key: string]: string } = {
   ViewpointReactions: ModelData['ViewpointReaction'].apiName,
 };
 
-// go through the models we have in and use the ModelDatas we have to create a full schema of graphql objects in gql
-export function allGraphQlModelsToGql(): string {
-  const typeDefStrings: string[] = [];
-  let countSuccess = 0;
-  let countFailure = 0;
-  allGraphQlModels().forEach((model: ObjectTypeComposer) => {
-    try {
-      const typeDefString = model.getInputTypeComposer().toSDL();
-      typeDefStrings.push(typeDefString);
-      countSuccess++;
-    } catch (e) {
-      countFailure++;
-    }
-  });
-  console.log(`Successfully parsed ${countSuccess} models`);
-  console.log(`Failed to parse ${countFailure} models`);
-  return typeDefStrings.join('\n');
-}
-
-const ObjectTypeComposerInstance = new SchemaComposer();
-ObjectTypeComposerInstance.add(GraphQLDate);
-ObjectTypeComposerInstance.add(GraphQLJSON);
-ObjectTypeComposerInstance.add(GraphQLJSONObject);
-const UserModel = registerModel<IUser>(ModelData['User'], ObjectTypeComposerInstance);
-const UserTC: ObjectTypeComposer = nameToGraphQl('User');
-type TArgs = {
-  filter: any; // specify the type for your filter argument
-  tc: ObjectTypeComposer;
-};
-
 /**
  * A simple dictionary of models for all models in the system.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const MongooseModels: { [key: string]: Model<any> } = {
-  AdminUser: registerModel<IAdminUser>(ModelData['AdminUser'], ObjectTypeComposerInstance),
-  Invitation: registerModel<IInvitation>(ModelData['Invitation'], ObjectTypeComposerInstance),
-  Login: registerModel<ILogin>(ModelData['Login'], ObjectTypeComposerInstance),
-  Post: registerModel<IPost>(ModelData['Post'], ObjectTypeComposerInstance),
-  PostExpand: registerModel<IPostExpand>(ModelData['PostExpand'], ObjectTypeComposerInstance),
-  PostImpression: registerModel<IPostImpression>(ModelData['PostImpression'], ObjectTypeComposerInstance),
-  PostViewpoint: registerModel<IPostViewpoint>(ModelData['PostViewpoint'], ObjectTypeComposerInstance),
-  Profile: registerModel<IProfile>(ModelData['Profile'], ObjectTypeComposerInstance),
-  Report: registerModel<IReport>(ModelData['Report'], ObjectTypeComposerInstance),
-  SudoLog: registerModel<ISudoLog>(ModelData['SudoLog'], ObjectTypeComposerInstance),
-  User: UserModel,
-  UserNameChange: registerModel<IUserNameChange>(ModelData['UserNameChange'], ObjectTypeComposerInstance),
+  AdminUser: registerModel<IAdminUser>(ModelData['AdminUser']),
+  Invitation: registerModel<IInvitation>(ModelData['Invitation']),
+  Login: registerModel<ILogin>(ModelData['Login']),
+  Post: registerModel<IPost>(ModelData['Post']),
+  PostExpand: registerModel<IPostExpand>(ModelData['PostExpand']),
+  PostImpression: registerModel<IPostImpression>(ModelData['PostImpression']),
+  PostViewpoint: registerModel<IPostViewpoint>(ModelData['PostViewpoint']),
+  Profile: registerModel<IProfile>(ModelData['Profile']),
+  Report: registerModel<IReport>(ModelData['Report']),
+  SudoLog: registerModel<ISudoLog>(ModelData['SudoLog']),
+  User: registerModel<IUser>(ModelData['User']),
+  UserNameChange: registerModel<IUserNameChange>(ModelData['UserNameChange']),
   ViewpointReaction: registerModel<IViewpointReaction>(
-    ModelData['ViewpointReaction'], ObjectTypeComposerInstance
+    ModelData['ViewpointReaction']
   ),
 };
-
-const typeDefs = allGraphQlModelsToGql();
-const resolveMethods = {
-  Query: {
-    users: async (_: any, args: TArgs) => {
-      const { filter } = args;
-      console.log(filter);
-    },
-    countUsers: async (_: any, args: TArgs) => {
-      const { filter } = args;
-      console.log(filter);
-      const count = await UserModel.count(filter);
-      return count;
-    },
-    currentUser: async (_: any, __: any, context: any) => {
-      // Fetch user data from MongoDB using context.user
-      console.log(context.user);
-      return context.user;
-    },
-  },
-};
-ObjectTypeComposerInstance.addTypeDefs(typeDefs);
-ObjectTypeComposerInstance.addResolveMethods(resolveMethods)
-export const OverallGraphQlSchema: GraphQLSchema = ObjectTypeComposerInstance.buildSchema();
-// const schema = new GraphQLSchema({
-//   query: new GraphQLObjectType({
-//     name: 'Query',
-//     fields: {
-//       // your existing fields here
-//       countUsers: {
-//         type: GraphQLInt,
-//         args: {
-//           filter: {
-//             type: UserTC.getInputType(),
-//           },
-//         },
-//         resolve: async (_, { filter }) => {
-//           return await UserModel.countDocuments(filter);
-//         },
-//       },
-//     },
-//   }),
-// });
 
 /**
  * A simple dictionary of caches for each of the models in the system.

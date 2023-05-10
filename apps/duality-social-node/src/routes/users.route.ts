@@ -33,8 +33,6 @@ usersRouter.get(
   ensureAuthenticated, // check if user is authenticated
   async function (req, res, next) {
     try {
-      // TODO we're going to have apollo client do this
-      
       res.render('profile', { profile: {} });
     } catch (error) {
       next(error);

@@ -26,8 +26,6 @@ export interface IPostMeta {
  * It inherits from IHasID, which provides the id property, IHasCreation, which provides the createdAt and updatedAt properties, and IHasSoftDelete, which provides the deletedAt property.
  */
 export interface IPost extends IHasID, IHasTimestamps, IHasSoftDelete, IHasTimestampOwners, IHasDeleter, Document {
-    // graphql fields
-
     // duality social specific fields
     /**
      * The id of the parent post if this is a reply.

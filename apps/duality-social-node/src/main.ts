@@ -3,6 +3,7 @@
 import express from 'express';
 import https from 'https';
 import fs from 'fs';
+import session from 'express-session';
 import {
   environment,
   environment as environmentToValidate,
@@ -13,11 +14,7 @@ import { setupDatabase } from './setupDatabase';
 import { setupMiddlewares } from './setupMiddlewares';
 import { setupSession } from './setupSession';
 import { setupRoutes } from './setupRoutes';
-import session from 'express-session';
-import { ApolloServer } from 'apollo-server-express';
 import './types';
-import { GraphQLSchema } from 'graphql';
-import { OverallGraphQlSchema } from '@duality-social/duality-social-lib';
 
 declare global {
   namespace Express {
@@ -50,17 +47,6 @@ async function configureApplication(
      */
     app.set('trust proxy', 1); // trust first proxy e.g. App Service
   }
-
-  const server = new ApolloServer({
-    schema: OverallGraphQlSchema,
-    context: ({ req }) => {
-      const user = req.user;
-      console.log('user', user);
-      return {
-        user,
-      };
-    },
-  });
 
   if (validatedEnvironment.developer.sslEnabled) {
     const path =

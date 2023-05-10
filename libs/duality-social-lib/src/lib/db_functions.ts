@@ -7,24 +7,20 @@ import { Document, Schema, Model, model as mongooseModel } from 'mongoose';
 import { IModelData } from './interfaces/modelData';
 import { ModelNames } from './schema';
 import { ModelData } from './models/modelData';
-import { composeWithMongoose } from "graphql-compose-mongoose";
-import { ObjectTypeComposer, SchemaComposer } from 'graphql-compose';
+import { MergeType } from 'mongoose';
 
 /**
  * A map of schema names to their corresponding mongoose models
  * Objects are all Model<T> where T extends Document
  */
-const modelMap: Map<string, object> = new Map();
+const modelMap: Map<string, Model<MergeType<any, Document>>> = new Map();
 const modelDataMap: Map<string, ModelData> = new Map();
-const graphQlMap: Map<string, ObjectTypeComposer> = new Map();
 
-export function registerModel<T>(modelData: IModelData, schemaComposer: SchemaComposer): Model<T&Document> {
+export function registerModel<T>(modelData: IModelData): Model<T&Document> {
     const newModel = mongooseModel<T&Document>(modelData.name, modelData.schema, modelData.pluralName);
     const newModelData = new ModelData(modelData);
     modelDataMap.set(modelData.name, newModelData);
     modelMap.set(modelData.name, newModel);
-    const graphQl = modelDataToGraphQl(newModelData, schemaComposer);
-    graphQlMap.set(modelData.name, graphQl);
     return newModel;
 }
 
@@ -86,43 +82,4 @@ export function nameToSchema<T>(modelName: ModelNames): Schema<T> {
         throw new Error(`Could not find model ${modelName}`);
     }
     return modelData.schema as Schema<T>;
-}
-
-export function nameToGraphQl(modelName: ModelNames): ObjectTypeComposer {
-    const modelNameString = modelName as string;
-    const graphQl = graphQlMap.get(modelNameString);
-    if (!graphQl) {
-        throw new Error(`Could not find model ${modelName}`);
-    }
-    return graphQl;
-}
-
-export function modelToGraphQl<T>(model: Model<T>): object {
-    const modelName = findModelName(model);
-    if (modelName === undefined) {
-        throw new Error(`Could not find model ${model}`);
-    }
-    return nameToGraphQl(modelName);
-}
-
-export function allGraphQlModels(): ObjectTypeComposer[] { const result: ObjectTypeComposer[] = []; graphQlMap.forEach((value) => result.push(value)); return result; }
-
-export function modelDataToGraphQl<T extends Document>(modelData: ModelData, schemaComposer: SchemaComposer): ObjectTypeComposer { 
-    const model = nameToModel<T>(modelData.name);
-    const customizationOptions = {}; // Customize your mongoose schema if needed.
-    const ModelTC = composeWithMongoose(model, customizationOptions);
-      
-    // Get the count resolver
-    const countResolver = ModelTC.getResolver('count');
-    
-    // Update the filter argument type
-    countResolver.setArg('filter', {
-        type: ModelTC.getITC(),
-    });
-    
-    schemaComposer.Query.addFields({
-        [`${model.modelName}Count`]: countResolver,
-    });
-
-    return ModelTC;
 }
