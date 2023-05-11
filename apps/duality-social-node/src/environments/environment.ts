@@ -1,28 +1,5 @@
 import { dirname } from "path";
 import { IEnvironment } from "../interfaces/environment";
-import { readFileSync } from "fs";
-
-/**
- * 6226576d-37e9-49eb-b201-ec1eeb0029b6 is the production microsoft client id
- * The other client id possibility is found under the Web App > Authentication under "App (client) ID"
- */
-const clientId =
-  process.env.CLIENT_ID ?? '25989269-b717-4761-8498-f83e3bfc0754';
-/**
- * // https://learn.microsoft.com/en-us/azure/active-directory/develop/msal-client-application-configuration
- */
-const cloudInstance =
-  process.env.CLOUD_INSTANCE ?? 'https://login.microsoftonline.com/';
-const cloudInstanceDomain = cloudInstance.replace('https://', '').replace('/', '');
-/**
- * https://learn.microsoft.com/en-us/azure/active-directory/develop/accounts-overview
- */
-const tenantId =
-  process.env.TENANT_ID ?? '87e87c07-f72e-4811-9730-85294c4c92e4';
-  // consumers, common, organizations, or tenant id
-  const authority = process.env.MSAL_AUTHORITY ?? cloudInstanceDomain;
-  console.log('authority', authority);
-//const authority = cloudInstance + tenantId + '/';
 const host = process.env.SERVER_HOST ?? 'localhost';
 const port = Number(process.env.PORT ?? 3000);
 const production = process.env.NODE_ENV === 'production';
@@ -31,7 +8,6 @@ const urlProto = sslEnabled ? 'https://' : 'http://';
 const serverHost = sslEnabled
   ? `${urlProto}${host}:${port === 443 ? '' : port}/`
   : `${urlProto}${host}:${port === 80 ? '' : port}/`;
-const redirectUri = serverHost;
 
 export const environment: IEnvironment = {
   production: production,
@@ -70,7 +46,7 @@ export const environment: IEnvironment = {
       process.env.EXPRESS_SESSION_SECRET ?? '',
   },
   realm: {
-    appId: 'dualitysocial-djqzy',
+    appId: 'dualitysocial-dev-vcidy',
     redirectUri: 'http://localhost:3000',
     postLogoutRedirectUri: 'http://localhost:3000/auth/signout',
     auth: {

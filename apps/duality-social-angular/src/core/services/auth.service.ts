@@ -22,6 +22,7 @@ export class AuthenticationService {
   private realmApp: App;
   private user: User | null;
   private _redirectUrl: string = environment.realm.redirectUri;
+  private httpClient: HttpClient;
 
   public get redirectUrl(): string {
     return this._redirectUrl;
@@ -34,7 +35,8 @@ export class AuthenticationService {
   
   constructor(private http: HttpClient) {
     this.realmApp = new App({ id: environment.realm.appId });
-    this.user = null;
+    this.user = this.realmApp.currentUser as User;
+    this.httpClient = http;
   }
 
   public get isAnonymous(): boolean {
