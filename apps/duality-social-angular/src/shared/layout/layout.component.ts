@@ -43,28 +43,10 @@ export class LayoutComponent implements OnInit, OnDestroy, AfterViewInit {
     this.mobileQuery.addListener(this._mobileQueryListener);
   }
 
-  async loginEmail() {
-    // login expects an email and password to be passed in
-    // we also have other auth providers
-    const loggedIn = false; // await this.authService.loginEmail();
-    if (loggedIn) {
-      this.setLoginDisplay();
-    }
+  async login() {
+    // redirect to /auth/login
+    this.router.navigate(['/auth/login']);
   }
-
-  loginGoogle() {
-    // we need the authCode from google first using the angularx-social-login library
-    throw new Error('Not implemented');
-    //let authCode = '';
-    //this.authService.loginGoogle(authCode);
-  }
-
-  loginFacebook() {
-    // we need the accessToken from facebook first using the angularx-social-login library
-    throw new Error('Not implemented');
-    //this.authService.loginFacebook(accessToken);
-  }
-
   async logout() {
     await this.authService.logout();
     this.setLoginDisplay();

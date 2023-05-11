@@ -33,7 +33,7 @@ export class AuthenticationService {
     this._redirectUrl = value;
   }
   
-  constructor(private http: HttpClient) {
+  constructor(http: HttpClient) {
     this.realmApp = new App({ id: environment.realm.appId });
     this.user = this.realmApp.currentUser as User;
     this.httpClient = http;
