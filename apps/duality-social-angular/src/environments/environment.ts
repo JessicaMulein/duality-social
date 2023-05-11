@@ -10,7 +10,7 @@ export const environment: IEnvironment = {
   logLevel: NgxLoggerLevel.OFF,
   serverLogLevel: NgxLoggerLevel.ERROR,
   realm: {
-    appId: 'dualitysocial-djqzy',
+    appId: 'dualitysocial-dev-vcidy',
     redirectUri: 'http://localhost:3000',
     postLogoutRedirectUri: 'http://localhost:3000/auth/signout',
     auth: {
