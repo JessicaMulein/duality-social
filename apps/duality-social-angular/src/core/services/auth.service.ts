@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { App, User as RealmUser } from 'realm-web';
+import { App, User as RealmUser, Credentials } from 'realm-web';
 import { Observable, from, of } from 'rxjs';
 import { delay, map, mergeMap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
@@ -53,7 +53,7 @@ export class AuthenticationService {
 
   public async loginAnonymous(): Promise<boolean> {
     try {
-      const user = await this.realmApp.logIn(Realm.Credentials.anonymous());
+      const user = await this.realmApp.logIn(Credentials.anonymous());
       this._isAnonymous = user ? true : false;
       console.log('anonymous user', user);
       this.user = user as User;
@@ -67,7 +67,7 @@ export class AuthenticationService {
 
   public async loginGoogle(authCode: string): Promise<boolean> {
     try {
-      const credentials = Realm.Credentials.google({
+      const credentials = Credentials.google({
         authCode: authCode
       });
       const user = await this.realmApp.logIn(credentials);
@@ -82,7 +82,7 @@ export class AuthenticationService {
 
   public async loginFacebook(accessToken: string): Promise<boolean> {
     try {
-      const credentials = Realm.Credentials.facebook(accessToken);
+      const credentials = Credentials.facebook(accessToken);
       const user = await this.realmApp.logIn(credentials);
       console.log('facebook user', user);
       this.user = user as User;
@@ -99,7 +99,7 @@ export class AuthenticationService {
   
   public async _loginEmail(email: string, password: string): Promise<boolean | string> {
     try {
-      const credentials = Realm.Credentials.emailPassword(email, password);
+      const credentials = Credentials.emailPassword(email, password);
       const user = await this.realmApp.logIn(credentials);
       console.log("email user", user);
       if (user) {
