@@ -1,13 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { App, User as RealmUser, Credentials } from 'realm-web';
+import { App, User, Credentials } from 'realm-web';
 import { Observable, from, of } from 'rxjs';
 import { delay, map, mergeMap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-
-interface User extends RealmUser {
-  isAdmin: boolean;
-}
 
 interface IError {
   message: string;
@@ -23,6 +19,15 @@ export class AuthenticationService {
   private user: User | null;
   private _redirectUrl: string = environment.realm.redirectUri;
   private httpClient: HttpClient;
+
+  private postLoginToServer(user: User): void {
+    this.httpClient
+      .post(`${environment.domainName}/auth/login`, { user })
+      .subscribe({
+        next: (response) => console.log('Login data posted to server', response),
+        error: (err) => console.error('Error posting login data to server', err),
+      });
+  }
 
   public get redirectUrl(): string {
     return this._redirectUrl;
@@ -57,6 +62,7 @@ export class AuthenticationService {
       this._isAnonymous = user ? true : false;
       console.log('anonymous user', user);
       this.user = user as User;
+      this.postLoginToServer(this.user);
       return this._isAnonymous;
     } catch (error) {
       console.error('Failed to log in', error);
@@ -73,6 +79,7 @@ export class AuthenticationService {
       const user = await this.realmApp.logIn(credentials);
       console.log('google user', user);
       this.user = user as User;
+      this.postLoginToServer(this.user);
       return user ? true : false;
     } catch (error) {
       console.error('Failed to log in', error);
@@ -86,6 +93,7 @@ export class AuthenticationService {
       const user = await this.realmApp.logIn(credentials);
       console.log('facebook user', user);
       this.user = user as User;
+      this.postLoginToServer(this.user);
       return user ? true : false;
     } catch (error) {
       console.error('Failed to log in', error);
@@ -105,6 +113,7 @@ export class AuthenticationService {
       if (user) {
         this._isAnonymous = false;
         this.user = user as User;
+        this.postLoginToServer(this.user);
         return true;
       }
     } catch (error: unknown) {

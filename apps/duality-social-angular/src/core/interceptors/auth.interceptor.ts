@@ -1,16 +1,13 @@
-import { HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';
+import { HttpClient, HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthenticationService } from '../services/auth.service';
 import { from, Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthenticationService) {}
-
-  writeUser(token: string, user: any) {
-    console.log('writeUser', token, user);
-  }
+  constructor(private authService: AuthenticationService, private httpClient: HttpClient) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<any> {
     const authToken = this.authService.getCurrentUser()?.accessToken;
@@ -22,7 +19,6 @@ export class AuthInterceptor implements HttpInterceptor {
         },
       });
 
-      this.writeUser(authToken, this.authService.getCurrentUser());
       return next.handle(authReq);
     } else {
       // User not logged in, use anonymous login
@@ -36,7 +32,6 @@ export class AuthInterceptor implements HttpInterceptor {
               },
             });
 
-            this.writeUser(currentUser?.accessToken??'', currentUser);
             return next.handle(authReq);
           } else {
             return next.handle(req);

@@ -1,15 +1,27 @@
 import express from 'express';
 import { Request, Response } from 'express';
-import * as Realm from 'realm-web';
+import { Credentials, App, User } from 'realm-web';
 import { environment } from '../environments/environment';
 
 export const authRouter = express.Router();
 
-const app = new Realm.App({ id:environment.realm.appId });
+const app = new App({ id:environment.realm.appId });
 
+authRouter.post('/login', async (req: Request, res: Response) => {
+  const user = req.body.user as User;
+  console.log('user', user);
+  console.log(user.identities[0]);
+  console.log(user.profile);
+  // are we authenticated?
+  if (req.session.isAuthenticated) {
+    console.log('already authenticated');
+  } else {
+    console.log('not authenticated');
+  }
+});
 authRouter.get('/signin', async (req: Request, res: Response) => {
   try {
-    const credentials = Realm.Credentials.anonymous();
+    const credentials = Credentials.anonymous();
     const user = await app.logIn(credentials);
 
     // Save the user to the session
