@@ -28,6 +28,7 @@ export interface IEnvironment {
     };
     realm: {
       appId: string;
+      customJwtSecret: string;
       redirectUri: string;
       postLogoutRedirectUri: string;
       auth: {

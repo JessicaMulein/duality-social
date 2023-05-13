@@ -11,6 +11,7 @@ export * from './lib/enumerations/reactionType';
 export * from './lib/enumerations/defaultReactionsType';
 export * from './lib/enumerations/reportedAgainstType';
 export * from './lib/enumerations/reportType';
+export * from './lib/enumerations/viewpointType';
 export * from './lib/interfaces/adminUser';
 export * from './lib/interfaces/devilsAdvocateRequest';
 export * from './lib/interfaces/devilsAdvocateResponse';

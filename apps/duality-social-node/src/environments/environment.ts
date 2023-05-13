@@ -47,6 +47,7 @@ export const environment: IEnvironment = {
   },
   realm: {
     appId: 'dualitysocial-dev-vcidy',
+    customJwtSecret: process.env.JWT_SECRET ?? '',
     redirectUri: 'http://localhost:3000',
     postLogoutRedirectUri: 'http://localhost:3000/auth/signout',
     auth: {

@@ -59,6 +59,10 @@ export class LoginComponent implements OnInit {
     if (rememberMe) {
       localStorage.setItem('savedUserEmail', email);
     }
+    this.http.post(`${environment.domainName}/auth/login`, { email, password }).subscribe({
+      next: (response) => console.log('Login data posted to server', response),
+      error: (err) => console.error('Error posting login data to server', err),
+    });
   }
 
   resetPassword() {

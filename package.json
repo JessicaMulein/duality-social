@@ -19,7 +19,9 @@
     "azure:login": "az login",
     "realm:login": "realm-cli login",
     "realm:pull": "realm-cli pull --remote=soundstorm-wdkhs",
-    "realm:pull:dev": "realm-cli pull --remote=soundstorm-dev-udikj"
+    "realm:pull:dev": "realm-cli pull --remote=soundstorm-dev-udikj",
+    "new:jwt:hs256": "node -e \"console.log (require('crypto').randomBytes(32).toString ('hex'));\"",
+    "new:jwt:rs256": "openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048 && openssl rsa -pubout -in private_key.pem -out public_key.pem"
   },
   "private": true,
   "dependencies": {

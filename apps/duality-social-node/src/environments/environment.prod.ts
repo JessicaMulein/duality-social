@@ -50,6 +50,7 @@ export const environment: IEnvironment = {
   },
   realm: {
     appId: 'dualitysocial-djqzy',
+    customJwtSecret: process.env.JWT_SECRET ?? '',
     redirectUri: process.env.REDIRECT_URI ?? serverHost,
     postLogoutRedirectUri: process.env.POST_LOGOUT_REDIRECT_URI ?? `${serverHost}/auth/signout`,
     auth: {
