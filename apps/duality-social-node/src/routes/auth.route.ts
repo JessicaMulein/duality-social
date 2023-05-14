@@ -6,17 +6,34 @@ import { sign } from 'jsonwebtoken'
 
 export const authRouter = express.Router();
 
-const app = new App({ id:environment.realm.appId });
+const app = new App({ id: environment.realm.appId });
+
+authRouter.post('/register', async (req, res) => {
+  const { email, password } = req.body;
+  const sanitizedEmail = email.toLowerCase().trim();
+  try {
+    await app.emailPasswordAuth.registerUser({
+      email: sanitizedEmail,
+      password
+    });
+  }
+  catch (error) {
+    res.status(500).send(error);
+  }
+});
 
 authRouter.post('/login', async (req, res) => {
   const { email, password } = req.body;
   const sanitizedEmail = email.toLowerCase().trim();
   const credentials = Credentials.emailPassword(sanitizedEmail, password);
-  const user = await app.logIn(credentials);
-  const jwtSecret = environment.realm.customJwtSecret;
-
-  const token = sign({ email: sanitizedEmail }, jwtSecret, { expiresIn: '1h' });
-  res.send({ token });
+  try {
+    const user = await app.logIn(credentials);
+    const token = sign({ email: sanitizedEmail }, environment.realm.customJwtSecret, { expiresIn: '1h' });
+    res.send({ token, user });
+  }
+  catch (error) {
+    res.status(401).send('Invalid credentials!');
+  }
 });
 
 
