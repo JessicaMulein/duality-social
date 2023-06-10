@@ -11,7 +11,7 @@ import { AppRoutingModule } from './app.routes';
 import { ProfileComponent } from '../profile/profile.component';
 
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
-import { IPublicClientApplication, PublicClientApplication, InteractionType, BrowserCacheLocation, LogLevel } from '@azure/msal-browser';
+import { IPublicClientApplication, PublicClientApplication, InteractionType, BrowserCacheLocation, LogLevel, Configuration } from '@azure/msal-browser';
 import { MsalGuard, MsalInterceptor, MsalBroadcastService, MsalInterceptorConfiguration, MsalModule, MsalService, MSAL_GUARD_CONFIG, MSAL_INSTANCE, MSAL_INTERCEPTOR_CONFIG, MsalGuardConfiguration, MsalRedirectComponent } from '@azure/msal-angular';
 import { FailedComponent } from '../failed/failed.component';
 import { environment } from '../environments/environment';
@@ -27,11 +27,11 @@ export function loggerCallback(logLevel: LogLevel, message: string) {
 }
 
 export function MSALInstanceFactory(): IPublicClientApplication {
-  return new PublicClientApplication({
+  const configuration: Configuration = {
     auth: {
       clientId: environment.msal.clientId,
       authority: environment.msal.authority,
-      redirectUri: environment.msal.redirectUri,
+      redirectUri: environment.msal.redirectUri ?? window.location.origin ?? 'http://127.0.0.1:3000',
       postLogoutRedirectUri: environment.msal.postLogoutRedirectUri
     },
     cache: {
@@ -45,7 +45,9 @@ export function MSALInstanceFactory(): IPublicClientApplication {
         piiLoggingEnabled: false
       }
     }
-  });
+  };
+  console.log('MSALInstanceFactory: configuration: ', configuration)
+  return new PublicClientApplication(configuration);
 }
 
 export function MSALInterceptorConfigFactory(): MsalInterceptorConfiguration {

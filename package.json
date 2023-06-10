@@ -16,9 +16,13 @@
     "serve:angular:dev": "npx nx serve duality-social-angular --configuration development",
     "serve:angular": "npx nx serve duality-social-angular --configuration production",
     "npm-globals": "npm install -g yarn @angular/cli @nrwl/cli npx nx jest",
+    "azure:clear": "az account clear",
     "azure:login": "az login",
+    "azure:allow-telemetry": "az config set core.allow_broker=true && az account clear && az login",
+    "azure:auth-cycle": "az account clear && az login",
     "clean:all": "rm -rf node_modules apps/duality-social-angular/node_modules apps/duality-social-node/node_modules libs/duality-social-lib/node_modules dist/ ~/.cache && yarn cache clean",
-    "migrate:latest": "npx nx migrate latest && npx nx migrate --run-migrations"
+    "migrate:latest": "npx nx migrate latest",
+    "migrate:run-migrations": "npx nx migrate --run-migrations"
   },
   "private": true,
   "dependencies": {
