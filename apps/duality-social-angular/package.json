@@ -31,7 +31,7 @@
     "jwt-decode": "^3.1.2",
     "moment": "^2.29.4",
     "mongoose-browser": "^5.2.8-pre-2",
-    "ngx-logger": "^5.0.11",
+    "ngx-logger": "^5.0.12",
     "pusher-angular": "^1.0.0",
     "rxjs": "~7.8.0"
   },

@@ -1,6 +1,5 @@
 import { dirname } from "path";
 import { IEnvironment } from "../interfaces/environment";
-import { readFileSync } from "fs";
 
 /**
  * 6226576d-37e9-49eb-b201-ec1eeb0029b6 is the production microsoft client id
@@ -18,7 +17,7 @@ const cloudInstanceDomain = cloudInstance.replace('https://', '').replace('/', '
  * https://learn.microsoft.com/en-us/azure/active-directory/develop/accounts-overview
  */
 const tenantId =
-  process.env.TENANT_ID ?? '87e87c07-f72e-4811-9730-85294c4c92e4';
+  process.env.TENANT_ID ?? '9188040d-6c67-4c5b-b112-36a304b66dad';
   // consumers, common, organizations, or tenant id
   const authorityRealm = 'consumers';
   const authority = process.env.MSAL_AUTHORITY ?? `${cloudInstanceDomain}/${authorityRealm}`;
@@ -80,8 +79,6 @@ export const environment: IEnvironment = {
     postLogoutRedirectUri:
       process.env.MSAL_POST_LOGOUT_REDIRECT_URI ?? redirectUri,
     tenantId: tenantId,
-    clientCertificateThumbprint: process.env.MSAL_CERT_THUMBPRINT ?? '',
-    clientCertificate: readFileSync(process.env.MSAL_CERT_PATH ?? '', 'utf8'),
     graphMeEndpoint:
       (process.env.GRAPH_API_ENDPOINT ?? 'https://graph.microsoft.com/') +
       'v1.0/me',

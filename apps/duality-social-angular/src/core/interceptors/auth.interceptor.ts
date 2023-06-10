@@ -9,8 +9,6 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private authService: AuthenticationService) {}
   writeUser(token: string, user: any) {
     console.log('writeUser', token, user);
-    // call /login/msal
-
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<any> {

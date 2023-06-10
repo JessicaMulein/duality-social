@@ -1,6 +1,6 @@
 import { CreateImageRequestSizeEnum } from 'openai';
 import { Buffer } from 'buffer';
-import { stripHtml } from 'string-strip-html';
+import sanitizeHtml from 'sanitize-html';
 import { parseIconMarkup } from './font-awesome/font-awesome';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const MarkdownIt = require('markdown-it');
@@ -40,14 +40,11 @@ export function parsePostContent(content: string): string {
   // Phase 1: Strip HTML
   // we strip the html first because we don't really support HTML in posts,
   // but our syntax is too close to markdown so it gets parsed as HTML
-  content = stripHtml(content, {
-    stripTogetherWithTheirContents: [
-      'script', // default
-      'style', // default
-      'xml', // default
-      // "pre", // <-- custom-added
-    ],
-  }).result;
+
+  content = sanitizeHtml(content, {
+    allowedTags: [], // Strip all tags
+    allowedAttributes: {}, // Strip all attributes
+  });
 
   // Phase 2: Parse markdown
   content = MarkdownIt('default')

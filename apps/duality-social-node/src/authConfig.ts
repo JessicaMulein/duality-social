@@ -10,13 +10,6 @@ export const msalConfig: Configuration = {
     auth: {
         clientId: environment.msal.clientId, // 'Application (client) ID' of app registration in Azure portal - this value is a GUID
         authority: environment.msal.authority, // Full directory URL, in the form of https://login.microsoftonline.com/<tenant>
-        /**
-         * Client secret generated from the app registration in Azure portal
-         */
-        clientCertificate: {
-            thumbprint: environment.msal.clientCertificateThumbprint,
-            privateKey: environment.msal.clientCertificate,
-        }
     },
     system: {
         loggerOptions: {

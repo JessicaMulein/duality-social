@@ -28,8 +28,6 @@ export interface IEnvironment {
     };
     msal: {
       clientId: string;
-      clientCertificateThumbprint: string;
-      clientCertificate: string;
       cloudInstance: string;
       graphMeEndpoint: string;
       authority: string;
@@ -53,12 +51,6 @@ export function validateEnvironment(environment: IEnvironment, then: (environmen
   }
   if (!environment.msal.clientId) {
     throw new Error('CLIENT_ID is not set');
-  }
-  if (!environment.msal.clientCertificate) {
-    throw new Error('MSAL_CERT_PATH is not set');
-  }
-  if(!environment.msal.clientCertificateThumbprint) {
-    throw new Error('MSAL_CERT_THUMBPRINT is not set');
   }
   if (!environment.msal.tenantId) {
     throw new Error('TENANT_ID is not set');

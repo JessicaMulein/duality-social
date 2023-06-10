@@ -6,6 +6,7 @@ import {
   UpdateWriteOpResult as UpdateResult,
 } from 'mongoose';
 import { IHasID } from '../interfaces/hasId';
+import { ModelData } from './modelData';
 
 abstract class Base {
   protected static ModelRegistry: Map<string, Model<unknown>> = new Map<
@@ -53,18 +54,15 @@ export class BaseModel<
   public readonly Model: Model<T & Document>;
   public readonly Document?: T & Document;
   constructor(
-    name: string,
-    path: string,
-    schema: Schema,
+    modelData: ModelData,
     model: Model<T & Document>,
-    collection?: string,
     doc?: T&Document | T
   ) {
     super(model as Model<unknown>);
-    this.Name = name;
-    this.Path = path;
-    this.Schema = schema;
-    this.Collection = collection;
+    this.Name = modelData.name;
+    this.Path = modelData.path;
+    this.Schema = modelData.schema;
+    this.Collection = modelData.pluralName;
     this.Model = model;
     if (doc) {
       this.addDocument(doc as T & Document);

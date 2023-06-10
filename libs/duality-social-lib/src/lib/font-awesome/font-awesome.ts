@@ -2,67 +2,13 @@
 /// description: Font Awesome helper functions to look up icons and parse markup
 
 import {
-  IconName,
-  IconDefinition,
-  IconPrefix,
-  IconStyle
-} from '@fortawesome/fontawesome-common-types';
-import {
-  findIconDefinition,
-  library,
-} from '@fortawesome/fontawesome-svg-core';
-import { fab } from '@fortawesome/free-brands-svg-icons';
-import { fas } from '@fortawesome/pro-solid-svg-icons';
-import { far } from '@fortawesome/pro-regular-svg-icons';
-import { fal } from '@fortawesome/pro-light-svg-icons';
-import { fat } from '@fortawesome/pro-thin-svg-icons';
-import { fad } from '@fortawesome/pro-duotone-svg-icons';
-import { fass } from '@fortawesome/sharp-solid-svg-icons';
-import {
   getReactionTypeIcon,
   DefaultReactionsTypeEnum,
   ReactionTypeIcons,
 } from '../enumerations/defaultReactionsType';
 import { FontAwesomeTextStyleTypeEnum } from '../enumerations/fontAwesomeTextClass';
-import { FontAwesomeLibrary } from './fontAwesomeLibrary';
-// configure fontawesome
-export const fontAwesomeLibrary = new FontAwesomeLibrary();
-/**
- * Add all the font awesome icons to the global library
- */
-library.add(fab, fas, far, fal, fat, fad, fass);
-/**
- * Add all the font awesome icons to the searchable library
- */
-fontAwesomeLibrary.add(fab, fas, far, fal, fat, fad, fass);
-
-export interface IFontAwesomeParseItem {
-  colorClass: FontAwesomeTextStyleTypeEnum;
-  name: IconName;
-  definition: IconDefinition;
-}
-
-export interface IFontAwesomeParseResult {
-  outputText: string;
-  changed: boolean;
-  changes: IFontAwesomeParseItem[];
-}
 
 export const DefaultColorClass = FontAwesomeTextStyleTypeEnum.Regular;
-
-export function verifyFontAwesome(
-  iconPrefix: IconPrefix,
-  iconName: IconName
-): IconDefinition | false {
-  const iconDefinition: IconDefinition = findIconDefinition({
-    prefix: iconPrefix,
-    iconName: iconName,
-  });
-  if (!iconDefinition) {
-    return false;
-  }
-  return iconDefinition;
-}
 
 export function makeReaction(
   reactionType: DefaultReactionsTypeEnum,

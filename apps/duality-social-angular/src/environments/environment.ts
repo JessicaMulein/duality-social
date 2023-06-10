@@ -11,7 +11,7 @@ export const environment: IEnvironment = {
   serverLogLevel: NgxLoggerLevel.ERROR,
   msal: {
     authority: 'https://login.microsoftonline.com/consumers', // 'https://login.microsoftonline.com/83f34336-afeb-4706-b665-02995bbdffc8/',
-    clientId: '25989269-b717-4761-8498-f83e3bfc0754',
+    clientId: '4679d7e6-340a-4a09-9434-744c19664c02',
     cloudInstance: 'https://login.microsoftonline.com/',
     redirectUri: 'http://localhost:3000',
     postLogoutRedirectUri: 'http://localhost:3000/auth/signout',

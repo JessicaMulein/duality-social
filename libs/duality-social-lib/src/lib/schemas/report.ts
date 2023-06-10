@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
 import { ReportTypeEnum } from '../enumerations/reportType';
-import { BaseModelCaches } from '../models/schema';
+import { BaseModelCaches } from '../schema';
 
 export const ReportSchema = new Schema({
   /**

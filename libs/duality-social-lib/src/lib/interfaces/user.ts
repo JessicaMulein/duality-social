@@ -13,10 +13,9 @@ import { AdminLevelEnum } from '../enumerations/adminLevel';
 
 export const PasswordRounds = 10; 
 
-export interface IUser extends IHasID, IHasTimestamps, IHasTimestampOwners, IHasSoftDelete {
+export interface IUser extends Document, IHasID, IHasTimestamps, IHasTimestampOwners, IHasSoftDelete {
     _id?: ObjectId;
     username: string;
-  // graphql fields
     givenName: string;
     surname: string;
     userPrincipalName: string;

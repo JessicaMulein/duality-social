@@ -7,7 +7,7 @@ export const environment: IEnvironment = {
   serverLogLevel: NgxLoggerLevel.ERROR,
   msal: {
     authority: 'https://login.microsoftonline.com/consumers',
-    clientId: 'dc60f3f2-3089-47dd-8151-3e7e3b29c2e8',
+    clientId: '4679d7e6-340a-4a09-9434-744c19664c02',
     cloudInstance: 'https://login.microsoftonline.com/',
     redirectUri: 'https://duality.social',
     postLogoutRedirectUri: 'https://duality.social/auth/signout',

@@ -7,7 +7,7 @@ import { readFileSync } from "fs";
  * The other client id possibility is found under the Web App > Authentication under "App (client) ID"
  */
 const clientId =
-  process.env.CLIENT_ID ?? '25989269-b717-4761-8498-f83e3bfc0754';
+  process.env.CLIENT_ID ?? '4679d7e6-340a-4a09-9434-744c19664c02';
 /**
  * // https://learn.microsoft.com/en-us/azure/active-directory/develop/msal-client-application-configuration
  */
@@ -77,8 +77,6 @@ export const environment: IEnvironment = {
     postLogoutRedirectUri:
       process.env.MSAL_POST_LOGOUT_REDIRECT_URI ?? redirectUri,
     tenantId: tenantId,
-    clientCertificateThumbprint: process.env.MSAL_CERT_THUMBPRINT ?? '',
-    clientCertificate: readFileSync(process.env.MSAL_CERT_PATH ?? '', 'utf8'),
     graphMeEndpoint:
       (process.env.GRAPH_API_ENDPOINT ?? 'https://graph.microsoft.com/') +
       'v1.0/me',

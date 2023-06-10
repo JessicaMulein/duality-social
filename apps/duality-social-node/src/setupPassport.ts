@@ -17,10 +17,6 @@ export function setupPassport(app: express.Application) {
         passReqToCallback: false,
         loggingLevel: 'info' as const, // Add 'as const' to the loggingLevel property
         scope: environment.msal.scope.split(', '),
-        clientCertificate: {
-            thumbprint: environment.msal.clientCertificateThumbprint,
-            privateKey: environment.msal.clientCertificate,
-        }
     };
     console.log('config', config)
 
