@@ -1,6 +1,6 @@
 import { NgModule, LOCALE_ID } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -34,7 +34,6 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { SelectCheckAllComponent } from './select-check-all/select-check-all.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { MAT_DATE_FORMATS } from '@angular/material/core';
 
 export const MY_FORMATS = {
   parse: {
@@ -52,7 +51,6 @@ export const MY_FORMATS = {
   imports: [
     CommonModule,
     MatFormFieldModule, MatRadioModule, MatSliderModule, MatGridListModule,
-    MatMomentDateModule,
     MatSidenavModule, MatIconModule, MatToolbarModule, MatButtonModule,
     MatListModule, MatCardModule, MatProgressBarModule, MatInputModule,
     MatSnackBarModule, MatProgressSpinnerModule, MatDatepickerModule,

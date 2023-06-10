@@ -1,16 +1,17 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import * as moment from 'moment';
+import { DatePipe } from '@angular/common';
 
 @Pipe({
   name: 'localDate'
 })
 export class LocalDatePipe implements PipeTransform {
 
+  constructor(private datePipe: DatePipe) {}
+
   transform(value: Date, args: string): string {
     if (!value || !args) {
       return '';
     }
-    return moment.utc(value).local().format(args);
+    return this.datePipe.transform(value, args) ?? '';
   }
-
 }
