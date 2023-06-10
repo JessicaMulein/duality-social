@@ -28,6 +28,7 @@ export interface IEnvironment {
     };
     msal: {
       clientId: string;
+      clientSecret?: string;
       cloudInstance: string;
       graphMeEndpoint: string;
       authority: string;

@@ -3,7 +3,6 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "fontawesome:setup": "scripts/setup-fa-npm.sh",
     "newSecret": "node -e \"console.log (require('crypto').randomBytes(32).toString ('hex'));\"",
     "install:all": "yarn && cd libs/duality-social-lib && yarn && cd ../../apps/duality-social-angular && yarn && cd ../../apps/duality-social-node && yarn && cd ../..",
     "upgrade:all": "yarn upgrade && cd libs/duality-social-lib && yarn upgrade && cd ../../apps/duality-social-angular && yarn upgrade && cd ../duality-social-node && yarn upgrade && cd ../..",

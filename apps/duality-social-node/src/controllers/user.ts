@@ -56,7 +56,7 @@ userRouter.post('/register/local', async (req, res) => {
     await newUser.save();
 
     const newUserMeta = new UserMetaModel({
-      _id: newUser._id,
+      userId: newUser._id,
     });
     await newUserMeta.save();
 
@@ -89,7 +89,7 @@ userRouter.post('/register/msal', passport.authenticate('oauth-bearer', { sessio
     await newUser.save();
 
     const newUserMeta = new UserMetaModel({
-      _id: newUser._id,
+      userId: newUser._id,
     });
     await newUserMeta.save();
 

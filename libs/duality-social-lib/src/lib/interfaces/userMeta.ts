@@ -6,6 +6,7 @@ import { IHasID } from "./hasId";
 
 export interface IUserMeta extends Document, IHasID, IHasTimestamps, IHasTimestampOwners, IHasSoftDelete {
     _id: Schema.Types.ObjectId;
+    userId: Schema.Types.ObjectId;
     /**
      * How many posts the user has made.
      */

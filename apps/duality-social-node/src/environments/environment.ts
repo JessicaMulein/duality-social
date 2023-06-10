@@ -72,6 +72,7 @@ export const environment: IEnvironment = {
   msal: {
     clientId: clientId,
     cloudInstance: cloudInstance,
+    clientSecret: process.env.MSAL_CLIENT_SECRET ?? '',
     authority: authority,
     redirectUri: process.env.MSAL_REDIRECT_URI ?? redirectUri,
     postLogoutRedirectUri:

@@ -3,7 +3,7 @@ import session, { SessionOptions } from 'express-session';
 import mongoDbSession from 'connect-mongodb-session';
 import { environment } from './environments/environment';
 
-export function setupSession(app: express.Application): SessionOptions | null {
+export async function setupSession(app: express.Application): Promise<SessionOptions | null> {
     if (environment.cookies.enabled && environment.mongo.mongoSessions) {
         console.debug('Using MongoDB sessions');
         const MongoDBStore = mongoDbSession(session);
@@ -12,7 +12,7 @@ export function setupSession(app: express.Application): SessionOptions | null {
             databaseName: environment.mongo.sessionDatabase,
             collection: environment.mongo.sessionCollection,
         });
-
+        
         // Catch errors
         store.on('error', function (error: any) {
             console.error(error);
