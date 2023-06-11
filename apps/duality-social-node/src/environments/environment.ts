@@ -79,7 +79,7 @@ export const environment: IEnvironment = {
     cloudInstance: cloudInstance,
     clientSecret: process.env.MSAL_CLIENT_SECRET ?? '',
     authority: authority,
-    redirectUri: process.env.MSAL_REDIRECT_URI ?? redirectUri,
+    redirectUri: process.env.MSAL_REDIRECT_URI ?? 'https://duality-social.agreeableforest-3aab7fce.westus.azurecontainerapps.io/.auth/login/aad/callback',
     postLogoutRedirectUri:
       process.env.MSAL_POST_LOGOUT_REDIRECT_URI ?? redirectUri,
     tenantId: tenantId,
