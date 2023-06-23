@@ -4,6 +4,7 @@ import {
 } from '@duality-social/duality-social-lib';
 import { Request, Response } from 'express';
 import { Schema } from 'mongoose';
+import { parsePostContent } from '../services/post';
 
 const maxPostLength = 1000;
 
@@ -86,4 +87,10 @@ export async function newPost(req: Request, res: Response) {
         throw new Error('Post input viewpoint id not updated');
     }
     res.status(200).send(post);
+}
+
+export function previewPost(req: Request, res: Response) {
+    const content = req.body.content;
+    const parsedInput = parsePostContent(content);
+    res.status(200).send(parsedInput);
 }

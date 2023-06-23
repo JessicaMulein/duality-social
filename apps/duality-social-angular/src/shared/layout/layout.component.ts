@@ -1,32 +1,9 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectorRef,
-  OnDestroy,
-  AfterViewInit,
-  Inject,
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy, AfterViewInit, Inject } from '@angular/core';
 import { MediaMatcher } from '@angular/cdk/layout';
-import { filter, Subject, takeUntil, timer } from 'rxjs';
+import { Subject, timer } from 'rxjs';
 import { Subscription } from 'rxjs';
-// import { AuthGuard } from '../../core/guards/auth.guard';
-import {
-  MsalBroadcastService,
-  MsalGuard,
-  MsalGuardConfiguration,
-  MsalService,
-  MSAL_GUARD_CONFIG,
-} from '@azure/msal-angular';
-import {
-  AccountInfo,
-  AuthenticationResult,
-  EventMessage,
-  EventType,
-  InteractionStatus,
-  PopupRequest,
-  RedirectRequest,
-} from '@azure/msal-browser';
-import { Router, RouterState, RouterStateSnapshot } from '@angular/router';
+import { OAuthService, OAuthEvent, OAuthErrorEvent, OAuthSuccessEvent } from 'angular-oauth2-oidc';
+import { Router } from '@angular/router';
 import { SpinnerService } from '../../core/services/spinner.service';
 
 @Component({
@@ -47,55 +24,23 @@ export class LayoutComponent implements OnInit, OnDestroy, AfterViewInit {
   private autoLogoutSubscription: Subscription = new Subscription();
 
   constructor(
-    @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
     public changeDetectorRef: ChangeDetectorRef,
     public media: MediaMatcher,
     public spinnerService: SpinnerService,
-    public authService: MsalService,
-    public msalBroadcastService: MsalBroadcastService,
-    public authGuard: MsalGuard,
+    public oauthService: OAuthService,
     public router: Router
   ) {
     this.mobileQuery = this.media.matchMedia('(max-width: 1000px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-    // tslint:disable-next-line: deprecation
-    this.mobileQuery.addListener(this._mobileQueryListener);
+    this.mobileQuery.addEventListener('change', this._mobileQueryListener);
   }
 
-  loginRedirect() {
-    if (this.msalGuardConfig.authRequest) {
-      this.authService.loginRedirect({
-        ...this.msalGuardConfig.authRequest,
-      } as RedirectRequest);
-    } else {
-      this.authService.loginRedirect();
-    }
+  login() {
+    this.oauthService.initCodeFlow();
   }
 
-  loginPopup() {
-    if (this.msalGuardConfig.authRequest) {
-      this.authService
-        .loginPopup({ ...this.msalGuardConfig.authRequest } as PopupRequest)
-        .subscribe((response: AuthenticationResult) => {
-          this.authService.instance.setActiveAccount(response.account);
-        });
-    } else {
-      this.authService
-        .loginPopup()
-        .subscribe((response: AuthenticationResult) => {
-          this.authService.instance.setActiveAccount(response.account);
-        });
-    }
-  }
-
-  logout(popup?: boolean) {
-    if (popup) {
-      this.authService.logoutPopup({
-        mainWindowRedirectUri: '/',
-      });
-    } else {
-      this.authService.logoutRedirect();
-    }
+  logout() {
+    this.oauthService.logOut();
   }
 
   public showNewPost() {
@@ -111,87 +56,41 @@ export class LayoutComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnInit(): void {
     this.isAdmin = false;
-    const user: AccountInfo = this.authService.instance.getAllAccounts()[0];
-    if (user === undefined) {
-      this.userLoggedInDisplay = false;
-      this.username = '';
+
+    if (this.oauthService.hasValidAccessToken()) {
+      this.username = this.oauthService.getIdentityClaims()['name'] ?? 'Unknown User';
     } else {
-      this.username =
-        user.name ??
-        user.username ??
-        user.localAccountId ??
-        user.homeAccountId ??
-        'Unknown User';
+      this.username = '';
+      this.userLoggedInDisplay = false;
     }
 
-    // Auto log-out subscription
-    const timer$ = timer(2000, 5000);
-    this.autoLogoutSubscription = timer$.subscribe(() => {
-      const stateObj: RouterState = this.router.routerState;
-      const snapshot: RouterStateSnapshot = stateObj.snapshot;
-      this.authGuard.canActivate(snapshot.root, snapshot);
+    this.oauthService.events.subscribe((event: OAuthEvent) => {
+      switch (event.type) {
+        case 'token_received':
+          this.userLoggedInDisplay = true;
+          this.username = this.oauthService.getIdentityClaims()['name'] ?? 'Unknown User';
+          break;
+        case 'token_expires':
+        case 'token_error':
+          this.username = '';
+          this.userLoggedInDisplay = false;
+          break;
+      }
     });
+    
     this.setLoginDisplay();
-
-    this.authService.instance.enableAccountStorageEvents(); // Optional - This will enable ACCOUNT_ADDED and ACCOUNT_REMOVED events emitted when a user logs in or out of another tab or window
-
-    const addedOrRemoved: (msg: EventMessage) => boolean = (
-      msg: EventMessage
-    ) =>
-      msg.eventType === EventType.ACCOUNT_ADDED ||
-      msg.eventType === EventType.ACCOUNT_REMOVED;
-    this.msalBroadcastService.msalSubject$
-      .pipe(filter(addedOrRemoved))
-      .subscribe((result) => {
-        if (this.authService.instance.getAllAccounts().length === 0) {
-          window.location.pathname = '/';
-        } else {
-          this.setLoginDisplay();
-        }
-      });
-
-    this.msalBroadcastService.inProgress$
-      .pipe(
-        filter(
-          (status: InteractionStatus) => status === InteractionStatus.None
-        ),
-        takeUntil(this._destroying$)
-      )
-      .subscribe(() => {
-        this.setLoginDisplay();
-        this.checkAndSetActiveAccount();
-      });
-  }
-
-  checkAndSetActiveAccount() {
-    /**
-     * If no active account set but there are accounts signed in, sets first account to active account
-     * To use active account set here, subscribe to inProgress$ first in your component
-     * Note: Basic usage demonstrated. Your app may require more complicated account selection logic
-     */
-    const activeAccount = this.authService.instance.getActiveAccount();
-
-    if (
-      !activeAccount &&
-      this.authService.instance.getAllAccounts().length > 0
-    ) {
-      const accounts = this.authService.instance.getAllAccounts();
-      this.authService.instance.setActiveAccount(accounts[0]);
-    }
   }
 
   setLoginDisplay() {
-    this.userLoggedInDisplay =
-      this.authService.instance.getAllAccounts().length > 0;
+    this.userLoggedInDisplay = this.oauthService.hasValidAccessToken();
   }
 
   ngOnDestroy(): void {
-    // tslint:disable-next-line: deprecation
-    this.mobileQuery.removeListener(this._mobileQueryListener);
+    this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
     this.autoLogoutSubscription.unsubscribe();
-    this._destroying$.next(undefined);
+    this._destroying$.next();
     this._destroying$.complete();
-  }
+  }  
 
   ngAfterViewInit(): void {
     this.changeDetectorRef.detectChanges();

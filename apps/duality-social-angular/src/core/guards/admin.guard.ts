@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate } from '@angular/router';
 import { AuthenticationService } from '../services/auth.service';
+import { IAdminUser } from '@duality-social/duality-social-lib'
 
 @Injectable()
 export class AdminGuard implements CanActivate {
@@ -10,7 +11,7 @@ export class AdminGuard implements CanActivate {
   ) {}
 
   canActivate() {
-    const user = this.authService.getCurrentUser();
+    const user = this.authService.getCurrentUser() as IAdminUser;
 
     if (user && user.isAdmin) {
       return true;

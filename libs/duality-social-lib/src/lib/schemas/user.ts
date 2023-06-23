@@ -31,7 +31,7 @@ export const UserSchema = new Schema<IUser>(
      * The user's email address, used for login if accountType is email/password.
      * Used for sending notifications, regardless.
      */
-    accountEmail: { type: String, unique: true, index: true, optional: true },
+    email: { type: String, unique: true, index: true, optional: true },
     /**
      * Whether the user has verified their email address.
      * See also a record in the email verification collection.

@@ -9,6 +9,7 @@ export const apiRouter = Router();
 // -----
 // all routes prefixed with /api/openai
 apiRouter.use('/openai', openAiRouter);
+// all routes prefixed with /api/feed
 apiRouter.use('/feed', feedRouter);
 
 // Commands

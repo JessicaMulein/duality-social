@@ -26,16 +26,13 @@ export interface IEnvironment {
       enabled: boolean;
       secret: string;
     };
-    msal: {
+    keycloak: {
+      realm: string;
+      issuer: string;
       clientId: string;
-      clientSecret?: string;
-      cloudInstance: string;
-      graphMeEndpoint: string;
-      authority: string;
-      postLogoutRedirectUri: string;
-      tenantId: string;
+      clientSecret: string;
       redirectUri: string;
-      scope: string;
+      registrationToken: string;
     };
     pusher: {
       appId: number;
@@ -50,20 +47,11 @@ export function validateEnvironment(environment: IEnvironment, then: (environmen
   if (!environment.openai.accessToken) {
     throw new Error('OPENAI_API_KEY is not set');
   }
-  if (!environment.msal.clientId) {
+  if (!environment.fusionAuth.clientId) {
     throw new Error('CLIENT_ID is not set');
   }
-  if (!environment.msal.tenantId) {
-    throw new Error('TENANT_ID is not set');
-  }
-  if (!environment.msal.redirectUri) {
-    throw new Error('MSAL_REDIRECT_URI is not set');
-  }
-  if (!environment.msal.postLogoutRedirectUri) {
-    throw new Error('MSAL_POST_LOGOUT_REDIRECT_URI is not set');
-  }
-  if (!environment.msal.graphMeEndpoint) {
-    throw new Error('GRAPH_API_ENDPOINT is not set');
+  if (!environment.fusionAuth.redirectUri) {
+    throw new Error('FUSIONAUTH_REDIRECT_URI is not set');
   }
   if (!environment.cookies.secret) {
     throw new Error('EXPRESS_SESSION_SECRET is not set');

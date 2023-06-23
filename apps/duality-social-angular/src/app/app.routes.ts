@@ -1,29 +1,8 @@
-import { NgModule, inject } from '@angular/core';
-import { Routes, RouterModule, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { MsalGuard } from '@azure/msal-angular';
-import { BrowserUtils } from '@azure/msal-browser';
-import { ProfileComponent } from '../profile/profile.component';
-//import { CanActivateGuard } from '../core/guards/can-activate.guard';
-// import { ProfileComponent } from '../profile/profile.component';
-// import { HomeComponent } from '../home/home.component';
-// import { FailedComponent } from '../failed/failed.component';
-// import { AuthGuard } from '../core/guards/auth.guard';
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
+import { OAuthGuard } from '../core/guards/auth.guard';
 
-// export const routes: Routes = [
-//   {
-//     path: 'profile',
-//     component: ProfileComponent,
-//     canActivate: [MsalGuard]
-//   },
-//   {
-//     path: '',
-//     component: HomeComponent
-//   },
-//   {
-//     path: 'login-failed',
-//     component: FailedComponent
-//   }
-// ];
+import { ProfileComponent } from '../profile/profile.component';
 
 const appRoutes: Routes = [
   {
@@ -33,8 +12,7 @@ const appRoutes: Routes = [
   {
     path: 'profile',
     component: ProfileComponent,
-    canActivate: [MsalGuard]
-    //canActivate: [() => (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => inject(CanActivateGuard).canActivateFn(route, state)]
+    canActivate: [OAuthGuard]
   },
   {
     path: 'auth',
@@ -43,37 +21,37 @@ const appRoutes: Routes = [
   {
     path: 'feed',
     loadChildren: () => import('../features/feed/feed.module').then(m => m.FeedModule),
-    canActivate: [MsalGuard]
+    canActivate: [OAuthGuard]
   },
   {
     path: 'customers',
     loadChildren: () => import('../features/customers/customers.module').then(m => m.CustomersModule),
-    canActivate: [MsalGuard]
+    canActivate: [OAuthGuard]
   },
   {
     path: 'users',
     loadChildren: () => import('../features/users/users.module').then(m => m.UsersModule),
-    canActivate: [MsalGuard]
+    canActivate: [OAuthGuard]
   },
   {
     path: 'account',
     loadChildren: () => import('../features/account/account.module').then(m => m.AccountModule),
-    canActivate: [MsalGuard]
+    canActivate: [OAuthGuard]
   },
   {
     path: 'icons',
     loadChildren: () => import('../features/icons/icons.module').then(m => m.IconsModule),
-    canActivate: [MsalGuard]
+    canActivate: [OAuthGuard]
   },
   {
     path: 'playground',
     loadChildren: () => import('../features/typography/typography.module').then(m => m.TypographyModule),
-    canActivate: [MsalGuard]
+    canActivate: [OAuthGuard]
   },
   {
     path: 'about',
     loadChildren: () => import('../features/about/about.module').then(m => m.AboutModule),
-    canActivate: [MsalGuard]
+    canActivate: [OAuthGuard]
   },
   {
     path: '**',
@@ -83,10 +61,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(appRoutes, {
-    // Don't perform initial navigation in iframes or popups
-    initialNavigation: !BrowserUtils.isInIframe() && !BrowserUtils.isInPopup() ? 'enabledNonBlocking' : 'disabled' // Set to enabledBlocking to use Angular Universal
-  })],
+  imports: [RouterModule.forRoot(appRoutes)],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

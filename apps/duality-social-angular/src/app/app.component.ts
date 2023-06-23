@@ -1,7 +1,6 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
-import { MsalService, MsalBroadcastService, MSAL_GUARD_CONFIG, MsalGuardConfiguration } from '@azure/msal-angular';
-import { AuthenticationResult, InteractionStatus, PopupRequest, RedirectRequest, EventMessage, EventType } from '@azure/msal-browser';
-import { Subject, filter, takeUntil } from 'rxjs';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { KeycloakService } from 'keycloak-angular';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -10,95 +9,37 @@ import { Subject, filter, takeUntil } from 'rxjs';
 })
 export class AppComponent implements OnInit, OnDestroy {
   public readonly title = 'Duality Social';
-  public isIframe = false;
   public isAuthenticated = false;
   public userLoggedIn = false;
+  public isIframe = false; 
   private readonly _destroying$ = new Subject<void>();
 
-  constructor(
-    @Inject(MSAL_GUARD_CONFIG) private msalGuardConfig: MsalGuardConfiguration,
-    public authService: MsalService,
-    public msalBroadcastService: MsalBroadcastService
-  ) {}
+  constructor(private keycloakService: KeycloakService) {}
+
+  private runningInIframe(): boolean {
+    try {
+      return window.self !== window.top;
+    } catch (e) {
+      return true;
+    }
+  }
 
   ngOnInit(): void {
-    this.isIframe = window !== window.parent && !window.opener; // Remove this line to use Angular Universal
+    this.isIframe = this.runningInIframe();
     this.updateUserLoggedIn();
-
-    this.authService.instance.enableAccountStorageEvents(); // Optional - This will enable ACCOUNT_ADDED and ACCOUNT_REMOVED events emitted when a user logs in or out of another tab or window
-
-    const addedOrRemoved: (msg: EventMessage) => boolean = (msg: EventMessage) => msg.eventType === EventType.ACCOUNT_ADDED || msg.eventType === EventType.ACCOUNT_REMOVED
-    this.msalBroadcastService.msalSubject$
-      .pipe(
-        filter(addedOrRemoved),
-      )
-      .subscribe((result) => {
-        if (this.authService.instance.getAllAccounts().length === 0) {
-          window.location.pathname = "/";
-        } else {
-          this.updateUserLoggedIn();
-        }
-      });
-
-    this.msalBroadcastService.inProgress$
-      .pipe(
-        filter((status: InteractionStatus) => status === InteractionStatus.None),
-        takeUntil(this._destroying$)
-      )
-      .subscribe(() => {
-        this.updateUserLoggedIn();
-        this.checkAndSetActiveAccount();
-      })
   }
 
-  updateUserLoggedIn() {
-    this.userLoggedIn = this.authService.instance.getAllAccounts().length > 0;
+  async updateUserLoggedIn() {
+    console.log('updateUserLoggedIn');
+    this.userLoggedIn = await this.keycloakService.isLoggedIn();
   }
 
-  checkAndSetActiveAccount(){
-    /**
-     * If no active account set but there are accounts signed in, sets first account to active account
-     * To use active account set here, subscribe to inProgress$ first in your component
-     * Note: Basic usage demonstrated. Your app may require more complicated account selection logic
-     */
-    const activeAccount = this.authService.instance.getActiveAccount();
-
-    if (!activeAccount && this.authService.instance.getAllAccounts().length > 0) {
-      const accounts = this.authService.instance.getAllAccounts();
-      this.authService.instance.setActiveAccount(accounts[0]);
-    }
+  async login() {
+    await this.keycloakService.login();
   }
 
-  loginRedirect() {
-    if (this.msalGuardConfig.authRequest){
-      this.authService.loginRedirect({...this.msalGuardConfig.authRequest} as RedirectRequest);
-    } else {
-      this.authService.loginRedirect();
-    }
-  }
-
-  loginPopup() {
-    if (this.msalGuardConfig.authRequest){
-      this.authService.loginPopup({...this.msalGuardConfig.authRequest} as PopupRequest)
-        .subscribe((response: AuthenticationResult) => {
-          this.authService.instance.setActiveAccount(response.account);
-        });
-      } else {
-        this.authService.loginPopup()
-          .subscribe((response: AuthenticationResult) => {
-            this.authService.instance.setActiveAccount(response.account);
-      });
-    }
-  }
-
-  logout(popup?: boolean) {
-    if (popup) {
-      this.authService.logoutPopup({
-        mainWindowRedirectUri: "/"
-      });
-    } else {
-      this.authService.logoutRedirect();
-    }
+  async logout() {
+    await this.keycloakService.logout();
   }
 
   ngOnDestroy(): void {

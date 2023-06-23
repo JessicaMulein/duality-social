@@ -5,7 +5,7 @@ import {
   getReactionTypeIcon,
   DefaultReactionsTypeEnum,
   ReactionTypeIcons,
-} from '../enumerations/defaultReactionsType';
+} from '@duality-social/duality-social-lib';
 import { FontAwesomeTextStyleTypeEnum } from '../enumerations/fontAwesomeTextClass';
 
 export const DefaultColorClass = FontAwesomeTextStyleTypeEnum.Regular;

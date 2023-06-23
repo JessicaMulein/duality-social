@@ -101,7 +101,7 @@ describe('/ (Home Page)', () => {
         }
         await screenshot.takeScreenshot(page, "Profile page loaded");
 
-        // Verify displays profile page without activating MsalGuard
+        // Verify displays profile page without activating OAuthGuard
         await page.waitForXPath("//strong[contains(., 'First Name: ')]");
     });
 
@@ -151,7 +151,7 @@ describe('/ (Home Page)', () => {
         }
         await screenshot.takeScreenshot(page, "Profile page loaded");
 
-        // Verify displays profile page without activating MsalGuard
+        // Verify displays profile page without activating OAuthGuard
         await page.waitForXPath("//strong[contains(., 'First Name: ')]");
     });
   }

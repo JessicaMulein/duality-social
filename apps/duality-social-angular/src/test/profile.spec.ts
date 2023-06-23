@@ -64,7 +64,7 @@ describe('/ (Profile Page)', () => {
         const screenshot = new Screenshot(`${SCREENSHOT_BASE_FOLDER_NAME}/${testName}`);
         await screenshot.takeScreenshot(page, "Page loaded");
 
-        // Initiate Login via MsalGuard by clicking Profile
+        // Initiate Login via OAuthGuard by clicking Profile
         const profileButton = await page.waitForSelector("xpath=//span[contains(., 'Profile')]");
         if (profileButton) {
             await profileButton.click();
@@ -79,12 +79,12 @@ describe('/ (Profile Page)', () => {
         // Verify tokens are in cache
         await verifyTokenStore(BrowserCache, ["User.Read"]);
 
-        // Verify displays profile page without activating MsalGuard
+        // Verify displays profile page without activating OAuthGuard
         await page.waitForXPath("//strong[contains(., 'First Name: ')]");
     });
 
     it("Profile page - children are rendered after initial navigation to profile before login ", async () => {
-        // Initiate login via MsalGuard by navigating directly to profile route
+        // Initiate login via OAuthGuard by navigating directly to profile route
         await page.goto(`http://localhost:${port}/profile`);
 
         const testName = "profileNavigationRedirectCase";
@@ -100,7 +100,7 @@ describe('/ (Profile Page)', () => {
         // Verify tokens are in cache
         await verifyTokenStore(BrowserCache, ["User.Read"]);
 
-        // Verify displays profile page without activating MsalGuard
+        // Verify displays profile page without activating OAuthGuard
         await page.waitForXPath("//strong[contains(., 'First Name: ')]");
     });
   }

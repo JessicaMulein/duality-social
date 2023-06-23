@@ -1,0 +1,62 @@
+version: '3'
+services:
+  app:
+    image: mcr.microsoft.com/devcontainers/typescript-node:0-18-bullseye
+    volumes:
+      - ..:/workspace:cached
+    command: /bin/sh -c "while sleep 1000; do :; done"
+    environment:
+      - NODE_ENV=development
+      - MONGO_URI=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongo:27017/${MONGO_INITDB_DATABASE}
+      - KEYCLOAK_CLIENT_SECRET=${KEYCLOAK_CLIENT_SECRET}
+      - KEYCLOAK_REGISTRATION_TOKEN=${KEYCLOAK_REGISTRATION_TOKEN}
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongo
+      - keycloak
+
+  mongo:
+    image: mongodb/mongodb-community-server:6.0.7-ubuntu2204
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb_data_container:/data/db
+
+  postgres:
+    image: postgres:13.2
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:${KEYCLOAK_VERSION}
+    depends_on:
+      - postgres
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KEYCLOAK_LOGLEVEL: INFO
+      ROOT_LOGLEVEL: INFO
+      DB_VENDOR: postgres
+      DB_ADDR: postgres
+      DB_DATABASE: ${DATABASE_NAME}
+      DB_USER: ${DATABASE_USERNAME}
+      DB_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - "8080:8080"
+      - "8787:8787"
+    command:
+      - start-dev
+      - --features admin-fine-grained-authz
+    restart: unless-stopped
+
+volumes:
+  mongodb_data_container:

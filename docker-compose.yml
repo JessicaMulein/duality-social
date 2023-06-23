@@ -1,0 +1,76 @@
+version: '3'
+
+services:
+  app:
+    build:
+      context: ../
+      dockerfile: Dockerfile.app
+    depends_on:
+      - postgres
+      - keycloak
+    environment:
+      - PUSHER_APP_ID=${PUSHER_APP_ID}
+      - PUSHER_KEY=${PUSHER_KEY}
+      - PUSHER_SECRET=${PUSHER_SECRET}
+      - SITE_URL=${SITE_URL}
+    ports:
+      - 3000:3000
+    networks:
+      - duality_net
+      - mongo_net
+      - keycloak_net
+    restart: unless-stopped
+
+  mongo:
+    image: mongodb/mongodb-community-server:6.0.7-ubuntu2204
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+    ports:
+      27017:27017
+    volumes:
+      - mongodb_data_container:/data/db
+    networks:
+      - mongo_net
+
+  postgres:
+    image: postgres:13.2
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - postgres_net
+
+  keycloak:
+    depends_on:
+      - postgres
+    container_name: local_keycloak
+    environment:
+      DB_VENDOR: postgres
+      DB_ADDR: postgres
+      DB_DATABASE: ${DATABASE_NAME}
+      DB_USER: ${DATABASE_USERNAME}
+      DB_PASSWORD: ${DATABASE_PASSWORD}
+    image: keycloak/keycloak:${KEYCLOAK_VERSION}
+    ports:
+      - "28080:8080"
+    restart: unless-stopped
+    networks:
+      - keycloak_net
+      - postgres_net
+
+networks:
+  keycloak_net:
+    driver: bridge
+  duality_net:
+    driver: bridge
+  mongo_net:
+    driver: bridge
+  postgres_net:
+    driver: bridge
+
+volumes:
+  mongodb_data_container:

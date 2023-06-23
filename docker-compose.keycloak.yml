@@ -1,0 +1,43 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:13.2
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    networks:
+      - postgres_net
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:${KEYCLOAK_VERSION}
+    depends_on:
+      - postgres
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KEYCLOAK_LOGLEVEL: INFO
+      ROOT_LOGLEVEL: INFO
+      DB_VENDOR: postgres
+      DB_ADDR: postgres
+      DB_DATABASE: ${DATABASE_NAME}
+      DB_USER: ${DATABASE_USERNAME}
+      DB_PASSWORD: ${DATABASE_PASSWORD}
+    ports:
+      - "8080:8080"
+      - "8787:8787"
+    command:
+      - start-dev
+      - --features admin-fine-grained-authz
+    restart: unless-stopped
+    networks:
+      - keycloak_net
+      - postgres_net
+
+networks:
+  keycloak_net:
+    driver: bridge
+  postgres_net:
+    driver: bridge

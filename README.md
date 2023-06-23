@@ -8,9 +8,9 @@
 
 Run `yarn serve:dev` for a dev server. Navigate to http://localhost:3000/. The app will automatically reload if you change any of the source files.
 
- ```CLIENT_ID=dc60f3f2-3089-47dd-8151-3e7e3b29c2e8 TENANT_ID=87e87c07-f72e-4811-9730-85294c4c92e4 MSAL_CLIENT_SECRET=XXXX OPENAI_API_KEY=YYYY OPENAI_ORGANIZATION=ZZZZ EXPRESS_SESSION_SECRET=AAAA yarn serve
+ ```CLIENT_ID=XXXX OPENAI_API_KEY=YYYY OPENAI_ORGANIZATION=ZZZZ EXPRESS_SESSION_SECRET=AAAA yarn serve
 
-XXXX: MSAL Client Secret- located in Azure Active Directory App Registration
+XXXX: FusionAuth Client Secret- located/created at http://localhost:9011
 YYYY: OpenAI API Key - located in OpenAI account
 ZZZZ: OpenAI Organization - located in OpenAI account
 AAAA: Express Session Secret - any string, yarn newSecret to generate a new one

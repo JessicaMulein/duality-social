@@ -6,11 +6,12 @@ import { NGXLogger } from 'ngx-logger';
 
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { SpinnerInterceptor } from './interceptors/spinner.interceptor';
-//import { AuthGuard } from './guards/auth.guard';
-import { MsalGuard } from '@azure/msal-angular';
 import { throwIfAlreadyLoaded } from './guards/module-import.guard';
 import { GlobalErrorHandler } from './services/global-error.handler';
 import { AdminGuard } from './guards/admin.guard';
+import { OAuthGuard } from './guards/auth.guard';
+// import your AuthService here
+import { AuthenticationService } from './services/auth.service';
 
 @NgModule({
   imports: [
@@ -20,8 +21,8 @@ import { AdminGuard } from './guards/admin.guard';
   declarations: [
   ],
   providers: [
-    MsalGuard,
     AdminGuard,
+    OAuthGuard,
     MediaMatcher,
     {
       provide: HTTP_INTERCEPTORS,
@@ -38,7 +39,9 @@ import { AdminGuard } from './guards/admin.guard';
       useClass: GlobalErrorHandler
     },
     { provide: NGXLogger, useClass: NGXLogger },
-    { provide: 'LOCALSTORAGE', useValue: window.localStorage }
+    { provide: 'LOCALSTORAGE', useValue: window.localStorage },
+    // provide your AuthService here
+    AuthenticationService
   ],
   exports: [
   ]

@@ -4,15 +4,17 @@ export interface IEnvironment {
   production: boolean;
   logLevel: NgxLoggerLevel;
   serverLogLevel: NgxLoggerLevel;
-  msal: {
-    authority: string;
+  keycloak: {
+    realm: string;
+    issuer: string;
     clientId: string;
-    cloudInstance: string;
     redirectUri: string;
-    postLogoutRedirectUri: string;
   };
   domainName: string;
   apiUrl: string;
+  mongo: {
+    uri: string;
+  };
   pusher: {
     appId: number;
     key: string;

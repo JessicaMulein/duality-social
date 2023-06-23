@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 /* eslint-disable @typescript-eslint/no-namespace */
 import { ObjectId } from 'mongoose';
+import { KeycloakProfile } from 'keycloak-js';
 import { AccountLoginTypeEnum } from '../enumerations/accountLoginType';
 import { AccountStatusTypeEnum } from '../enumerations/accountStatusType';
 import { LockTypeEnum } from '../enumerations/lockType';
@@ -13,7 +14,7 @@ import { AdminLevelEnum } from '../enumerations/adminLevel';
 
 export const PasswordRounds = 10; 
 
-export interface IUser extends Document, IHasID, IHasTimestamps, IHasTimestampOwners, IHasSoftDelete {
+export interface IUser extends KeycloakProfile, Document, IHasID, IHasTimestamps, IHasTimestampOwners, IHasSoftDelete {
     _id?: ObjectId;
     username: string;
     givenName: string;
@@ -51,7 +52,7 @@ export interface IUser extends Document, IHasID, IHasTimestamps, IHasTimestampOw
    * The user's email address, used for login if accountType is email/password.
    * Used for sending notifications, regardless.
    */
-    accountEmail?: string;
+    email?: string;
   /**
    * Whether the user has verified their email address.
    * See also a record in the email verification collection.
