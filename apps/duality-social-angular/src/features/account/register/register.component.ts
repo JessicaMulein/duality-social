@@ -2,7 +2,6 @@ import { UntypedFormGroup, UntypedFormControl, Validators } from '@angular/forms
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { AuthenticationService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
@@ -22,7 +21,6 @@ export class RegisterComponent implements OnInit {
 
   constructor(private activeRoute: ActivatedRoute,
     private router: Router,
-    private authService: AuthenticationService,
     private notificationService: NotificationService,
     private titleService: Title) {
 

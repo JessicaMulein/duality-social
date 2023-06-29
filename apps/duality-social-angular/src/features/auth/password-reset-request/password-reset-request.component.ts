@@ -8,7 +8,6 @@ import {
 import { Title } from '@angular/platform-browser';
 
 import { NotificationService } from '../../../core/services/notification.service';
-import { AuthenticationService } from '../../../core/services/auth.service';
 
 @Component({
   selector: 'app-password-reset-request',
@@ -21,7 +20,6 @@ export class PasswordResetRequestComponent implements OnInit {
   loading!: boolean;
 
   constructor(
-    private authService: AuthenticationService,
     private notificationService: NotificationService,
     private titleService: Title,
     private router: Router
@@ -44,18 +42,18 @@ export class PasswordResetRequestComponent implements OnInit {
 
   resetPassword() {
     this.loading = true;
-    this.authService.passwordResetRequest(this.email).subscribe(
-      (results) => {
-        this.router.navigate(['/auth/login']);
-        this.notificationService.openSnackBar(
-          'Password verification mail has been sent to your email address.'
-        );
-      },
-      (error) => {
-        this.loading = false;
-        this.notificationService.openSnackBar(error.error);
-      }
-    );
+    // this.authService.passwordResetRequest(this.email).subscribe(
+    //   (results) => {
+    //     this.router.navigate(['/auth/login']);
+    //     this.notificationService.openSnackBar(
+    //       'Password verification mail has been sent to your email address.'
+    //     );
+    //   },
+    //   (error) => {
+    //     this.loading = false;
+    //     this.notificationService.openSnackBar(error.error);
+    //   }
+    // );
   }
 
   cancel() {

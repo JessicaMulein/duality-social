@@ -10,8 +10,6 @@ import { throwIfAlreadyLoaded } from './guards/module-import.guard';
 import { GlobalErrorHandler } from './services/global-error.handler';
 import { AdminGuard } from './guards/admin.guard';
 import { OAuthGuard } from './guards/auth.guard';
-// import your AuthService here
-import { AuthenticationService } from './services/auth.service';
 
 @NgModule({
   imports: [
@@ -40,8 +38,6 @@ import { AuthenticationService } from './services/auth.service';
     },
     { provide: NGXLogger, useClass: NGXLogger },
     { provide: 'LOCALSTORAGE', useValue: window.localStorage },
-    // provide your AuthService here
-    AuthenticationService
   ],
   exports: [
   ]
