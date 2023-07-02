@@ -42,7 +42,6 @@
     "@types/cors": "^2.8.13",
     "@types/express-session": "^1.17.6",
     "@types/jsonwebtoken": "^9.0.2",
-    "@types/keycloak-connect": "^7.0.0",
     "@types/morgan": "^1.9.4",
     "@types/passport": "^1.0.12",
     "@types/passport-azure-ad": "^4.3.1",
