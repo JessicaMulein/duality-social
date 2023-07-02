@@ -53,7 +53,7 @@ services:
       DB_USER: ${DATABASE_USERNAME}
       DB_PASSWORD: ${DATABASE_PASSWORD}
     ports:
-      - "8080:8080"
+      - "28080:8080"
       - "8787:8787"
     command:
       - start-dev

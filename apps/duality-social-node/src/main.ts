@@ -7,7 +7,6 @@ import session from 'express-session';
 import { environment, environment as environmentToValidate } from './environments/environment';
 import { IEnvironment, validateEnvironment } from './interfaces/environment';
 import { setupPusher } from './setupPusher';
-import { setupKeycloak } from './setupKeycloak';
 import { setupDatabase } from './setupDatabase';
 import { setupMiddlewares } from './setupMiddlewares';
 import { setupSession } from './setupSession';
@@ -32,7 +31,6 @@ async function configureApplication(validatedEnvironment: IEnvironment): Promise
     }
     app.use(session(sessionConfig));
   }
-  await setupKeycloak(app);
   await setupMiddlewares(app);
   await setupRoutes(app);
 

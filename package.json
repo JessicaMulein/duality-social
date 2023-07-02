@@ -38,7 +38,10 @@
     "docker:keycloak:down": "docker-compose -f docker-compose.keycloak.yml down",
     "docker:keycloak:up": "docker-compose -f docker-compose.keycloak.yml up",
     "docker:keycloak:logs": "docker-compose -f docker-compose.keycloak.yml logs",
+    "docker:ps": "docker-compose -f .devcontainer/docker-compose.yml ps",
+    "docker:ps-dev": "docker-compose -f .devcontainer/docker-compose.yml -p duality-social_devcontainer ps",
     "docker:logs": "docker compose logs",
+    "docker:logs-dev": "docker-compose -f .devcontainer/docker-compose.yml -p duality-social_devcontainer logs",
     "docker:up": "docker-compose up -d",
     "migrate:latest": "npx nx migrate latest",
     "migrate:run-migrations": "npx nx migrate --run-migrations"
