@@ -43,6 +43,7 @@
     "docker:logs": "docker compose logs",
     "docker:logs-dev": "docker-compose -f .devcontainer/docker-compose.yml -p duality-social_devcontainer logs",
     "docker:up": "docker-compose up -d",
+    "git:push:main:all": "git push origin main && git push upstream main && git push keybase main",
     "migrate:latest": "npx nx migrate latest",
     "migrate:run-migrations": "npx nx migrate --run-migrations"
   },
