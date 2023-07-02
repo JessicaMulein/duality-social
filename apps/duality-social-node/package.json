@@ -15,6 +15,7 @@
   "dependencies": {
     "@azure/cosmos": "^3.17.2",
     "@azure/storage-blob": "^12.13.0",
+    "@keycloak/keycloak-admin-client": "^21.1.2",
     "@pusher/push-notifications-server": "^1.2.6",
     "@ts-stack/markdown": "^1.4.0",
     "body-parser": "^1.20.2",
@@ -26,7 +27,6 @@
     "fast-png": "^6.1.0",
     "jsonwebtoken": "^9.0.0",
     "jwks-rsa": "^3.0.1",
-    "keycloak-connect": "^21.1.2",
     "morgan": "^1.10.0",
     "openai": "^3.1.0",
     "passport": "^0.6.0",

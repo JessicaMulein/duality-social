@@ -27,6 +27,8 @@ export interface IEnvironment {
       secret: string;
     };
     keycloak: {
+      adminUser: string;
+      adminPassword: string;
       realm: string;
       issuer: string;
       clientId: string;
@@ -47,11 +49,11 @@ export function validateEnvironment(environment: IEnvironment, then: (environmen
   if (!environment.openai.accessToken) {
     throw new Error('OPENAI_API_KEY is not set');
   }
-  if (!environment.fusionAuth.clientId) {
-    throw new Error('CLIENT_ID is not set');
+  if (!environment.keycloak.clientId) {
+    throw new Error('KEYCLOAK_CLIENT_ID is not set');
   }
-  if (!environment.fusionAuth.redirectUri) {
-    throw new Error('FUSIONAUTH_REDIRECT_URI is not set');
+  if (!environment.keycloak.redirectUri) {
+    throw new Error('KEYCLOAK_REDIRECT_URI is not set');
   }
   if (!environment.cookies.secret) {
     throw new Error('EXPRESS_SESSION_SECRET is not set');

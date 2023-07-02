@@ -15,7 +15,7 @@ const redirectHostname = process.env.REDIRECT_HOST ?? '127.0.0.1';
 const redirectHost = sslEnabled
   ? `${urlProto}${redirectHostname}:${port === 443 ? '' : port}`
   : `${urlProto}${redirectHostname}:${port === 80 ? '' : port}`;
-const redirectUri = process.env.FUSIONAUTH_REDIRECT_URI ?? `${redirectHost}/auth/redirect`;
+const redirectUri = process.env.KEYCLOAK_REDIRECT_URI ?? `${redirectHost}/auth/redirect`;
 
 export const environment: IEnvironment = {
   production: production,
@@ -51,6 +51,8 @@ export const environment: IEnvironment = {
     secret: process.env.EXPRESS_SESSION_SECRET ?? '',
   },
   keycloak: {
+    adminUser: process.env.KEYCLOAK_ADMIN ?? 'admin',
+    adminPassword: process.env.KEYCLOAK_ADMIN_PASSWORD ?? '6b75c0bda624ca09ae8517ff43ab11948b00ca8b7f35f9bba748ac1776758c96',
     clientId: process.env.KEYCLOAK_CLIENT_ID ?? 'duality-social-dev',
     clientSecret: process.env.KEYCLOAK_CLIENT_SECRET ?? 'X1FrSkWZPzI0mpd3BobxIFAIHwFqJC11',
     registrationToken: process.env.KEYCLOAK_REGISTRATION_TOKEN ?? 'eyJhbGciOiJIUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICIwNzFhZGEwZS0xNTA4LTRmY2YtYjM3Mi04NjExY2NjMTUxYzAifQ.eyJleHAiOjAsImlhdCI6MTY4ODA2NTYwNCwianRpIjoiZTAwZjU0ZTItNzEyYi00MTExLWJjM2QtYmJkMmNkNDdhMDVjIiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL3JlYWxtcy9kdWFsaXR5LXNvY2lhbC1kZXYiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjgwODAvcmVhbG1zL2R1YWxpdHktc29jaWFsLWRldiIsInR5cCI6IlJlZ2lzdHJhdGlvbkFjY2Vzc1Rva2VuIiwicmVnaXN0cmF0aW9uX2F1dGgiOiJhdXRoZW50aWNhdGVkIn0.zc-cev_P95L-iJqCTWZhkjj5YyYwWhEyOShq8RA7Uc4',

@@ -8,9 +8,9 @@
 
 Run `yarn serve:dev` for a dev server. Navigate to http://localhost:3000/. The app will automatically reload if you change any of the source files.
 
- ```CLIENT_ID=XXXX OPENAI_API_KEY=YYYY OPENAI_ORGANIZATION=ZZZZ EXPRESS_SESSION_SECRET=AAAA yarn serve
+ ```KEYCLOAK_CLIENT_ID=XXXX OPENAI_API_KEY=YYYY OPENAI_ORGANIZATION=ZZZZ EXPRESS_SESSION_SECRET=AAAA yarn serve
 
-XXXX: FusionAuth Client Secret- located/created at http://localhost:9011
+XXXX: Keycloak Client Secret- located/created at http://localhost:9011
 YYYY: OpenAI API Key - located in OpenAI account
 ZZZZ: OpenAI Organization - located in OpenAI account
 AAAA: Express Session Secret - any string, yarn newSecret to generate a new one

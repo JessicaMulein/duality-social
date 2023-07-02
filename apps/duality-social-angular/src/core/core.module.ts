@@ -4,12 +4,8 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { NGXLogger } from 'ngx-logger';
 
-import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { SpinnerInterceptor } from './interceptors/spinner.interceptor';
-import { throwIfAlreadyLoaded } from './guards/module-import.guard';
 import { GlobalErrorHandler } from './services/global-error.handler';
-import { AdminGuard } from './guards/admin.guard';
-import { OAuthGuard } from './guards/auth.guard';
 
 @NgModule({
   imports: [
@@ -19,17 +15,10 @@ import { OAuthGuard } from './guards/auth.guard';
   declarations: [
   ],
   providers: [
-    AdminGuard,
-    OAuthGuard,
     MediaMatcher,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: SpinnerInterceptor,
-      multi: true
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthInterceptor,
       multi: true
     },
     {
@@ -43,7 +32,4 @@ import { OAuthGuard } from './guards/auth.guard';
   ]
 })
 export class CoreModule {
-  constructor(@Optional() @SkipSelf() parentModule: CoreModule) {
-    throwIfAlreadyLoaded(parentModule, 'CoreModule');
-  }
 }

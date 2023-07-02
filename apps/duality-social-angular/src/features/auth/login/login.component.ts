@@ -47,6 +47,10 @@ export class LoginComponent implements OnInit {
     });
   }
 
+  login() {
+    console.log('do nothing, login. TODO removeme');
+  }
+
   emailFlowLogin() {
     throw new Error('Method not implemented.');
     const email = this.loginForm.get('email')?.value;
