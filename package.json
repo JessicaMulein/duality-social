@@ -60,7 +60,7 @@
     "@angular/platform-browser": "~15.2.0",
     "@angular/platform-browser-dynamic": "~15.2.0",
     "@angular/router": "~15.2.0",
-    "@docusaurus/core": "2.1.0",
+    "@docusaurus/core": "2.4.1",
     "@docusaurus/preset-classic": "2.1.0",
     "@mdx-js/react": "^1.6.22",
     "@nrwl/angular": "16.4.2",
