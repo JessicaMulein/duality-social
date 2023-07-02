@@ -3,13 +3,14 @@
 import express from 'express';
 import https from 'https';
 import fs from 'fs';
-import session from 'express-session';
+import * as session from 'express-session';
+
 import { environment, environment as environmentToValidate } from './environments/environment';
 import { IEnvironment, validateEnvironment } from './interfaces/environment';
 import { setupPusher } from './setupPusher';
 import { setupDatabase } from './setupDatabase';
 import { setupMiddlewares } from './setupMiddlewares';
-import { setupSession } from './setupSession';
+import { getSessionConfig } from './setupSession';
 import { setupRoutes } from './setupRoutes';
 import './types';
 
@@ -23,11 +24,11 @@ async function configureApplication(validatedEnvironment: IEnvironment): Promise
   const app = express();
   await setupDatabase();
   await setupPusher(app);
-  const sessionConfig = await setupSession(app);
+  const sessionConfig = await getSessionConfig(app);
   if (sessionConfig !== null) {
     if (environment.production) {
       // enable secure cookies in production
-      sessionConfig.cookie = {...sessionConfig.cookie, ...{secure: true} };
+      sessionConfig.cookie = {...sessionConfig.cookie, ...{secure: true, maxAge: 3600} };
     }
     app.use(session(sessionConfig));
   }

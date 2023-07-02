@@ -18,7 +18,11 @@
           "outExtension": {
             ".js": ".js"
           }
-        }
+        },
+        "allowedCommonJsDependencies": [
+          "base64-js",
+          "js-sha256"
+        ]
       },
       "configurations": {
         "production": {
