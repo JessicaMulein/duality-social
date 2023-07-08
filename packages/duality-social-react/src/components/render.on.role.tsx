@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import UserService from "../services/user.service";
+import { hasRole } from "../services/user.service";
 
 interface RenderOnRoleProps {
   roles: string[];
@@ -7,7 +7,7 @@ interface RenderOnRoleProps {
 }
 
 const RenderOnRole: React.FC<RenderOnRoleProps> = ({ roles, children }) => (
-  UserService.hasRole(roles) ? <>{children}</> : null
+  hasRole(roles) ? <>{children}</> : null
 );
 
 export default RenderOnRole;

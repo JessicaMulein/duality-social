@@ -6,7 +6,7 @@ import keycloak from '../keycloak';
  *
  * @param onAuthenticatedCallback
  */
-const initKeycloak = (onAuthenticatedCallback: () => void): void => {
+export const initKeycloak = (onAuthenticatedCallback: () => void): void => {
     keycloak.init({
         onLoad: 'check-sso',
         silentCheckSsoRedirectUri: window.location.origin + '/silent-check-sso.html',
@@ -21,33 +21,24 @@ const initKeycloak = (onAuthenticatedCallback: () => void): void => {
         .catch(console.error);
 };
 
-const doLogin = (): Promise<void> => keycloak.login();
+export const doLogin = (): Promise<void> => keycloak.login();
 
-const doLogout = (): Promise<void> => keycloak.logout();
+export const doLogout = (): Promise<void> => keycloak.logout();
 
-const getToken = (): string | undefined => keycloak.token;
+export const doRegister = (): Promise<void> => keycloak.register();
 
-const isLoggedIn = (): boolean => !!keycloak.token;
+export const getToken = (): string | undefined => keycloak.token;
 
-const updateToken = (successCallback: () => Promise<InternalAxiosRequestConfig<any>>) =>
+export const isLoggedIn = (): boolean => !!keycloak.token;
+
+export const updateToken = (successCallback: () => Promise<InternalAxiosRequestConfig<any>>) =>
   keycloak.updateToken(5)
     .then(() => successCallback())
     .catch(doLogin);
 
 
-const getUsername = (): string | undefined => keycloak.tokenParsed?.preferred_username;
+export const getUsername = (): string | undefined => keycloak.tokenParsed?.preferred_username;
 
-const hasRole = (roles: string[]): boolean => roles.some((role) => keycloak.hasRealmRole(role));
+export const hasRole = (roles: string[]): boolean => roles.some((role) => keycloak.hasRealmRole(role));
 
-const UserService = {
-    initKeycloak,
-    doLogin,
-    doLogout,
-    isLoggedIn,
-    getToken,
-    updateToken,
-    getUsername,
-    hasRole,
-};
-
-export default UserService;
+export const isAdmin = (): boolean => hasRole(['admin']);

@@ -3,6 +3,9 @@
 # backups
 .devcontainer/*.tar
 
+# settings with db credentials
+.vscode/
+
 # environment files
 .env
 

@@ -3,15 +3,14 @@ import { Route } from "react-router-dom";
 import { hasRole } from "../services/user.service";
 import NotAllowed from "./not.allowed";
 
-interface RolesRouteProps {
+interface AdminRouteProps {
   path: string;
-  roles: string[];
   children: ReactNode;
 }
 
-const RolesRoute: React.FC<RolesRouteProps> = ({ roles, children, path }) => (
+const RolesRoute: React.FC<AdminRouteProps> = ({ children, path }) => (
   <Route path={path}>
-    {hasRole(roles) ? <>{children}</> : <NotAllowed />}
+    {hasRole(['admin']) ? <>{children}</> : <NotAllowed />}
   </Route>
 );
 

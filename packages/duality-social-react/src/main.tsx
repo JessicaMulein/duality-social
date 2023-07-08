@@ -3,20 +3,20 @@ import * as ReactDOM from 'react-dom/client';
 import axios from "axios";
 
 import App from './app/app';
-import UserService from './services/user.service';
+import { doLogin, getToken, initKeycloak, isLoggedIn, updateToken} from './services/user.service';
 
 // HTTP
 const _axios = axios.create();
 _axios.interceptors.request.use(async (config) => {
-  if (UserService.isLoggedIn()) {
+  if (isLoggedIn()) {
     try {
-      await UserService.updateToken(() => {
-        config.headers.Authorization = `Bearer ${UserService.getToken()}`;
+      await updateToken(() => {
+        config.headers.Authorization = `Bearer ${getToken()}`;
         return Promise.resolve(config);
       });
     } catch (e) {
       console.error(e);
-      UserService.doLogin();
+      doLogin();
     }
   }
   return config;
@@ -25,4 +25,4 @@ _axios.interceptors.request.use(async (config) => {
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 const renderApp = () => root.render(<App />);
 
-UserService.initKeycloak(renderApp);
+initKeycloak(renderApp);
