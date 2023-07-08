@@ -1,31 +1,38 @@
-import { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import keycloak from '../keycloak';
 
-interface TestProps {
-  isAuthenticated: boolean | null;
-}
-
-const Test: React.FC<TestProps> = ({ isAuthenticated }) => {
+const Test: React.FC = () => {
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const location = useLocation();
 
   useEffect(() => {
-    if (isAuthenticated === null) {
-      // Keycloak is still initializing
-      return;
-    }
+    keycloak.updateToken(30)
+      .then((refreshed) => {
+        if (refreshed) {
+          setLoading(false);
+        } else {
+          console.log('Token still valid');
+          setLoading(false);
+        }
+      }).catch(() => {
+        console.error('Failed to refresh token');
+        navigate('/login');
+      });
+  }, [navigate]);
 
-    if (isAuthenticated === false) {
-      // User is not authenticated, redirect to login
-      navigate('/login', { state: { from: location } });
-    }
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-    // User is authenticated
-    // continue with the rest of the component
-  }, [isAuthenticated, navigate, location]);
-
-  // Rest of the component logic here...
-  return <div>Test</div>
+  // User is authenticated, display user info
+  return (
+    <div>
+      <h2>User Info:</h2>
+      <p>Username: {keycloak.tokenParsed?.preferred_username}</p>
+      <p>Email: {keycloak.tokenParsed?.email}</p>
+    </div>
+  );
 };
 
 export default Test;

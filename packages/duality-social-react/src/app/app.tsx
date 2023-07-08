@@ -1,52 +1,25 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import styles from './app.module.scss';
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
 
-import NxWelcome from './nx-welcome';
-
-import { Route, Routes, Link } from 'react-router-dom';
+import RenderOnAnonymous from '../components/render.on.anonymous';
+import RenderOnAuthenticated from '../components/render.on.authenticated';
+import Welcome from '../components/welcome';
+import Test from '../test/test';
 
 export function App() {
   return (
-    <div>
-      <NxWelcome title="duality-social-react" />
-
-      {/* START: routes */}
-      {/* These routes and navigation have been generated for you */}
-      {/* Feel free to move and update them to fit your needs */}
-      <br />
-      <hr />
-      <br />
-      <div role="navigation">
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/page-2">Page 2</Link>
-          </li>
-        </ul>
+    <BrowserRouter>
+      <div className="container">
+        <RenderOnAnonymous>
+          <Welcome/>
+        </RenderOnAnonymous>
+        <RenderOnAuthenticated>
+          <Test />
+        </RenderOnAuthenticated>
       </div>
-      <Routes>
-        <Route
-          path="/"
-          element={
-            <div>
-              This is the generated root route.{' '}
-              <Link to="/page-2">Click here for page 2.</Link>
-            </div>
-          }
-        />
-        <Route
-          path="/page-2"
-          element={
-            <div>
-              <Link to="/">Click here to go back to root page.</Link>
-            </div>
-          }
-        />
-      </Routes>
-      {/* END: routes */}
-    </div>
+    </BrowserRouter>
   );
 }
 

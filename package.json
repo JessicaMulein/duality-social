@@ -9,6 +9,7 @@
     "build:node:dev": "npx nx build duality-social-node --configuration=development",
     "build:react": "npx nx build duality-social-react",
     "build:react:dev": "npx nx build duality-social-react --configuration=development",
+    "clean": "rm -rf dist",
     "docker:dev": "docker-compose -f .devcontainer/docker-compose.yml",
     "docker:dev:ps": "docker-compose -f .devcontainer/docker-compose.yml ps",
     "docker:keycloak:logs": "docker-compose -f .devcontainer/docker-compose.yml logs keycloak",
@@ -22,7 +23,8 @@
     "postgres:backup:postgres": "/bin/bash ./.devcontainer/backup-sql.sh --dbname=postgres",
     "postgres:dev:rebuild": "/bin/bash ./.devcontainer/rebuild-postgres.sh",
     "postgres:restore": "/bin/bash ./.devcontainer/restore-sql.sh",
-    "serve:node": "npx nx serve duality-social-node"
+    "serve:node": "npx nx serve duality-social-node",
+    "serve:react": "npx nx serve duality-social-react"
   },
   "private": true,
   "dependencies": {
