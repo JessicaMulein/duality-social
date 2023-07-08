@@ -8,10 +8,10 @@ interface AdminRouteProps {
   children: ReactNode;
 }
 
-const RolesRoute: React.FC<AdminRouteProps> = ({ children, path }) => (
+const AdminRoute: React.FC<AdminRouteProps> = ({ children, path }) => (
   <Route path={path}>
     {hasRole(['admin']) ? <>{children}</> : <NotAllowed />}
   </Route>
 );
 
-export default RolesRoute;
+export default AdminRoute;

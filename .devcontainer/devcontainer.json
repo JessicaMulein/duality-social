@@ -23,7 +23,7 @@
 	"forwardPorts": [3000],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "apt-get update && apt-get install -y postgresql-client && yarn npm-globals:install",
+	"postCreateCommand": "apt-get update && apt-get install -y postgresql-client && yarn npm-globals:install && yarn install",
 	// "postCreateCommand": "yarn npm-globals && yarn install:all",
 
 	// Configure tool-specific properties.
