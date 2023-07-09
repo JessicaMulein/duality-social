@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route } from "react-router-dom";
 import { hasRole } from "../services/user.service";
 import NotAllowed from "./not.allowed";
@@ -6,13 +6,19 @@ import NotAllowed from "./not.allowed";
 interface RolesRouteProps {
   path: string;
   roles: string[];
-  children: ReactNode;
+  element: React.ReactElement;
 }
 
-const RolesRoute: React.FC<RolesRouteProps> = ({ roles, children, path }) => (
-  <Route path={path}>
-    {hasRole(roles) ? <>{children}</> : <NotAllowed />}
-  </Route>
-);
+const RolesRoute: React.FC<RolesRouteProps> = ({ roles, element, path }) => {
+  const [hasNeededRole, setHasNeededRole] = useState(false);
+
+  useEffect(() => {
+    setHasNeededRole(hasRole(roles));
+  }, [roles]);
+
+  return (
+    <Route path={path} element={hasNeededRole ? element : <NotAllowed />} />
+  );
+};
 
 export default RolesRoute;
