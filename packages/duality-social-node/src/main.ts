@@ -1,51 +1,31 @@
 import express, { Request, Response } from 'express';
 import path from 'path';
+import session, { SessionOptions } from 'express-session';
+import MongoStore from 'connect-mongo';
+import mongoose from 'mongoose';
 import rateLimit from 'express-rate-limit';
-import session from 'express-session';
-import pgSession from 'connect-pg-simple';
-import { Pool } from 'pg';
 import { environment } from './environment';
-import { sequelize } from './db/database';
+import { SessionData } from './interfaces/session.data';
 import apiRouter from './api.router';
-import User from './db/user';
 
-// Sync the models with the database
-async function syncDatabase() {
-  try {
-    await sequelize.authenticate();
-    await sequelize.sync({ force: false });
-    console.log('Connected to the database and synchronized the models');
-  } catch (error) {
-    console.error('Unable to connect to the database:', error);
+declare module 'express-session' {
+  interface SessionData {
+    views?: number;
+    // Add other properties as needed
   }
 }
 
-syncDatabase();
-
-const pool = new Pool({
-  user: environment.postgres.user,
-  host: environment.postgres.host,
-  database: environment.postgres.database,
-  password: environment.postgres.password,
-  port: environment.postgres.port,
-});
+mongoose
+  .connect(environment.session.mongoUri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+  })
+  .then(() => console.log('Connected to MongoDB'))
+  .catch((error) => console.error('MongoDB connection error:', error));
 
 const app = express();
-
-app.use(
-  session({
-    store: new (pgSession(session))({
-      pool,
-      tableName: environment.session.table,
-    }),
-    secret: environment.session.secret,
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      maxAge: environment.session.maxAge,
-    },
-  })
-);
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
