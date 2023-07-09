@@ -11,11 +11,8 @@
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
 	"features": {
-		"ghcr.io/devcontainers/features/azure-cli:1": {},
 		"ghcr.io/devcontainers/features/common-utils:2": {},
 		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {},
-		"ghcr.io/stuartleeks/dev-container-features/azure-cli-persistence:0": {},
-		"ghcr.io/jlaundry/devcontainer-features/azure-functions-core-tools:1": {}
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -23,7 +20,7 @@
 	"forwardPorts": [3000],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "apt-get update && apt-get install -y postgresql-client && yarn npm-globals:install && yarn install",
+	"postCreateCommand": "yarn npm-globals:install && yarn install",
 	// "postCreateCommand": "yarn npm-globals && yarn install:all",
 
 	// Configure tool-specific properties.
@@ -31,17 +28,10 @@
 		"vscode": {
 			// Add the IDs of extensions you want installed when the container is created.
 			"extensions": [
-				"dbaeumer.vscode-eslint",
-				"ms-vscode.vscode-typescript-next",
 				"esbenp.prettier-vscode",
-				"firsttris.vscode-jest-runner",
-				"nrwl.angular-console",
-				"shd101wyy.markdown-preview-enhanced",
-				"DavidAnson.vscode-markdownlint",
-				"mtxr.sqltools",
-				"mtxr.sqltools-driver-pg",
 				"GitHub.copilot",
-				"GitHub.copilot-labs"
+				"GitHub.copilot-labs",
+				"mongodb.mongodb-vscode"
 			],
 			// Set *default* container specific settings.json values on container create.
 			"settings": { 

@@ -4,16 +4,18 @@ export interface IEnvironment {
     port: number;
     rootPath: string;
     siteUrl: string;
+    mongo: {
+        uri: string;
+    }
+    rateLimiter: {
+        windowMs: number;
+        max: number;
+    }
     session: {
-        secret: string;
-        table: string;
         maxAge: number;
-    },
-    postgres: {
-        user: string;
-        host: string;
-        database: string;
-        password: string;
-        port: number;
+        mongoUri: string;
+        resave: boolean;
+        saveUninitialized: boolean;
+        secret: string;
     }
 }

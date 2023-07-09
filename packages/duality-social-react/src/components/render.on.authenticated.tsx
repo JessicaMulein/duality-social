@@ -1,8 +1,11 @@
 import React, { ReactNode } from 'react'
-import { isLoggedIn } from "../services/user.service";
 
 interface RenderOnAuthenticatedProps {
   children: ReactNode;
+}
+
+const isLoggedIn = () => {
+  return false;
 }
 
 const RenderOnAuthenticated: React.FC<RenderOnAuthenticatedProps> = ({ children }) => (

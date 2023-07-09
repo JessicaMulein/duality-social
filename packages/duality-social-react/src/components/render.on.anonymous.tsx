@@ -1,8 +1,11 @@
 import React, { ReactNode } from 'react'
-import { isLoggedIn } from "../services/user.service";
 
 interface RenderOnAnonymousProps {
   children: ReactNode;
+}
+
+const isLoggedIn = () => {
+  return false;
 }
 
 const RenderOnAnonymous: React.FC<RenderOnAnonymousProps> = ({ children }) => (

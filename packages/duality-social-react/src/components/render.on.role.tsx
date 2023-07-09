@@ -1,9 +1,12 @@
 import React, { ReactNode } from 'react';
-import { hasRole } from "../services/user.service";
 
 interface RenderOnRoleProps {
   roles: string[];
   children: ReactNode;
+}
+
+const hasRole = (roles: string[]) => {
+  return false;
 }
 
 const RenderOnRole: React.FC<RenderOnRoleProps> = ({ roles, children }) => (

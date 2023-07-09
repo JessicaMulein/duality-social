@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Route } from "react-router-dom";
-import { hasRole } from "../services/user.service";
 import NotAllowed from "./not.allowed";
 
 interface RolesRouteProps {
   path: string;
   roles: string[];
   element: React.ReactElement;
+}
+
+const hasRole = (roles: string[]) => {
+  return false;
 }
 
 const RolesRoute: React.FC<RolesRouteProps> = ({ roles, element, path }) => {
