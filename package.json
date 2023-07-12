@@ -52,7 +52,7 @@
     "@nx/linter": "16.4.2",
     "@nx/node": "16.4.2",
     "@nx/react": "16.4.2",
-    "@nx/webpack": "16.4.2",
+    "@nx/webpack": "16.5.1",
     "@nx/workspace": "16.4.2",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
     "@svgr/webpack": "^8.0.1",
