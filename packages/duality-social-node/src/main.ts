@@ -16,20 +16,15 @@ declare module 'express-session' {
 }
 
 mongoose
-  .connect(environment.session.mongoUri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-  })
+  .connect(environment.session.mongoUri)
   .then(() => console.log('Connected to MongoDB'))
   .catch((error) => console.error('MongoDB connection error:', error));
 
 const app = express();
 
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 1000, // limit each IP to 1000 requests per windowMs
+  windowMs: environment.rateLimiter.windowMs,
+  max: environment.rateLimiter.max, // limit each IP to N requests per windowMs
   message: "Too many requests from this IP, please try again later"
 });
 

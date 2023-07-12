@@ -7,10 +7,13 @@ export interface IEnvironment {
     mongo: {
         uri: string;
     }
+    rateLimiter: {
+        windowMs: number;
+        max: number;
+    }
     session: {
         mongoUri: string;
         secret: string;
-        table: string;
         maxAge: number;
     }
 }

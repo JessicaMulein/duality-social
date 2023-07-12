@@ -3,6 +3,9 @@
 # backups
 .devcontainer/*.tar
 
+# mongo extension playgraounds
+.devcontainer/playground-*.mongodb.js
+
 # settings with db credentials
 .vscode/
 

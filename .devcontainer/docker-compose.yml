@@ -7,6 +7,8 @@ services:
     command: /bin/sh -c "while sleep 1000; do :; done"
     environment:
       NODE_ENV: development
+      MONGO_DB_USERNAME: ${MONGO_DB_USERNAME}
+      MONGO_DB_PASSWORD: ${MONGO_DB_PASSWORD}
       MONGO_URI: mongodb://mongo:27017/duality
       MONGO_SESSION_URI: mongodb://mongo:27017/sessions
     depends_on:
@@ -17,6 +19,9 @@ services:
   mongo:
     restart: always
     image: mongo:6.0.7
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_DB_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_DB_PASSWORD}
     volumes:
       - mongo_data:/data/db
     networks:
