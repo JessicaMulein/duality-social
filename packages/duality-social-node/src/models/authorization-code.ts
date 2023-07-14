@@ -1,7 +1,7 @@
 import { model, Schema } from 'mongoose';
-import { IAuthorizationCode } from '../interfaces/authorization-code';
 import { ClientModelName } from './client';
 import { UserModelName } from './user';
+import { IAuthorizationCode } from '@duality-social/duality-social-lib';
 
 export const AuthorizationCodeModelName = 'AuthorizationCode';
 

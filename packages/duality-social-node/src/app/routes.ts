@@ -3,12 +3,14 @@ import path from 'path';
 
 import { environment } from '../environment';
 import apiRouter from '../routers/api.router';
+import authRouter from '../routers/auth.router';
 import oauthRouter from '../routers/oauth.router';
 
 export function addRoutesAndServeStatic(app: Application) {
     app.use(express.static(path.join(environment.rootPath, 'dist/packages/duality-social-react')));
 
     app.use('/api', apiRouter);
+    app.use('/auth', authRouter);
     app.use('/oauth', oauthRouter);
 
     app.get('*', (req: Request, res: Response) => {

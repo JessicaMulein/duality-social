@@ -1,11 +1,10 @@
 import { genSalt, hash } from 'bcrypt';
 import { model, Schema } from 'mongoose';
-import { IUser } from '../interfaces/user';
+import { IUser } from '@duality-social/duality-social-lib';
 
 export const UserModelName = 'User';
 
 export const UserSchema = new Schema<IUser>({
-  _id: { type: Schema.Types.ObjectId, required: true },
   email: { type: String, unique: true, required: true },
   lastLogin: { type: Date, required: false },
   lastFailedLogin: { type: Date, required: false },
@@ -17,7 +16,6 @@ export const UserSchema = new Schema<IUser>({
   createdAt: { type: Date, required: true },
   updatedAt: { type: Date, required: true },
 });
-
 
 UserSchema.pre<IUser>('save', async function (next) {
   if (this.isModified('password')) {

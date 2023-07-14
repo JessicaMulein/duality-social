@@ -1,7 +1,7 @@
 import { model, Schema } from 'mongoose';
-import { IRefreshToken } from '../interfaces/refresh-token';
 import { ClientModelName } from './client';
 import { UserModelName } from './user';
+import { IRefreshToken } from '@duality-social/duality-social-lib';
 
 export const RefreshTokenModelName = 'RefreshToken';
 

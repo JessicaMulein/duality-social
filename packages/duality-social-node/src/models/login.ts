@@ -1,6 +1,6 @@
 import { Schema, model } from "mongoose";
-import { ILogin } from "../interfaces/login";
 import { UserModelName } from "./user";
+import { ILogin } from '@duality-social/duality-social-lib';
 
 export const LoginModelName = 'Login';
 

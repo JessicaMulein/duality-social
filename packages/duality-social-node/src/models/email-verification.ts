@@ -1,6 +1,6 @@
 import { Schema, model } from 'mongoose';
-import { IEmailVerification } from '../interfaces/email-verification'
 import { UserModelName } from './user';
+import { IEmailVerification } from '@duality-social/duality-social-lib';
 
 export const EmailVerificationModelName = 'EmailVerification';
 

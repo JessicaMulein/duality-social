@@ -1,8 +1,10 @@
 import bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
 import { Request } from 'express';
-import { IUser, LockStatus, LoginFailureReason, User, EmailVerification, emailVerificationValidHours, IEmailVerification } from '@duality-social/duality-social-lib';
 import { LoginService } from './login';
+import { EmailVerification } from '../models/email-verification';
+import { User } from '../models/user';
+import { IUser, LockStatus, LoginFailureReason, emailVerificationValidHours, IEmailVerification } from '@duality-social/duality-social-lib';
 
 export class UserService {
     static async findByUsername(username: string): Promise<IUser> {

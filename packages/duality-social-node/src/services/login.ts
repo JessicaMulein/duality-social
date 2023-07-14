@@ -1,8 +1,8 @@
 import { Request } from "express";
+import { Login } from '../models/login';
 import {
   ILogin,
   IUser,
-  Login,
   LoginFailureReason,
 } from "@duality-social/duality-social-lib";
 

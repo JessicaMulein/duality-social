@@ -1,7 +1,7 @@
 import { model, Schema } from 'mongoose';
-import { IAccessToken } from '../interfaces/access-token';
 import { UserModelName } from './user';
 import { ClientModelName } from './client';
+import { IAccessToken } from '@duality-social/duality-social-lib';
 
 export const AccessTokenModelName = 'AccessToken';
 

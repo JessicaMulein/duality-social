@@ -1,6 +1,10 @@
 import { compare } from 'bcrypt';
 import OAuth2Server from 'oauth2-server';
-import { User, Client, AccessToken, RefreshToken, AuthorizationCode } from '@duality-social/duality-social-lib';
+import { AccessToken } from '../models/access-token';
+import { AuthorizationCode } from '../models/authorization-code';
+import { Client } from '../models/client';
+import { RefreshToken } from '../models/refresh-token';
+import { User } from '../models/user';
 
 export const oauth = new OAuth2Server({
     model: {

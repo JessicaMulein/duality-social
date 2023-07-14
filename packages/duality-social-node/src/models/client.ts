@@ -1,5 +1,5 @@
 import { model, Schema } from 'mongoose';
-import { IClient } from '../interfaces/client';
+import { IClient } from '@duality-social/duality-social-lib';
 
 export const ClientModelName = 'Client';
 

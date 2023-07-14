@@ -1,4 +1,3 @@
-import bcrypt from 'bcrypt';
 import express, { Router, Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
 import {
@@ -11,22 +10,18 @@ import {
     getLockedMessage,
     passwordInvalidMessage,
     passwordMinLength,
-    userCreatedMessage,
     userCreationErrorMessage,
     userIncorrectMessage,
     usernameInvalidMessage,
     usernameMinLength,
     usernameTakenMessage,
-    EmailVerification,
-    Login,
     LoginFailureReason,
-    LockStatus,
-    User,
     emailValidationInProgressMessage,
 } from '@duality-social/duality-social-lib';
 import oauth from '../app/oauth.server';
-import { LoginService } from '../services/login';
 import { UserService } from '../services/user';
+import { NewUserOrchestrator } from '../orchestrators/new-user';
+import { UserResponseTransformer } from '../transformers/user-response';
 
 const authRouter: Router = express.Router();
 
@@ -75,7 +70,7 @@ authRouter.post(
 
             // set the authorization header with the token
             res.set('Authorization', `Bearer ${token.accessToken}`);
-            res.status(200).json(user);
+            res.status(200).json(UserResponseTransformer.transform(user));
         } catch (error) {
             res.status(500).json({ message: 'Error generating access token', error });
         }
@@ -111,12 +106,8 @@ authRouter.post(
         }
 
         try {
-            // Hash password
-            const hashedPassword = await UserService.encryptUserPassword(req.body.password);
-
-            // Create user
-            const user = await UserService.newUser(req.body.email, req.body.username, hashedPassword)
-            res.status(201).json(user);
+            const orchestractionResults = await new NewUserOrchestrator().execute(req.body.username, req.body.email, req.body.password);
+            res.status(201).json(orchestractionResults.transformedUser);
         } catch (error) {
             res.status(500).json({ message: userCreationErrorMessage, error });
         }

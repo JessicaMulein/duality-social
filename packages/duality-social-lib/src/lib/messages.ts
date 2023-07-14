@@ -3,7 +3,6 @@ import { usernameMinLength, passwordMinLength } from './constants';
 export const emailRequiredInvalidMessage = 'Email is required and must be valid';
 export const emailAlreadyRegisteredMessage = 'Email is already registered';
 export const emailValidationInProgressMessage = 'Email verification already in progress for this email';
-export const userCreatedMessage = 'User created successfully';
 export const userCreationErrorMessage = 'Error creating user';
 export const usernameInvalidMessage = `Username is required and must be at least ${usernameMinLength} characters long`;
 export const usernameTakenMessage = 'Username is already taken';
