@@ -5,6 +5,7 @@ import { environment } from './environment';
 import { addBodyParser } from './app/body-parser';
 import { addMongoose } from './app/mongoose';
 import { addMongoSession } from './app/mongo.session';
+import { addPassport } from './app/passport';
 import { addRateLimiter } from './app/rate-limiter';
 import { addRoutesAndServeStatic } from './app/routes';
 
@@ -14,6 +15,7 @@ addMongoose((connection: any) => {
   addBodyParser(app);
   addMongoSession(app);
   addRateLimiter(app);
+  addPassport(app);
   addRoutesAndServeStatic(app);
 
   app.listen(environment.port, environment.host, () => {

@@ -7,6 +7,7 @@ import RenderOnAnonymous from '../components/render.on.anonymous';
 import RenderOnAuthenticated from '../components/render.on.authenticated';
 import Welcome from '../components/welcome';
 import FeedPage from '../components/feed/feed.page';
+import LoginPage from '../components/login/login.page';
 
 export function App() {
   return (
@@ -21,14 +22,16 @@ export function App() {
               <li>
                 <Link to="/">Home</Link>
                 <Link to="/feed">Feed</Link>
+                <Link to="/login">Login</Link>
               </li>
             </ul>
           </nav>
-          <Routes>
-            <Route path="/" element={<Welcome />} />
-            <Route path="/feed" element={<FeedPage />} />
-          </Routes>
         </RenderOnAuthenticated>
+        <Routes>
+          <Route path="/" element={<Welcome />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/feed" element={<FeedPage />} />
+        </Routes>
       </div>
     </BrowserRouter>
   );

@@ -1,10 +1,11 @@
-import { compare } from 'bcrypt';
-import OAuth2Server from 'oauth2-server';
+import OAuth2Server from '@node-oauth/express-oauth-server';
 import { AccessToken } from '../models/access-token';
 import { AuthorizationCode } from '../models/authorization-code';
 import { Client } from '../models/client';
 import { RefreshToken } from '../models/refresh-token';
 import { User } from '../models/user';
+import { UserService } from '../services/user';
+import { UserError } from '../enumerations/user-error';
 
 export const oauth = new OAuth2Server({
     model: {
@@ -35,9 +36,12 @@ export const oauth = new OAuth2Server({
             };
         },
         getUser: async (username, password) => {
-            const user = await User.findOne({ username });
-            if (user && await compare(password, user.password)) {
+            const user = await UserService.findByUsernameAndValidatePassword(username, password);
+            if (user instanceof User) {
                 return user;
+                // check if user is a UserError enumeration, but we can't use instanceof
+            } else if (Object.values(UserError).includes(user as any)) {
+                throw new Error(user as UserError);
             }
             return null;
         },
@@ -75,6 +79,9 @@ export const oauth = new OAuth2Server({
             return token.scope === scope;
         }
     },
+    accessTokenLifetime: 60 * 60 * 24, // 24 hours, or 1 day
+    allowEmptyState: true,
+    allowExtendedTokenAttributes: true,
 });
 
 export default oauth;

@@ -4,6 +4,10 @@ export interface IEnvironment {
     port: number;
     rootPath: string;
     siteUrl: string;
+    oauth: {
+        clientId: string;
+        clientSecret: string;
+    }
     mongo: {
         uri: string;
     }

@@ -11,6 +11,10 @@ export const environment: IEnvironment = {
     mongo: {
         uri: process.env.MONGO_URI ?? 'mongodb://localhost:27017/duality-social',
     },
+    oauth: {
+        clientId: process.env.OAUTH_CLIENT_ID ?? 'duality-social',
+        clientSecret: process.env.OAUTH_CLIENT_SECRET ?? '',
+    },
     rateLimiter: {
         windowMs: process.env.RATE_LIMITER_WINDOW_MS ? Number(process.env.RATE_LIMITER_WINDOW_MS) : 15 * 60 * 1000, // 15 minutes
         max: process.env.RATE_LIMITER_MAX ? Number(process.env.RATE_LIMITER_MAX) : 1000, // limit each IP to 1000 requests per windowMs

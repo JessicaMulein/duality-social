@@ -1,13 +1,9 @@
 import express, { Router, Request, Response } from 'express';
 import { body, validationResult } from 'express-validator';
-import {
-    Request as OAuthRequest,
-    Response as OAuthResponse,
-} from 'oauth2-server';
+import passport from 'passport';
 import {
     emailAlreadyRegisteredMessage,
     emailRequiredInvalidMessage,
-    getLockedMessage,
     passwordInvalidMessage,
     passwordMinLength,
     userCreationErrorMessage,
@@ -15,67 +11,20 @@ import {
     usernameInvalidMessage,
     usernameMinLength,
     usernameTakenMessage,
-    LoginFailureReason,
     emailValidationInProgressMessage,
 } from '@duality-social/duality-social-lib';
-import oauth from '../app/oauth.server';
 import { UserService } from '../services/user';
 import { NewUserOrchestrator } from '../orchestrators/new-user';
-import { UserResponseTransformer } from '../transformers/user-response';
 
 const authRouter: Router = express.Router();
 
-authRouter.post(
-    '/login',
-    // Validate input
-    body('username')
-        .isLength({ min: usernameMinLength })
-        .withMessage(usernameInvalidMessage),
-    body('password')
-        .isLength({ min: passwordMinLength })
-        .withMessage(passwordInvalidMessage),
-    async (req: Request, res: Response) => {
-        // Handle validation errors
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({ errors: errors.array() });
-        }
-
-        const user = await UserService.findByUsername(req.body.username);
-        if (!user) {
-            return res.status(400).json({ message: userIncorrectMessage });
-        }
-
-        const validPassword = UserService.validateUserPassword(user, req.body.password);
-        if (!validPassword) {
-            UserService.saveLogin(user, req, LoginFailureReason.InvalidPassword);
-            return res.status(400).json({ message: userIncorrectMessage });
-        }
-
-        // check lock status after checking password
-        if (user.lockStatus !== '' && user.lockExpiration < new Date()) {
-            UserService.saveLogin(user, req, LoginFailureReason.Locked);
-            return res
-                .status(400)
-                .json({ message: getLockedMessage(user.lockStatus) });
-        }
-
-        // generate an access token and send it in the headers
-        const request = new OAuthRequest(req);
-        const response = new OAuthResponse(res);
-        try {
-            const token = await oauth.token(request, response);
-
-            UserService.saveLogin(user, req);
-
-            // set the authorization header with the token
-            res.set('Authorization', `Bearer ${token.accessToken}`);
-            res.status(200).json(UserResponseTransformer.transform(user));
-        } catch (error) {
-            res.status(500).json({ message: 'Error generating access token', error });
-        }
+authRouter.get('/check-authentication', (req, res) => {
+    if (req.isAuthenticated()) {
+        res.sendStatus(200);
+    } else {
+        res.sendStatus(401);
     }
-);
+});
 
 authRouter.post(
     '/register',
@@ -146,7 +95,7 @@ authRouter.post('/change-email',
             email: newVerifcation.email,
             expiresAt: newVerifcation.expiresAt,
         });
-});
+    });
 
 authRouter.post('/verify-email',
     body('token').isString(),

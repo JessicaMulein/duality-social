@@ -5,9 +5,5 @@ import { IEnvironment } from "../interfaces/environment";
 
 export const environment: IEnvironment = {
   production: false,
-  keycloak: {
-    url: 'http://localhost:28080',
-    realm: 'duality-social-dev',
-    clientId: 'duality-social-dev'
-  }
+  siteUrl: 'http://localhost:3000',
 };

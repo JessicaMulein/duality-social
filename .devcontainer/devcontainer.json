@@ -17,7 +17,7 @@
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	//"forwardPorts": [28080,8787,5432],
-	"forwardPorts": [3000],
+	"forwardPorts": [3000, 27017],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"postCreateCommand": "yarn npm-globals:install && yarn install",

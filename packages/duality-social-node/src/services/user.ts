@@ -4,6 +4,7 @@ import { Request } from 'express';
 import { LoginService } from './login';
 import { EmailVerification } from '../models/email-verification';
 import { User } from '../models/user';
+import {UserError } from '../enumerations/user-error';
 import { IUser, LockStatus, LoginFailureReason, emailVerificationValidHours, IEmailVerification } from '@duality-social/duality-social-lib';
 
 export class UserService {
@@ -20,6 +21,18 @@ export class UserService {
             password,
             user.password
         );
+    }
+
+    static async findByUsernameAndValidatePassword(username: string, password: string): Promise<IUser | UserError> {
+        const user = await UserService.findByUsername(username);
+        if (!user) {
+            return UserError.InvalidUsername;
+        }
+        const validPassword = await UserService.validateUserPassword(user, password);
+        if (!validPassword) {
+            return UserError.InvalidPassword;
+        }
+        return user;
     }
 
     static async encryptUserPassword(password: string): Promise<string> {
