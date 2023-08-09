@@ -25,7 +25,7 @@ export class NewPostComponent implements OnInit, OnChanges {
   }
 
   public get signedIn(): boolean {
-    return this.layoutComponent.authService.instance.getAllAccounts().length > 0;
+    return false;
   }
   constructor(private route: ActivatedRoute, public layoutComponent: LayoutComponent, private httpClient: HttpClient) {
     

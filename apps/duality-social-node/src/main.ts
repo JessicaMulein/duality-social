@@ -6,12 +6,11 @@ import fs from 'fs';
 import { environment, environment as environmentToValidate } from './environments/environment';
 import { IEnvironment, validateEnvironment } from './interfaces/environment';
 import { setupPusher } from './setupPusher';
-import { setupPassport } from './setupPassport';
 import { setupDatabase } from './setupDatabase';
 import { setupMiddlewares } from './setupMiddlewares';
 import { setupSession } from './setupSession';
 import { setupRoutes } from './setupRoutes';
-import session from 'express-session';
+import * as session from 'express-session';
 import './types';
 
 declare global {
@@ -30,9 +29,8 @@ async function configureApplication(validatedEnvironment: IEnvironment): Promise
       // enable secure cookies in production
       sessionConfig.cookie = {...sessionConfig.cookie, ...{secure: true} };
     }
-    app.use(session(sessionConfig));
+    app.use((session as any)(sessionConfig));
   }
-  await setupPassport(app);
   await setupMiddlewares(app);
   await setupRoutes(app);
 

@@ -43,7 +43,8 @@
           <span>Account</span>
         </a>
 
-        <a mat-menu-item (click)="logout()">
+        <!-- <a mat-menu-item (click)=""> -->
+        <a mat-menu-item>
           <i class="fa-duotone fa-person-to-door"></i>
           <span>Log out</span>
         </a>
@@ -55,8 +56,9 @@
         <i class="fa-solid fa-person"></i>person
       </button>
       <mat-menu #loginMenu="matMenu" xPosition="before" yPosition="above" [overlapTrigger]="false">
-        <a mat-menu-item (click)="loginRedirect()">
-          <i class="fa-solid fa-person-sign"></i>
+        <!-- <a mat-menu-item (click)="loginRedirect()"> -->
+        <a mat-menu-item>
+            <i class="fa-solid fa-person-sign"></i>
           <span>Log in</span>
         </a>
       </mat-menu>
@@ -80,8 +82,9 @@
           <p mat-line> Account </p>
         </a>
 
-        <a mat-list-item (click)="logout()">
-          <i class="fa-duotone fa-person-to-door"></i>
+        <!-- <a mat-list-item (click)="logout()"> -->
+        <a mat-list-item>
+            <i class="fa-duotone fa-person-to-door"></i>
           <p mat-line> Log out </p>
         </a>
 

@@ -3,7 +3,7 @@
   "npmScope": "duality-social",
   "tasksRunnerOptions": {
     "default": {
-      "runner": "@nrwl/nx-cloud",
+      "runner": "nx-cloud",
       "options": {
         "cacheableOperations": [
           "build",
@@ -11,7 +11,7 @@
           "test",
           "e2e"
         ],
-        "accessToken": "NmZmNTljMDUtOTkzYy00OGIzLWE2YmEtNmIxMzc5ZmExYTBkfHJlYWQtd3JpdGU="
+        "accessToken": "MDRmZDM5OWUtYmQ3Ni00NDYzLWFjYjctZTFhMDgyYTA3ZmVlfHJlYWQtd3JpdGU="
       }
     }
   },
@@ -56,7 +56,8 @@
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
       "!{projectRoot}/tsconfig.spec.json",
       "!{projectRoot}/jest.config.[jt]s",
-      "!{projectRoot}/.eslintrc.json"
+      "!{projectRoot}/.eslintrc.json",
+      "!{projectRoot}/src/test-setup.[jt]s"
     ],
     "sharedGlobals": []
   },

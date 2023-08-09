@@ -6,7 +6,6 @@ import {
   UntypedFormGroup,
 } from '@angular/forms';
 import { Title } from '@angular/platform-browser';
-import { AuthenticationService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
@@ -28,12 +27,10 @@ export class LoginComponent implements OnInit {
     private titleService: Title,
     private http: HttpClient,
     private notificationService: NotificationService,
-    private authenticationService: AuthenticationService
   ) { }
 
   ngOnInit() {
     this.titleService.setTitle('Duality Social - Login');
-    this.authenticationService.logout();
     this.createForm();
   }
 
@@ -65,7 +62,6 @@ export class LoginComponent implements OnInit {
       (response: any) => {
         console.log('response', response);
         this.loading = false;
-        this.authenticationService.setSession(response);
         this.router.navigate(['/']);
       }
     );
@@ -77,7 +73,8 @@ export class LoginComponent implements OnInit {
   public async msasFlowLogin(): Promise<void> {
     this.loading = true;
     try {
-      const accessToken = await this.authenticationService.getAccessToken();
+      // const accessToken = await this.authenticationService.getAccessToken();
+      const accessToken = undefined;
 
       console.log('accessToken', accessToken);
       if (accessToken) {

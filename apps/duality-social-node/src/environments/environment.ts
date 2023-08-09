@@ -43,6 +43,7 @@ const redirectUri = process.env.MSAL_REDIRECT_URI ?? redirectHost;
 
 export const environment: IEnvironment = {
   production: production,
+  siteUrl: redirectUri,
   developer: {
     angularDir: dirname(dirname(__filename)) + '/duality-social-angular/',
     host: host,
@@ -73,22 +74,6 @@ export const environment: IEnvironment = {
      * arbitrarily generated string, arbitrarily 100 characters long
      */
     secret: process.env.EXPRESS_SESSION_SECRET ?? '',
-  },
-  msal: {
-    clientId: clientId,
-    cloudInstance: cloudInstance,
-    clientSecret: process.env.MSAL_CLIENT_SECRET ?? '',
-    authority: authority,
-    redirectUri: process.env.MSAL_REDIRECT_URI ?? 'https://duality-social.agreeableforest-3aab7fce.westus.azurecontainerapps.io/.auth/login/aad/callback',
-    postLogoutRedirectUri:
-      process.env.MSAL_POST_LOGOUT_REDIRECT_URI ?? redirectUri,
-    tenantId: tenantId,
-    graphMeEndpoint:
-      (process.env.GRAPH_API_ENDPOINT ?? 'https://graph.microsoft.com/') +
-      'v1.0/me',
-    scope:
-      process.env.MSAL_SCOPE ??
-      ['User.Read', 'email', 'profile', 'openid'].join(', '),
   },
   pusher: {
     appId: Number.parseInt(process.env.PUSHER_APP_ID ?? '1592034'),

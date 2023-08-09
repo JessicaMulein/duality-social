@@ -6,7 +6,7 @@
   "dependencies": {
     "@angular-devkit/build-angular": "~15.2.0",
     "@angular/cli": "~15.2.0",
-    "@fortawesome/fontawesome-common-types": "^6.4.0",
+    "@fortawesome/fontawesome-common-types": "^6.4.2",
     "@types/jest": "^29.4.0",
     "@types/linkify-it": "^3.0.2",
     "@types/markdown-it": "^12.2.3",

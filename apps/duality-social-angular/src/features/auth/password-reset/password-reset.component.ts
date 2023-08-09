@@ -6,7 +6,6 @@ import {
 import { ActivatedRoute, Router, ParamMap } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { Title } from '@angular/platform-browser';
-import { AuthenticationService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 
 @Component({
@@ -25,7 +24,6 @@ export class PasswordResetComponent implements OnInit {
   constructor(
     private activeRoute: ActivatedRoute,
     private router: Router,
-    private authService: AuthenticationService,
     private notificationService: NotificationService,
     private titleService: Title
   ) {
@@ -61,20 +59,6 @@ export class PasswordResetComponent implements OnInit {
 
     this.loading = true;
 
-    this.authService
-      .passwordReset(this.email, this.token, password, passwordConfirm)
-      .subscribe(
-        () => {
-          this.notificationService.openSnackBar(
-            'Your password has been changed.'
-          );
-          this.router.navigate(['/auth/login']);
-        },
-        (error: any) => {
-          this.notificationService.openSnackBar(error.error);
-          this.loading = false;
-        }
-      );
   }
 
   cancel() {

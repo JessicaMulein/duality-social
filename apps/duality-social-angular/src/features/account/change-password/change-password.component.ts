@@ -5,7 +5,6 @@ import {
 } from '@angular/forms';
 import { Component, OnInit } from '@angular/core';
 import { NGXLogger } from 'ngx-logger';
-import { AuthenticationService } from '../../../core/services/auth.service';
 import { NotificationService } from '../../../core/services/notification.service';
 import { SpinnerService } from '../../../core/services/spinner.service';
 
@@ -24,7 +23,6 @@ export class ChangePasswordComponent implements OnInit {
   disableSubmit!: boolean;
 
   constructor(
-    private authService: AuthenticationService,
     private logger: NGXLogger,
     private spinnerService: SpinnerService,
     private notificationService: NotificationService
@@ -63,7 +61,7 @@ export class ChangePasswordComponent implements OnInit {
       return;
     }
 
-    const email = this.authService.getCurrentUser()?.username;
+    // const email = this.authService.getCurrentUser()?.username;
 
     // this.authService.changePassword(email, this.currentPassword, this.newPassword)
     //   .subscribe(

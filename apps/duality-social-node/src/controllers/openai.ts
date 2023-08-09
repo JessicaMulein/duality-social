@@ -6,11 +6,11 @@ import {
 import { BaseModelCaches, IDevilsAdvocateRequest, IDevilsAdvocateResponse, HumanityTypeEnum } from '@duality-social/duality-social-lib';
 import { Schema, Types as MongooseTypes } from 'mongoose';
 import { ObjectId } from 'bson';
-import { ViewpointTypeEnum } from 'libs/duality-social-lib/src/lib/enumerations/viewpointType';
+import { ViewpointTypeEnum, IUser } from '@duality-social/duality-social-lib';
 
 
 
-export async function devilsAdvocate(req: Request, res: Response): Promise<void> {
+export async function devilsAdvocate(user: IUser, req: Request, res: Response): Promise<void> {
     // stuff the entry in the queue.
     // get the id of the entry, this will be the id of the Post
     // each of the two PostViewpoints will have a reference to the Post
@@ -20,7 +20,6 @@ export async function devilsAdvocate(req: Request, res: Response): Promise<void>
 
     const body = req.body;
     const parentId: MongooseTypes.ObjectId | undefined = new MongooseTypes.ObjectId(req.params.parentId) ?? undefined;
-    const user = req.user;
     const userId = new MongooseTypes.ObjectId(new ObjectId().toString()); // TODO: get from auth
     console.log('user', user, userId);
     if (body === undefined) {
