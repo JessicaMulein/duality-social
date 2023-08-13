@@ -12,7 +12,7 @@
         "format": ["cjs"],
         "main": "apps/duality-social-node/src/main.ts",
         "tsConfig": "apps/duality-social-node/tsconfig.app.json",
-        "assets": ["apps/duality-social-node/src/assets"],
+        "assets": ["apps/duality-social-node/src/assets", "apps/duality-social-node/.env"],
         "esbuildOptions": {
           "sourcemap": true,
           "outExtension": {

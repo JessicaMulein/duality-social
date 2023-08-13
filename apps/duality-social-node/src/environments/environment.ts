@@ -1,6 +1,7 @@
 import { dirname } from 'path';
 import { IEnvironment } from '../interfaces/environment';
 import { readFileSync } from 'fs';
+import 'dotenv/config'
 
 /**
  * 6226576d-37e9-49eb-b201-ec1eeb0029b6 is the production microsoft client id
@@ -16,17 +17,6 @@ const cloudInstance =
 const cloudInstanceDomain = cloudInstance
   .replace('https://', '')
   .replace('/', '');
-/**
- * https://learn.microsoft.com/en-us/azure/active-directory/develop/accounts-overview
- */
-const tenantId =
-  process.env.TENANT_ID ?? '87e87c07-f72e-4811-9730-85294c4c92e4';
-// consumers, common, organizations, or tenant id
-const authorityRealm = 'consumers';
-// consumers, common, organizations, or tenant id
-const authority = `${cloudInstanceDomain}/${authorityRealm}`;
-console.log('authority', authority);
-//const authority = cloudInstance + tenantId + '/';
 const host = process.env.SERVER_HOST ?? 'localhost';
 const port = Number(process.env.PORT ?? 3000);
 const production = process.env.NODE_ENV === 'production';
