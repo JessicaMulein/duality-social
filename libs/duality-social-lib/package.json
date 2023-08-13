@@ -4,23 +4,9 @@
   "version": "0.0.1",
   "license": "MIT",
   "dependencies": {
-    "@angular-devkit/build-angular": "~15.2.0",
-    "@angular/cli": "~15.2.0",
-    "@fortawesome/fontawesome-common-types": "^6.4.2",
-    "@types/jest": "^29.4.0",
-    "@types/linkify-it": "^3.0.2",
-    "@types/markdown-it": "^12.2.3",
-    "linkify-it": "^4.0.1",
-    "markdown-it": "^13.0.1",
-    "mongoose": "^7.0.4",
-    "openai": "^3.2.1",
-    "phone": "^3.1.35",
-    "sanitize-html": "^2.10.0",
-    "string-strip-html": "^13.2.3",
-    "tlds": "^1.236.0"
+   
   },
   "devDependencies": {
-    "@types/sanitize-html": "^2.9.0",
-    "jest-util": "^29.5.0"
+
   }
 }

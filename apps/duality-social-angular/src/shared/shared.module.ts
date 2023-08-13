@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { CustomMaterialModule } from '../custom-material/custom-material.module';
@@ -23,7 +22,6 @@ import { PostPreviewComponent } from './widgets/post-preview/post-preview.compon
         CustomMaterialModule,
         FormsModule,
         ReactiveFormsModule,
-        FlexLayoutModule,
     ],
     declarations: [
         ConfirmDialogComponent,
@@ -42,7 +40,6 @@ import { PostPreviewComponent } from './widgets/post-preview/post-preview.compon
     exports: [
         FormsModule,
         ReactiveFormsModule,
-        FlexLayoutModule,
         CustomMaterialModule,
         LimitToPipe,
         ConfirmDialogComponent,
