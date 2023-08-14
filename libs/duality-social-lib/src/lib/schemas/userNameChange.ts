@@ -1,5 +1,5 @@
 import { Schema } from 'mongoose';
-export const UserNameChangeSchema = new Schema({
+export const UsernameChangeSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: 'User',

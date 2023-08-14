@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 import { environment } from './environments/environment';
-import { MongooseSchemas, PasswordRounds, UserSchema } from '@duality-social/duality-social-lib';
-import { hashSync } from 'bcryptjs';
+import { MongooseSchemas } from '@duality-social/duality-social-lib';
 
 
 let db: mongoose.Mongoose | undefined;
@@ -29,15 +28,3 @@ export async function getDatabase(): Promise<mongoose.Mongoose> {
 export function getSchemas() {
   return Schemas;
 }
-
-UserSchema.pre('save', function (next) {
-  if (!this.isModified('accountPasswordHash')) {
-    return next();
-  }
-  if ( !this.accountPasswordHash ) {
-    return next();
-  }
-  const hashedPassword = hashSync(this.accountPasswordHash, PasswordRounds);
-  this.accountPasswordHash = hashedPassword;
-  next();
-});

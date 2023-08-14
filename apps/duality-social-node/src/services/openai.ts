@@ -1,11 +1,13 @@
 
 import {
-  BaseModelCaches,
+  BaseModel,
   closestImageSize,
   HumanityTypeEnum,
   imageDataUrlToFile,
   IPost,
+  IPostViewpoint,
   makeDataUrl,
+  ModelName,
 } from '@duality-social/duality-social-lib';
 import {
     Configuration,
@@ -25,6 +27,9 @@ import { environment } from '../environments/environment';
 import { Types as MongooseTypes, Schema } from "mongoose";
 export const DevilsAdvocatePrompt = "Given the following post by a human, rewrite it, taking an opposite position, like playing Devil's Advocate, using a similar tone and style:";
 export const DevilsAdvocateImagePrompt = "Given the following position text, and a supplied image, generate an image that depicts the position:";
+
+const PostModel = BaseModel.getModel<IPost>(ModelName.Post);
+const PostViewpointModel = BaseModel.getModel<IPostViewpoint>(ModelName.PostViewpoint);
 
 const openAiConfig: ConfigurationParameters = {
   basePath: environment.openai.type === 'azure' ? 'https://api.openai.com/v1' : 'https://api.openai.com/v1',
@@ -125,7 +130,7 @@ export async function imageDataUrlToSizeAndFile(imageDataUrl: string): Promise<{
     // const logitBias = null;
     const completionRequest: CreateCompletionRequest = {
       model: model,
-      prompt: DevilsAdvocatePrompt.concat("\n\n", post),
+      prompt: DevilsAdvocatePrompt.concat("\n\n```", post, "\n```"),
       max_tokens: maxTokens,
       temperature,
       // top_p: topP,
@@ -205,7 +210,7 @@ export async function imageDataUrlToSizeAndFile(imageDataUrl: string): Promise<{
    async function runPrompt(createdById: MongooseTypes.ObjectId, humanity: HumanityTypeEnum, postContent: string): Promise<IPost> {
     // todo start spinner? deal with outside this?
     const currentDate = new Date();
-    const post = new BaseModelCaches.Posts.Model({
+    const post = new PostModel({
       inReplyToViewpointId: undefined,
       inputViewpointId: undefined,
       aiViewpointId: undefined,
@@ -225,13 +230,13 @@ export async function imageDataUrlToSizeAndFile(imageDataUrl: string): Promise<{
       updatedById: createdById,
   });
    ;
-    const savedPost = await BaseModelCaches.Posts.Model.create(post);
+    const savedPost = await PostModel.create(post);
     const postId: Schema.Types.ObjectId | undefined = savedPost._id;
     if (!postId) {
       throw new Error('Post id not saved');
     }
     post._id = postId;
-    const firstViewpoint = new BaseModelCaches.PostViewpoints.Model({
+    const firstViewpoint = new PostViewpointModel({
       post: postId,
       inptViewpoint: undefined,
       parentViewpoint: undefined,
@@ -249,7 +254,7 @@ export async function imageDataUrlToSizeAndFile(imageDataUrl: string): Promise<{
         reactionsByType: {},
       }
     });
-    const firstViewpointId = (await BaseModelCaches.PostViewpoints.Model.create(firstViewpoint))._id;
+    const firstViewpointId = (await PostViewpointModel.create(firstViewpoint))._id;
     if (!firstViewpointId) {
       throw new Error('First viewpoint id not saved');
     }
@@ -259,19 +264,19 @@ export async function imageDataUrlToSizeAndFile(imageDataUrl: string): Promise<{
     }
     post.inputViewpoint = firstViewpointId;
     // TODO: images
-    const aiViewpoint = new BaseModelCaches.PostViewpoints.Model({
+    const aiViewpoint = new PostViewpointModel({
       postId: postId,
       humanityType: HumanityTypeEnum.Ai,
       content: aiResponse.aiResponse,
       createdById: createdById,
     });
-    const aiViewpointModel = new BaseModelCaches.PostViewpoints.Model(await BaseModelCaches.PostViewpoints.Model.create(aiViewpoint));
+    const aiViewpointModel = new PostViewpointModel(await PostViewpointModel.create(aiViewpoint));
     const aiViewpointId = aiViewpointModel._id;
     if (!aiViewpointId) {
       throw new Error('AI viewpoint id not saved');
     }
     post.aiViewpoint = aiViewpointId;
-    const updated = await BaseModelCaches.PostViewpoints.Model.updateOne(
+    const updated = await PostViewpointModel.updateOne(
       { _id: firstViewpointId },
       { $set: { aiViewpoint: aiViewpointId } }
     );

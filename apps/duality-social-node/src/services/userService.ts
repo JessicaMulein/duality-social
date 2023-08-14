@@ -1,5 +1,7 @@
 // utils/userUtils.ts
-import { IUser, UserModel } from '@duality-social/duality-social-lib';
+import { BaseModel, IUser, ModelName } from '@duality-social/duality-social-lib';
+
+const UserModel = BaseModel.getModel<IUser>(ModelName.User);
 
 export const getUserFromDatabase = async (userId: string): Promise<IUser | null> => {
   try {
@@ -16,7 +18,7 @@ export const createUser = async (token: any): Promise<IUser> => {
     const user = await UserModel.create({
       id: token.sub,
       displayName: token.name,
-      accountEmail: token.email,
+      email: token.email,
       roles: ['User'],
     });
     return user;

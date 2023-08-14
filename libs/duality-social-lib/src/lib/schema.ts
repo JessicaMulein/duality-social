@@ -3,6 +3,7 @@
 // see also: ./db_functions.ts
 // ---------------------------------------------------------------------------------------------
 import { Model, Schema } from 'mongoose';
+import { ModelName } from './enumerations/modelName';
 import { IAdminUser } from './interfaces/adminUser';
 import { IInvitation } from './interfaces/invitation';
 import { ILogin } from './interfaces/login';
@@ -14,7 +15,7 @@ import { IProfile } from './interfaces/profile';
 import { IReport } from './interfaces/report';
 import { ISudoLog } from './interfaces/sudoLog';
 import { IUser } from './interfaces/user';
-import { IUserNameChange } from './interfaces/userNameChange';
+import { IUsernameChange } from './interfaces/usernameChange';
 import { IViewpointReaction } from './interfaces/viewpointReaction';
 import { AdminUserSchema } from './schemas/adminUser';
 import { InvitationSchema } from './schemas/invitation';
@@ -27,9 +28,8 @@ import { ProfileSchema } from './schemas/profile';
 import { ReportSchema } from './schemas/report';
 import { SudoLogSchema } from './schemas/sudoLog';
 import { UserSchema } from './schemas/user';
-import { UserNameChangeSchema } from './schemas/userNameChange';
+import { UsernameChangeSchema } from './schemas/usernameChange';
 import { ViewpointReactionSchema } from './schemas/viewpointReaction';
-import { BaseModelCache } from './models/baseModelCache';
 import { IUserMeta } from './interfaces/userMeta';
 import { UserMetaSchema } from './schemas/userMeta';
 import { registerModel } from './db_functions';
@@ -41,102 +41,116 @@ import { IModelData } from './interfaces/modelData';
  */
 export const ModelData: { [key: string]: IModelData } = {
   AdminUser: {
-    name: 'AdminUser',
+    name: ModelName.AdminUser,
     description: 'An admin user in the system.',
     apiName: 'admin-users',
-    pluralName: 'AdminUsers',
+    pluralName: 'admin users',
     schema: AdminUserSchema,
+    path: '/user',
   },
   Invitation: {
-    name: 'Invitation',
+    name: ModelName.Invitation,
     description: 'An invitation to join the system.',
     apiName: 'invitations',
-    pluralName: 'Invitations',
+    pluralName: 'invitations',
     schema: InvitationSchema,
+    path: '/invitation',
   },
   Login: {
-    name: 'Login',
+    name: ModelName.Login,
     description: 'A login to the system.',
     apiName: 'logins',
-    pluralName: 'Logins',
+    pluralName: 'logins',
     schema: LoginSchema,
+    path: '/login',
   },
   Post: {
-    name: 'Post',
+    name: ModelName.Post,
     description: 'A post in the system containing two viewpoints.',
     apiName: 'posts',
-    pluralName: 'Posts',
+    pluralName: 'posts',
     schema: PostSchema,
+    path: '/post',
   },
   PostExpand: {
-    name: 'PostExpand',
+    name: ModelName.PostExpand,
     description: 'A post expand event.',
     apiName: 'post-expands',
-    pluralName: 'PostExpands',
+    pluralName: 'post expands',
     schema: PostExpandSchema,
+    path: '/post-expand',
   },
   PostImpression: {
-    name: 'PostImpression',
+    name: ModelName.PostImpression,
     description: 'A post impression event.',
     apiName: 'post-impressions',
     pluralName: 'PostImpressions',
     schema: PostImpressionSchema,
+    path: '/post-impression',
   },
   PostViewpoint: {
-    name: 'PostViewpoint',
+    name: ModelName.PostViewpoint,
     description: 'A post viewpoint.',
     apiName: 'post-viewpoints',
-    pluralName: 'PostViewpoints',
+    pluralName: 'post viewpoints',
     schema: PostViewpointSchema,
+    path: '/post-viewpoint',
   },
   Profile: {
-    name: 'Profile',
+    name: ModelName.Profile,
     description: 'A user profile.',
     apiName: 'profiles',
-    pluralName: 'Profiles',
+    pluralName: 'profiles',
     schema: ProfileSchema,
+    path: '/profile',
   },
   Report: {
-    name: 'Report',
+    name: ModelName.Report,
     description: 'A report of a post.',
     apiName: 'reports',
-    pluralName: 'Reports',
+    pluralName: 'reports',
     schema: ReportSchema,
+    path: '/report',
   },
   SudoLog: {
-    name: 'SudoLog',
+    name: ModelName.SudoLog,
     description: 'A log of sudo events.',
     apiName: 'sudo-logs',
-    pluralName: 'SudoLogs',
+    pluralName: 'sudo logs',
     schema: SudoLogSchema,
+    path: '/sudo-log',
   },
   User: {
-    name: 'User',
+    name: ModelName.User,
     description: 'A user in the system.',
     apiName: 'users',
-    pluralName: 'Users',
+    pluralName: 'users',
     schema: UserSchema,
+    path: '/user',
   },
   UserMeta: {
-    name: 'UserMeta',
+    name: ModelName.UserMeta,
     description: 'Metadata for a user in the system.',
-    apiName: 'user-meta',
-    pluralName: 'UserMetas',
+    apiName: 'user-metas',
+    pluralName: 'user metas',
     schema: UserMetaSchema,
+    path: '/user-meta',
   },
-  UserNameChange: {
-    name: 'UsernameChange',
+  UsernameChange: {
+    name: ModelName.UsernameChange,
     description: 'A username change event.',
-    apiName: 'username-change',
-    pluralName: 'UsernameChanges',
-    schema: UserNameChangeSchema,
+    apiName: 'username-changes',
+    pluralName: 'username changes',
+    schema: UsernameChangeSchema,
+    path: '/username-change',
   },
   ViewpointReaction: {
-    name: 'ViewpointReaction',
+    name: ModelName.ViewpointReaction,
     description: 'A reaction to a viewpoint.',
     apiName: 'viewpoint-reaction',
-    pluralName: 'ViewpointReactions',
+    pluralName: 'viewpoint reactions',
     schema: ViewpointReactionSchema,
+    path: '/viewpoint-reaction',
   },
 };
 
@@ -148,68 +162,28 @@ export type ModelNames = keyof typeof ModelData;
 /**
  * A simple dictionary of schemas for all models in the system.
  */
-export const MongooseSchemas: { [key: string]: Schema } = {
-  AdminUsers: AdminUserSchema,
-  Invitations: InvitationSchema,
-  Logins: LoginSchema,
-  Posts: PostSchema,
-  PostExpands: PostExpandSchema,
-  PostImpressions: PostImpressionSchema,
-  PostViewpoints: PostViewpointSchema,
-  Profiles: ProfileSchema,
-  Reports: ReportSchema,
-  SudoLogs: SudoLogSchema,
-  Users: UserSchema,
-  UserMetas: UserMetaSchema,
-  UserNameChanges: UserNameChangeSchema,
-  ViewpointReactions: ViewpointReactionSchema,
-};
-
-/**
- * A simple dictionary of schema names for all models in the system.
- */
-export const MongooseModelSchemaNames: { [key: string]: string } = {
-  AdminUser: ModelData['AdminUser'].name,
-  Invitation: ModelData['Invitation'].name,
-  Login: ModelData['Login'].name,
-  Post: ModelData['Post'].name,
-  PostExpand: ModelData['PostExpand'].name,
-  PostImpression: ModelData['PostImpression'].name,
-  PostViewpoint: ModelData['PostViewpoint'].name,
-  Profile: ModelData['Profile'].name,
-  Report: ModelData['Report'].name,
-  SudoLog: ModelData['SudoLog'].name,
-  User: ModelData['User'].name,
-  UserMeta: ModelData['UserMeta'].name,
-  UserNameChange: ModelData['UserNameChange'].name,
-  ViewpointReaction: ModelData['ViewpointReaction'].name,
-};
-
-/**
- * A simple dictionary of plural collection names for all models in the system.
- */
-export const MongooseCollectionNames: { [key: string]: string } = {
-  AdminUsers: ModelData['AdminUser'].apiName,
-  Invitations: ModelData['Invitation'].apiName,
-  Logins: ModelData['Login'].apiName,
-  Posts: ModelData['Post'].apiName,
-  PostExpands: ModelData['PostExpand'].apiName,
-  PostImpressions: ModelData['PostImpression'].apiName,
-  PostViewpoints: ModelData['PostViewpoint'].apiName,
-  Profiles: ModelData['Profile'].apiName,
-  Reports: ModelData['Report'].apiName,
-  SudoLogs: ModelData['SudoLog'].apiName,
-  Users: ModelData['User'].apiName,
-  UserMetas: ModelData['UserMeta'].apiName,
-  UserNameChanges: ModelData['UserNameChange'].apiName,
-  ViewpointReactions: ModelData['ViewpointReaction'].apiName,
+export const MongooseSchemas: { [key: ModelNames]: Schema } = {
+  AdminUser: AdminUserSchema,
+  Invitation: InvitationSchema,
+  Login: LoginSchema,
+  Post: PostSchema,
+  PostExpand: PostExpandSchema,
+  PostImpression: PostImpressionSchema,
+  PostViewpoint: PostViewpointSchema,
+  Profile: ProfileSchema,
+  Report: ReportSchema,
+  SudoLog: SudoLogSchema,
+  User: UserSchema,
+  UserMeta: UserMetaSchema,
+  UsernameChange: UsernameChangeSchema,
+  ViewpointReaction: ViewpointReactionSchema,
 };
 
 /**
  * A simple dictionary of models for all models in the system.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const MongooseModels: { [key: string]: Model<any> } = {
+export const MongooseModels: { [key: ModelNames]: Model<any> } = {
   AdminUser: registerModel<IAdminUser>(ModelData['AdminUser']),
   Invitation: registerModel<IInvitation>(ModelData['Invitation']),
   Login: registerModel<ILogin>(ModelData['Login']),
@@ -221,62 +195,9 @@ export const MongooseModels: { [key: string]: Model<any> } = {
   Report: registerModel<IReport>(ModelData['Report']),
   SudoLog: registerModel<ISudoLog>(ModelData['SudoLog']),
   User: registerModel<IUser>(ModelData['User']),
-  UserNameChange: registerModel<IUserNameChange>(ModelData['UserNameChange']),
+  UserMeta: registerModel<IUserMeta>(ModelData['UserMeta']),
+  UsernameChange: registerModel<IUsernameChange>(ModelData['UsernameChange']),
   ViewpointReaction: registerModel<IViewpointReaction>(
     ModelData['ViewpointReaction']
-  ),
-};
-
-/**
- * A simple dictionary of caches for each of the models in the system.
- * These model caches are used to cache model instances in memory.
- */
-export const BaseModelCaches = {
-  AdminUsers: BaseModelCache.make<IAdminUser>(
-    ModelData['AdminUser'],
-    MongooseModels['AdminUser']
-  ),
-  Invitations: BaseModelCache.make<IInvitation>(
-    ModelData['Invitation'],
-    MongooseModels['Invitation']
-  ),
-  Logins: BaseModelCache.make<ILogin>(ModelData['Login'], MongooseModels['Login']),
-  Posts: BaseModelCache.make<IPost>(ModelData['Post'], MongooseModels['Post']),
-  PostExpands: BaseModelCache.make<IPostExpand>(
-    ModelData['PostExpand'],
-    MongooseModels['PostExpand']
-  ),
-  PostImpressions: BaseModelCache.make<IPostImpression>(
-    ModelData['PostImpression'],
-    MongooseModels['PostImpression']
-  ),
-  PostViewpoints: BaseModelCache.make<IPostViewpoint>(
-    ModelData['PostViewpoint'],
-    MongooseModels['PostViewpoint']
-  ),
-  Profiles: BaseModelCache.make<IProfile>(
-    ModelData['Profile'],
-    MongooseModels['Profile']
-  ),
-  Reports: BaseModelCache.make<IReport>(
-    ModelData['Report'],
-    MongooseModels['Report']
-  ),
-  SudoLogs: BaseModelCache.make<ISudoLog>(
-    ModelData['SudoLog'],
-    MongooseModels['SudoLog']
-  ),
-  Users: BaseModelCache.make<IUser>(ModelData['User'], MongooseModels['User']),
-  UserMetas: BaseModelCache.make<IUserMeta>(
-    ModelData['UserMeta'],
-    MongooseModels['UserMeta']
-  ),
-  UserNameChanges: BaseModelCache.make<IUserNameChange>(
-    ModelData['UserNameChange'],
-    MongooseModels['UserNameChange']
-  ),
-  ViewpointReactions: BaseModelCache.make<IViewpointReaction>(
-    ModelData['ViewpointReaction'],
-    MongooseModels['ViewpointReaction']
   ),
 };

@@ -5,6 +5,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { SafeHtml } from '@angular/platform-browser';
+import { parsePostContent } from '@duality-social/duality-social-lib';
 
 @Component({
   selector: 'app-fa-playground',
@@ -37,8 +38,9 @@ export class PlaygroundComponent implements OnInit, OnChanges {
     this.updatePostContent();
   }
 
-  public updatePostContent(): void {
+  public async updatePostContent(): Promise<void> {
     this._postContent = this.form.get('postContent')?.value;
+    this._playgroundOutput = await parsePostContent(this._postContent);
   }
 
   public ngOnInit(): void {

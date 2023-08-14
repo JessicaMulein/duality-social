@@ -10,4 +10,6 @@ export const feedRouter = Router();
 // Commands
 // -----
 // /api/test
-feedRouter.post('/feed', newPost);
+feedRouter.post('/', newPost);
+
+feedRouter.post('/preview', )

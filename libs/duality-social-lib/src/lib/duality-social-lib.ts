@@ -1,7 +1,7 @@
 import { CreateImageRequestSizeEnum } from 'openai';
 import { Buffer } from 'buffer';
 import sanitizeHtml from 'sanitize-html';
-import { parseIconMarkup } from './font-awesome/font-awesome';
+import { parseIconMarkup, stripIconMarkup } from './font-awesome/font-awesome';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const MarkdownIt = require('markdown-it');
 
@@ -60,4 +60,15 @@ export function parsePostContent(content: string): string {
   // Phase 3: Parse our custom icon syntax
   content = parseIconMarkup(content);
   return content;
+}
+
+export function sanitizeWhitespace(input: string): string {
+  // replace all whitespace with a single space
+  return input.replace(/\s+/g, ' ').trim();
+}
+
+export function sanitizeForAi(input: string): string {
+  const sanitized = sanitizeWhitespace(input);
+  const stripped = stripIconMarkup(sanitized);
+  return stripped;
 }

@@ -1,5 +1,4 @@
 import {  Schema } from 'mongoose';
-import { BaseModelCaches } from '../schema';
 
 /**
  * Toplevel object represents a post with its two viewpoints

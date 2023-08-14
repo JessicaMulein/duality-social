@@ -3,12 +3,14 @@ import {
     DevilsAdvocateImagePrompt,
     getOppositeResponseFromOpenAI
 } from '../services/openai';
-import { BaseModelCaches, IDevilsAdvocateRequest, IDevilsAdvocateResponse, HumanityTypeEnum } from '@duality-social/duality-social-lib';
+import { IDevilsAdvocateRequest, IDevilsAdvocateResponse, HumanityTypeEnum, BaseModel, IPost, ModelName, IPostViewpoint } from '@duality-social/duality-social-lib';
 import { Schema, Types as MongooseTypes } from 'mongoose';
 import { ObjectId } from 'bson';
 import { ViewpointTypeEnum, IUser } from '@duality-social/duality-social-lib';
 
-
+const PostModel = BaseModel.getModel<IPost>(ModelName.Post);
+const PostViewpointModel = BaseModel.getModel<IPostViewpoint>(ModelName.PostViewpoint);
+const PostViewpointModelData = BaseModel.ModelDataMap.get(ModelName.PostViewpoint);
 
 export async function devilsAdvocate(user: IUser, req: Request, res: Response): Promise<void> {
     // stuff the entry in the queue.
@@ -29,7 +31,7 @@ export async function devilsAdvocate(user: IUser, req: Request, res: Response): 
         return;
     }
     const postId = new MongooseTypes.ObjectId(new ObjectId().toString());
-    const humanViewpoint = new BaseModelCaches.PostViewpoints.Model({
+    const humanViewpoint = new PostViewpointModel({
         post: postId,
         humanityType: HumanityTypeEnum.Human,
         content: body.postContent,
@@ -38,14 +40,14 @@ export async function devilsAdvocate(user: IUser, req: Request, res: Response): 
         createdBy: userId,
         updatedBy: userId
     });
-    const humanViewpointId = (await BaseModelCaches.PostViewpoints.Model.create(humanViewpoint))._id;
+    const humanViewpointId = (await PostViewpointModel.create(humanViewpoint))._id;
     if (humanViewpointId === undefined) {
         res.status(500).json({
             error: 'Failed to create human viewpoint'
         });
         return;
     }
-    const post = await BaseModelCaches.Posts.Model.create({
+    const post = await PostModel.create({
         _id: postId,
         inputViewpoint: humanViewpointId,
         imageUrls: [],
@@ -83,17 +85,17 @@ export async function devilsAdvocate(user: IUser, req: Request, res: Response): 
             postId: postId.toString(),
             aiPostText: aiPostText,
         };
-        const aiViewpoint = new BaseModelCaches.PostViewpoints.Model({
+        const aiViewpoint = new PostViewpointModel({
             postId: postId,
             humanityType: HumanityTypeEnum.Ai,
             content: aiPostText,
             createdBy: userId,
             updatedBy: userId
         });
-        const aiViewpointId = (await BaseModelCaches.PostViewpoints.Model.create(aiViewpoint))._id;
+        const aiViewpointId = (await PostViewpointModel.create(aiViewpoint))._id;
         aiViewpoint._id = aiViewpointId;
-        post.aiViewpoint = aiViewpointId ?? new Schema.Types.ObjectId(BaseModelCaches.PostViewpoints.Path);
-        const updateStatus = await BaseModelCaches.Posts.Model.updateOne(
+        post.aiViewpoint = aiViewpointId ?? new Schema.Types.ObjectId(PostViewpointModelData!.path);
+        const updateStatus = await PostModel.updateOne(
             { _id: post._id },
             { $set: { aiViewpoint: aiViewpointId } }
         );

@@ -7,7 +7,7 @@ export const PostViewpointSchema = new Schema(
     /**
      * Correlation id to link the dualities.
      */
-    post: {
+    postId: {
       type: Schema.Types.ObjectId,
       ref: 'Post',
       required: true,

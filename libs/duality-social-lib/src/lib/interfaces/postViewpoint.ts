@@ -19,7 +19,7 @@ export interface IPostViewpoint extends IHasID, IHasTimestamps, IHasSoftDelete, 
   /**
    * Correlation id to link the dualities.
    */
-  post: IPost['_id'];
+  postId: IPost['_id'];
   /**
    * What type of entity created this post.
    */

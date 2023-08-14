@@ -1,6 +1,6 @@
 import { Document } from "mongoose"
 
-export interface IUserNameChange extends Document {
+export interface IUsernameChange extends Document {
     oldName: string
     newName: string
     createdAt: Date

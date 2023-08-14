@@ -46,12 +46,11 @@ export interface IUser extends Document, IHasID, IHasTimestamps, IHasTimestampOw
      */
     accountStatusType: AccountStatusTypeEnum;
     humanityType: HumanityTypeEnum,
-    accountPasswordHash?: string,
   /**
    * The user's email address, used for login if accountType is email/password.
    * Used for sending notifications, regardless.
    */
-    accountEmail?: string;
+    email?: string;
   /**
    * Whether the user has verified their email address.
    * See also a record in the email verification collection.

@@ -1,5 +1,4 @@
 import { Schema } from 'mongoose';
-import { BaseModelCaches } from '../schema';
 export const ViewpointReactionSchema = new Schema(
   {
     post: {
