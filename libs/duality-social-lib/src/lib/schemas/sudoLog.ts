@@ -1,27 +1,23 @@
 import { Schema } from 'mongoose';
+import { ISudoLog } from '../interfaces/sudoLog';
+import ModelName from '../enumerations/modelName';
 
-export const SudoLogSchema = new Schema({
+export const SudoLogSchema = new Schema<ISudoLog>({
   /**
    * The id of the user attempting sudo.
    */
-  user: {
+  userId: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: ModelName.User,
     required: true,
     immutable: true,
   },
   /**
    * The id of the admin user if the sudo attempt was successful.
    */
-  adminUser: { type: Schema.Types.ObjectId, optional: true, immutable: true },
+  adminUserId: { type: Schema.Types.ObjectId, ref: ModelName.AdminUser, optional: true, immutable: true },
   /**
    * Whether the sudo attempt was successful.
    */
   success: { type: Boolean, required: true, immutable: true, null: false },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-    required: true,
-    immutable: true,
-  },
-});
+}, { timestamps: true });

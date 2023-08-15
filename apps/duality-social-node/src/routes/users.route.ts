@@ -1,34 +1,14 @@
-/*
- * Copyright (c) Microsoft Corporation. All rights reserved.
- * Licensed under the MIT License.
- */
-
-import express = require('express');
 import { Request, Response, Router} from 'express';
-import { fetch } from '../fetch';
-import { environment } from '../environments/environment';
+import { UserService } from '../services/userService';
 export const usersRouter = Router();
 
-// allows unauthorized users to POST to /users/login
-// usersRouter.post(
-//   '/login', // POST /users/login
-//   login // use the login POST handler
-// )
-
-usersRouter.get(
-  '/id',
-  async function (req: Request, res: Response, next: (error: unknown) => void) {
-    // if (!req.session || !req.session.account) {
-      next(new Error('Session not found'));
-    //   return;
-    // }
-    // res.render('id', { idTokenClaims: req.session.account.idTokenClaims });
+usersRouter.post('/register', async (req: Request, res: Response) => {
+  const { email, username, password } = req.body;
+  try {
+    const newUser = await UserService.register(email, username, password);
+    res.status(201).json(newUser);
   }
-);
-
-usersRouter.get(
-  '/profile',
-  async function (req, res, next) {
-      next();
+  catch (error) {
+    res.status(400).json(error);
   }
-);
+});

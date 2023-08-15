@@ -1,5 +1,4 @@
 export * from './lib/duality-social-lib';
-export * from './lib/enumerations/accountLoginType';
 export * from './lib/enumerations/accountStatusType';
 export * from './lib/enumerations/adminLevel';
 export * from './lib/enumerations/defaultReactionsType';
@@ -16,6 +15,7 @@ export * from './lib/enumerations/viewpointType';
 export * from './lib/interfaces/adminUser';
 export * from './lib/interfaces/devilsAdvocateRequest';
 export * from './lib/interfaces/devilsAdvocateResponse';
+export * from './lib/interfaces/emailChange';
 export * from './lib/interfaces/hasCreation';
 export * from './lib/interfaces/hasCreator';
 export * from './lib/interfaces/hasDeleter';
@@ -35,7 +35,6 @@ export * from './lib/interfaces/profile';
 export * from './lib/interfaces/reaction';
 export * from './lib/interfaces/report';
 export * from './lib/interfaces/sudoLog';
-export * from './lib/interfaces/urlData';
 export * from './lib/interfaces/user';
 export * from './lib/interfaces/userMeta';
 export * from './lib/interfaces/usernameChange';
@@ -63,4 +62,5 @@ export * from './lib/schemas/user';
 export * from './lib/schemas/userMeta';
 export * from './lib/schemas/usernameChange';
 export * from './lib/schemas/viewpointReaction';
+export * from './lib/schemas/vote';
 export * from './lib/font-awesome/font-awesome'

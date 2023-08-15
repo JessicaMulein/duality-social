@@ -1,11 +1,10 @@
-import { Document } from "mongoose";
-import { IPost } from "./post";
-import { IUser } from "./user";
+import { Schema } from "mongoose";
+import { IHasID } from "./hasId";
+import { IHasTimestamps } from "./hasTimestamps";
+import { IHasCreator } from "./hasCreator";
 
-export interface IPostImpression extends Document {
-    post: IPost['_id'];
-    user: IUser['_id'];
+export interface IPostImpression extends IHasID, IHasTimestamps, IHasCreator {
+    postId: Schema.Types.ObjectId;
     ip: string;
     botExclude: boolean;
-    createdAt: Date;
 }

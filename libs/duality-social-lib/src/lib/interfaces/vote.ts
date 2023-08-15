@@ -1,12 +1,12 @@
-import { Document } from 'mongoose';
 import { HumanityTypeEnum } from '../enumerations/humanityType';
 import { IHasCreation } from './hasCreation';
+import { IHasCreator } from './hasCreator';
 import { IHasID } from './hasId';
+import { IHasTimestamps } from './hasTimestamps';
 import { IPost } from './post';
 import { IUser } from './user';
 
-export interface IVote extends IHasID, IHasCreation, Document {
-    post: IPost['_id'];
+export interface IVote extends IHasID, IHasTimestamps, IHasCreator {
+    postId: IPost['_id'];
     humanity: HumanityTypeEnum;
-    createdBy: IUser['_id'];
 }

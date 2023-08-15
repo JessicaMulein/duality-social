@@ -1,6 +1,6 @@
 import express from 'express';
 import Pusher from 'pusher';
-import { environment } from './environments/environment';
+import { environment } from './environment';
 
 export function setupPusher(app: express.Application) {
     const pusher = new Pusher({

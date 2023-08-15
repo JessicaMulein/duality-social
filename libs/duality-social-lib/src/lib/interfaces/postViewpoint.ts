@@ -1,21 +1,15 @@
-import { Document } from 'mongoose';
+import { Schema } from 'mongoose';
 import { HumanityTypeEnum } from '../enumerations/humanityType';
 import { ViewpointTypeEnum } from '../enumerations/viewpointType';
+import { IPostViewpointMeta } from './postViewpointMeta';
 import { IHasID } from './hasId';
 import { IHasSoftDelete } from './hasSoftDelete';
 import { IHasTimestamps } from './hasTimestamps';
-import { IPost } from './post';
 import { IUser } from './user';
+import { IPost } from './post';
+import { IHasDeleter } from './hasDeleter';
 
-
-export interface IPostViewpointMeta {
-  expands: number;
-  impressions: number;
-  reactions:  number;
-  reactionsByType: { [key: string]: number };
-}
-
-export interface IPostViewpoint extends IHasID, IHasTimestamps, IHasSoftDelete, Document {
+export interface IPostViewpoint extends IHasID, IHasTimestamps, IHasSoftDelete, IHasDeleter {
   /**
    * Correlation id to link the dualities.
    */
@@ -35,7 +29,7 @@ export interface IPostViewpoint extends IHasID, IHasTimestamps, IHasSoftDelete, 
   /**
    * Whether the content is a translation.
    */
-  translation: boolean;
+  isTranslation: boolean;
   /**
    * The language of the content.
    */
@@ -43,8 +37,9 @@ export interface IPostViewpoint extends IHasID, IHasTimestamps, IHasSoftDelete, 
   /**
    * The id of the parent viewpoint if this is a reply.
    */
-  parentViewpoint?: IPostViewpoint['_id'];
+  parentViewpointId?: IPostViewpoint['_id'];
+  meta: IPostViewpointMeta;
+  viewpointType: ViewpointTypeEnum;
   createdBy: IUser['_id'];
   updatedBy: IUser['_id'];
-  meta: IPostViewpointMeta;
 }

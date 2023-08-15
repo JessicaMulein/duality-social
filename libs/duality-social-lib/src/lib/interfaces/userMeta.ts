@@ -3,10 +3,10 @@ import { IHasSoftDelete } from "./hasSoftDelete";
 import { IHasTimestampOwners } from "./hasTimestampOwners";
 import { IHasTimestamps } from "./hasTimestamps";
 import { IHasID } from "./hasId";
+import { IUser } from "./user";
 
 export interface IUserMeta extends Document, IHasID, IHasTimestamps, IHasTimestampOwners, IHasSoftDelete {
-    _id: Schema.Types.ObjectId;
-    userId: Schema.Types.ObjectId;
+    userId: IUser['_id'];
     /**
      * How many posts the user has made.
      */

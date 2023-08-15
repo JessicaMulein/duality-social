@@ -82,11 +82,11 @@ export async function newPost(req: Request, res: Response) {
     }
     inputViewpoint._id = inputViewpointId;
     // update the post with the input viewpoint id
-    post.inputViewpoint = inputViewpointId;
+    post.inputViewpointId = inputViewpointId;
     const updateStatus = await PostModel.updateOne(
         { _id: newPostId }, {
             $set: {
-                inputViewpoint: inputViewpointId,
+                inputViewpointId: inputViewpointId,
             },
         }
     );

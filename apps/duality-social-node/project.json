@@ -24,13 +24,7 @@
         "production": {
           "esbuildOptions": {
             "sourcemap": false
-          },
-          "fileReplacements": [
-            {
-              "replace": "apps/duality-social-node/src/environments/environment.ts",
-              "with": "apps/duality-social-node/src/environments/environment.prod.ts"
-            }
-          ]
+          }
         }
       }
     },

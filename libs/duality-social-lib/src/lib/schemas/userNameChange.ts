@@ -1,8 +1,10 @@
 import { Schema } from 'mongoose';
-export const UsernameChangeSchema = new Schema({
-  user: {
+import { IUsernameChange } from '../interfaces/usernameChange';
+import ModelName from '../enumerations/modelName';
+export const UsernameChangeSchema = new Schema<IUsernameChange>({
+  userId: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: ModelName.User,
     required: true,
     null: false,
     immutable: true,

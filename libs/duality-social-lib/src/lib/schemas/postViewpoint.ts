@@ -1,15 +1,17 @@
 import { Schema } from 'mongoose';
 import { HumanityTypeEnum } from '../enumerations/humanityType';
 import { ViewpointTypeEnum } from '../enumerations/viewpointType';
+import { IPostViewpoint } from '../interfaces/postViewpoint';
+import ModelName from '../enumerations/modelName';
 
-export const PostViewpointSchema = new Schema(
+export const PostViewpointSchema = new Schema<IPostViewpoint>(
   {
     /**
      * Correlation id to link the dualities.
      */
     postId: {
       type: Schema.Types.ObjectId,
-      ref: 'Post',
+      ref: ModelName.Post,
       required: true,
       immutable: true,
     },
@@ -37,20 +39,11 @@ export const PostViewpointSchema = new Schema(
       immutable: true,
     },
     /**
-     * Whether the content has been formatted.
-     */
-    formatted: {
-      type: Boolean,
-      required: true,
-      default: false,
-      immutable: true,
-    },
-    /**
      * The id of the parent viewpoint if this is a reply.
      */
-    parentViewpoint: {
+    parentViewpointId: {
       type: Schema.Types.ObjectId,
-      ref: 'PostViewpoint',
+      ref: ModelName.PostViewpoint,
       optional: true,
       immutable: true,
     },
@@ -60,12 +53,13 @@ export const PostViewpointSchema = new Schema(
     content: { type: String, required: true, immutable: true },
     /**
      * Whether the content has been pre-rendered.
+     * Not immutable because rendering may be improved or changed
      */
     contentRendered: { type: String, required: false },
     /**
      * Whether the content is a translation.
      */
-    translation: { type: Boolean, required: true, default: false },
+    isTranslation: { type: Boolean, required: true, default: false },
     deletedAt: { type: Date, optional: true },
     createdAt: {
       type: Date,
@@ -75,9 +69,14 @@ export const PostViewpointSchema = new Schema(
     },
     createdBy: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: ModelName.User,
       required: true,
       immutable: true,
+    },
+    deletedBy: {
+      type: Schema.Types.ObjectId,
+      ref: ModelName.User,
+      optional: true,
     },
     meta: {
       expands: Number,

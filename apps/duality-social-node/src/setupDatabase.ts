@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { environment } from './environments/environment';
+import { environment } from './environment';
 import { MongooseSchemas } from '@duality-social/duality-social-lib';
 
 

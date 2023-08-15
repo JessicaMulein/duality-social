@@ -1,30 +1,13 @@
-import { Document } from "mongoose";
 import { IHasID } from "./hasId";
 import { IHasSoftDelete } from "./hasSoftDelete";
+import { IHasTimestampOwners } from "./hasTimestampOwners";
 import { IHasTimestamps } from "./hasTimestamps";
-import { IHasUpdates } from "./hasUpdates";
-import { IUser } from "./user";
+import { IInvitationMeta } from "./invitationMeta";
 
-export interface IInvitationMeta extends IHasUpdates {
-    uses: number;
-    views: number;
-}
-
-export interface IInvitation extends IHasID, IHasTimestamps, IHasSoftDelete, Document {
+export interface IInvitation extends IHasID, IHasTimestamps, IHasSoftDelete, IHasTimestampOwners {
     email?: string;
     phone?: string;
     code?: string;
     maxUses?: number;
     meta: IInvitationMeta;
-    createdBy?: IUser['_id'];
-    updatedBy?: IUser['_id'];
-}
-
-export interface IClaimedInvitation extends IHasID, Document {
-    invitation: IInvitation['_id'];
-    ip: string;
-    email?: string;
-    code?: string;
-    phone?: string;
-    createdAt?: Date;
 }

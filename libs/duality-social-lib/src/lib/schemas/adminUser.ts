@@ -1,12 +1,13 @@
 import { Schema } from 'mongoose';
 import { IAdminUser } from '../interfaces/adminUser';
+import ModelName from '../enumerations/modelName';
 
 /**
  * An admin user in the system.
  */
 export const AdminUserSchema = new Schema<IAdminUser>(
   {
-    isAdmin: { type: Boolean, required: true },
+    userId: { type: Schema.Types.ObjectId, ref: ModelName.User, required: true, immutable: true },
     /**
      * The password hash for sudo access.
      */

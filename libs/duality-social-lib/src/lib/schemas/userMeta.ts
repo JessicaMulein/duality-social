@@ -1,8 +1,8 @@
 import { Schema } from "mongoose";
 import { IUserMeta } from "../interfaces/userMeta";
+import ModelName from "../enumerations/modelName";
 export const UserMetaSchema = new Schema<IUserMeta>({
-    _id: Schema.Types.ObjectId,
-    userId: { type: Schema.Types.ObjectId, ref: 'User' },
+    userId: { type: Schema.Types.ObjectId, ref: ModelName.User },
     /**
      * How many posts the user has made.
      */

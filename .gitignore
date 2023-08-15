@@ -2,6 +2,8 @@
 .env
 .devcontainer/devcontainer.env
 .npmrc
+.yarn/
+.yarnrc
 
 # keys
 /dev.key
@@ -46,8 +48,6 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
-
-.angular
 
 # Generated Docusaurus files
 .docusaurus/

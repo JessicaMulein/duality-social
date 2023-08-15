@@ -5,6 +5,7 @@
 import { Model, Schema } from 'mongoose';
 import { ModelName } from './enumerations/modelName';
 import { IAdminUser } from './interfaces/adminUser';
+import { IEmailChange } from './interfaces/emailChange';
 import { IInvitation } from './interfaces/invitation';
 import { ILogin } from './interfaces/login';
 import { IPost } from './interfaces/post';
@@ -18,6 +19,7 @@ import { IUser } from './interfaces/user';
 import { IUsernameChange } from './interfaces/usernameChange';
 import { IViewpointReaction } from './interfaces/viewpointReaction';
 import { AdminUserSchema } from './schemas/adminUser';
+import { EmailChangeSchema } from './schemas/emailChange';
 import { InvitationSchema } from './schemas/invitation';
 import { LoginSchema } from './schemas/login';
 import { PostSchema } from './schemas/post';
@@ -30,10 +32,12 @@ import { SudoLogSchema } from './schemas/sudoLog';
 import { UserSchema } from './schemas/user';
 import { UsernameChangeSchema } from './schemas/usernameChange';
 import { ViewpointReactionSchema } from './schemas/viewpointReaction';
+import { VoteSchema } from './schemas/vote';
 import { IUserMeta } from './interfaces/userMeta';
 import { UserMetaSchema } from './schemas/userMeta';
 import { registerModel } from './db_functions';
 import { IModelData } from './interfaces/modelData';
+import { IVote } from './interfaces/vote';
 
 /**
  * The schema for all models in the system.
@@ -46,7 +50,15 @@ export const ModelData: { [key: string]: IModelData } = {
     apiName: 'admin-users',
     pluralName: 'admin users',
     schema: AdminUserSchema,
-    path: '/user',
+    path: '/admin-user',
+  },
+  EmailChange: {
+    name: ModelName.EmailChange,
+    description: 'An email change event.',
+    apiName: 'email-changes',
+    pluralName: 'email changes',
+    schema: EmailChangeSchema,
+    path: '/email-change',
   },
   Invitation: {
     name: ModelName.Invitation,
@@ -152,6 +164,14 @@ export const ModelData: { [key: string]: IModelData } = {
     schema: ViewpointReactionSchema,
     path: '/viewpoint-reaction',
   },
+  Vote: {
+    name: ModelName.Vote,
+    description: 'A vote on the humanity of a viewpoint.',
+    apiName: 'votes',
+    pluralName: 'votes',
+    schema: VoteSchema,
+    path: '/vote',
+  }
 };
 
 /**
@@ -164,6 +184,7 @@ export type ModelNames = keyof typeof ModelData;
  */
 export const MongooseSchemas: { [key: ModelNames]: Schema } = {
   AdminUser: AdminUserSchema,
+  EmailChange: EmailChangeSchema,
   Invitation: InvitationSchema,
   Login: LoginSchema,
   Post: PostSchema,
@@ -177,6 +198,7 @@ export const MongooseSchemas: { [key: ModelNames]: Schema } = {
   UserMeta: UserMetaSchema,
   UsernameChange: UsernameChangeSchema,
   ViewpointReaction: ViewpointReactionSchema,
+  Vote: VoteSchema,
 };
 
 /**
@@ -185,6 +207,7 @@ export const MongooseSchemas: { [key: ModelNames]: Schema } = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const MongooseModels: { [key: ModelNames]: Model<any> } = {
   AdminUser: registerModel<IAdminUser>(ModelData['AdminUser']),
+  EmailChange: registerModel<IEmailChange>(ModelData['EmailChange']),
   Invitation: registerModel<IInvitation>(ModelData['Invitation']),
   Login: registerModel<ILogin>(ModelData['Login']),
   Post: registerModel<IPost>(ModelData['Post']),
@@ -200,4 +223,5 @@ export const MongooseModels: { [key: ModelNames]: Model<any> } = {
   ViewpointReaction: registerModel<IViewpointReaction>(
     ModelData['ViewpointReaction']
   ),
+  Vote: registerModel<IVote>(ModelData['Vote']),
 };

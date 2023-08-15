@@ -4,11 +4,17 @@ export interface IEnvironment {
     production: boolean;
     siteUrl: string;
     developer: {
-      angularDir: string;
+      reactDir: string;
       host: string;
       port: number;
-      baseUrl: string;
       sslEnabled: boolean;
+    };
+    auth0: {
+      database: string;
+      domain: string;
+      clientId: string;
+      clientSecret: string;
+      scope: string;
     };
     openai: {
       type: OpenAiProvider;
@@ -19,9 +25,6 @@ export interface IEnvironment {
     };
     mongo: {
       uri: string;
-      sessionCollection: string;
-      sessionDatabase: string;
-      mongoSessions: boolean;
     };
     cookies: {
       enabled: boolean;

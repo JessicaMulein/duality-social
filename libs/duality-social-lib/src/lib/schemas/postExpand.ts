@@ -1,16 +1,18 @@
 import { Schema } from 'mongoose';
+import { IPostExpand } from '../interfaces/postExpand';
+import ModelName from '../enumerations/modelName';
 
 /**
  * Represents a post being expanded.
  * This is used to track the number of times a post has been expanded.
  */
-export const PostExpandSchema = new Schema({
+export const PostExpandSchema = new Schema<IPostExpand>({
   /**
    * The id of the post being expanded.
    */
-  post: {
+  postId: {
     type: Schema.Types.ObjectId,
-    ref: 'Post',
+    ref: ModelName.Post,
     required: true,
     null: false,
     immutable: true,
@@ -21,13 +23,9 @@ export const PostExpandSchema = new Schema({
    */
   postImpression: {
     type: Schema.Types.ObjectId,
-    ref: 'PostImpression',
+    ref: ModelName.PostImpression,
     required: true,
     null: false,
     immutable: true,
   },
-  /**
-   * The time the post was expanded.
-   */
-  createdAt: { type: Date, default: Date.now, required: true, immutable: true },
-});
+}, { timestamps: true });

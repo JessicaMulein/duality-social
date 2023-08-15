@@ -1,7 +1,9 @@
+import { IUser } from "./user";
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export interface IHasUpdater<T = any> {
+export interface IHasUpdater {
     /**
      * The MongoDB unique identifier for the user who updated the object.
      */
-    updatedBy: T;
+    updatedBy: IUser['_id'];
 }

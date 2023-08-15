@@ -1,43 +1,45 @@
 import {  Schema } from 'mongoose';
+import { IPost } from '../interfaces/post';
+import ModelName from '../enumerations/modelName';
 
 /**
  * Toplevel object represents a post with its two viewpoints
  */
-export const PostSchema = new Schema(
+export const PostSchema = new Schema<IPost>(
   {
     /**
      * The id of the parent post if this is a reply.
      */
-    parentPost: {
+    parentPostId: {
       type: Schema.Types.ObjectId,
-      ref: 'Post',
+      ref: ModelName.Post,
       optional: true,
       default: null,
       readonly: true,
     },
-    inputViewpoint: {
+    inputViewpointId: {
       type: Schema.Types.ObjectId,
-      ref: 'PostViewpoint',
+      ref: ModelName.PostViewpoint,
       optional: true,
       required: false,
     },
-    inputViewpointTranslations: [
+    inputViewpointTranslationIds: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'PostViewpoint',
+        ref: ModelName.PostViewpoint,
         required: true,
       },
     ],
-    aiViewpoint: {
+    aiViewpointId: {
       type: Schema.Types.ObjectId,
-      ref: 'PostViewpoint',
+      ref: ModelName.PostViewpoint,
       required: false,
       optional: true,
     },
-    aiViewpointTranslations: [
+    aiViewpointTranslationIds: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'PostViewpoint',
+        ref: ModelName.PostViewpoint,
         required: true,
       },
     ],
@@ -46,18 +48,18 @@ export const PostSchema = new Schema(
     deletedAt: { type: Date, optional: true },
     createdBy: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: ModelName.User,
       required: true,
       immutable: true,
     },
     deletedBy: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: ModelName.User,
       optional: true,
     },
     updatedBy: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: ModelName.User,
       required: true,
     },
     meta: {

@@ -31,9 +31,7 @@
 				"GitHub.copilot",
 				"GitHub.copilot-labs",
 				"mongodb.mongodb-vscode",
-				"ms-azuretools.vscode-docker",
-				"firsttris.vscode-jest-runner",
-				"nrwl.angular-console"
+				"ms-azuretools.vscode-docker"
 			],
 			// Set *default* container specific settings.json values on container create.
 			"settings": {

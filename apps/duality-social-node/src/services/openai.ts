@@ -23,7 +23,7 @@ import {
 import { promptResultParser } from '../models/promptResultParser';
 import { decode, encode } from 'fast-png';
 import { ImageData } from 'fast-png/lib/types';
-import { environment } from '../environments/environment';
+import { environment } from '../environment';
 import { Types as MongooseTypes, Schema } from "mongoose";
 export const DevilsAdvocatePrompt = "Given the following post by a human, rewrite it, taking an opposite position, like playing Devil's Advocate, using a similar tone and style:";
 export const DevilsAdvocateImagePrompt = "Given the following position text, and a supplied image, generate an image that depicts the position:";
@@ -262,7 +262,7 @@ export async function imageDataUrlToSizeAndFile(imageDataUrl: string): Promise<{
     if ((aiResponse).postId !== postId) {
       throw new Error('Post id mismatch');
     }
-    post.inputViewpoint = firstViewpointId;
+    post.inputViewpointId = firstViewpointId;
     // TODO: images
     const aiViewpoint = new PostViewpointModel({
       postId: postId,
@@ -275,7 +275,7 @@ export async function imageDataUrlToSizeAndFile(imageDataUrl: string): Promise<{
     if (!aiViewpointId) {
       throw new Error('AI viewpoint id not saved');
     }
-    post.aiViewpoint = aiViewpointId;
+    post.aiViewpointId = aiViewpointId;
     const updated = await PostViewpointModel.updateOne(
       { _id: firstViewpointId },
       { $set: { aiViewpoint: aiViewpointId } }

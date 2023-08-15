@@ -1,25 +1,18 @@
 import { Model, Schema } from 'mongoose';
+import validator from 'validator';
 import { AccountStatusTypeEnum } from '../enumerations/accountStatusType';
-import { AccountLoginTypeEnum } from '../enumerations/accountLoginType';
 import { AdminLevelEnum } from '../enumerations/adminLevel';
 import { LockTypeEnum } from '../enumerations/lockType';
 import { IUser } from '../interfaces/user';
 import { IHasID } from '../interfaces/hasId';
+import ModelName from '../enumerations/modelName';
 
 /**
  * A user in the system.
  */
 export const UserSchema = new Schema<IUser>(
   {
-    /**
-     * Whether the login is via email/password or via external authentication.
-     */
-    accountType: {
-      type: String,
-      enum: AccountLoginTypeEnum,
-      default: AccountLoginTypeEnum.Microsoft,
-      required: true,
-    },
+    auth0Id: { type: String, unique: true, index: true, required: true },
     accountStatusType: {
       type: String,
       enum: AccountStatusTypeEnum,
@@ -31,16 +24,30 @@ export const UserSchema = new Schema<IUser>(
      * The user's email address, used for login if accountType is email/password.
      * Used for sending notifications, regardless.
      */
-    email: { type: String, unique: true, index: true, optional: true },
-    /**
-     * Whether the user has verified their email address.
-     * See also a record in the email verification collection.
-     */
-    emailVerified: {
-      type: Boolean,
-      default: false,
+    email: {
+      type: String,
+      unique: true,
+      index: true,
+      lowercase: true,
       required: true,
-      null: false,
+      trim: true,
+      validate: {
+        validator: async function (value: any) {
+          if (!validator.isEmail(value)) {
+            return false;
+          }
+          const userModel = this.constructor as Model<IUser>;
+          const user = await userModel.findOne({ email: value });
+          if (user) {
+            const currentDocument = this as IHasID;
+            if (user._id === currentDocument._id) {
+              return true;
+            }
+            return false;
+          }
+          return true;
+        },
+      },
     },
     /**
      * The unique @username of the user.
@@ -59,7 +66,7 @@ export const UserSchema = new Schema<IUser>(
           const userModel = this.constructor as Model<IUser>;
           const user = await userModel.findOne({ username: value });
           if (user) {
-            const currentDocument = this as IHasID
+            const currentDocument = this as IHasID;
             if (user._id === currentDocument._id) {
               return true;
             }
@@ -81,6 +88,14 @@ export const UserSchema = new Schema<IUser>(
       default: AdminLevelEnum.User,
     },
     /**
+     * Whether the account is under any kind of lock.
+     */
+    adminFreezeType: {
+      type: String,
+      enum: LockTypeEnum,
+      default: LockTypeEnum.PendingEmailVerification,
+    },
+    /**
      * Posts from this account are not included in the main feed.
      * The user sees their own posts.
      */
@@ -99,7 +114,7 @@ export const UserSchema = new Schema<IUser>(
      */
     updatedBy: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: ModelName.User,
       optional: true,
     },
     /**
@@ -111,16 +126,8 @@ export const UserSchema = new Schema<IUser>(
      */
     deletedBy: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: ModelName.User,
       optional: true,
-    },
-    /**
-     * Whether the account is under any kind of lock.
-     */
-    adminFreezeType: {
-      type: String,
-      enum: LockTypeEnum,
-      default: LockTypeEnum.PendingEmailVerification,
     },
   },
   { timestamps: true }

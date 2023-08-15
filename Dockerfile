@@ -9,12 +9,11 @@ WORKDIR /app
 COPY ./package.json ./*package-lock.json *yarn.lock ./
 
 # Copy the rest of the application code
-RUN mkdir -p ./libs ./apps ./scripts
+RUN mkdir -p ./libs ./apps
 COPY ./.npmrc ./.npmrc
 RUN cp ./.npmrc ~/.npmrc
-COPY ./scripts/setup-fa-npm.sh ./scripts/setup-fa-npm.sh
 COPY ./libs/duality-social-lib ./libs/duality-social-lib
-COPY ./apps/duality-social-angular ./apps/duality-social-angular
+COPY ./apps/duality-social-react ./apps/duality-social-react
 COPY ./apps/duality-social-node ./apps/duality-social-node
 
 # Build the application

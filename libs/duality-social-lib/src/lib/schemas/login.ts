@@ -1,17 +1,18 @@
 import { Schema } from 'mongoose';
+import { ILogin } from '../interfaces/login';
+import ModelName from '../enumerations/modelName';
 
 /**
  * Represents a user logging in.
  */
-export const LoginSchema = new Schema({
-  user: {
+export const LoginSchema = new Schema<ILogin>({
+  userId: {
     type: Schema.Types.ObjectId,
-    ref: 'User',
+    ref: ModelName.User,
     required: true,
     null: false,
     immutable: true,
   },
   ip: { type: String, required: true, null: false, immutable: true },
   userAgent: { type: String, required: true, null: false, immutable: true },
-  createdAt: { type: Date, default: Date.now, required: true, immutable: true },
-});
+}, { timestamps: true });

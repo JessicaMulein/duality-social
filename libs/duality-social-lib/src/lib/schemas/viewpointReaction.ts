@@ -1,27 +1,30 @@
 import { Schema } from 'mongoose';
-export const ViewpointReactionSchema = new Schema(
+import { IViewpointReaction } from '../interfaces/viewpointReaction';
+import ModelName from '../enumerations/modelName';
+export const ViewpointReactionSchema = new Schema<IViewpointReaction>(
   {
-    post: {
+    postId: {
       type: Schema.Types.ObjectId,
-      ref: 'Post',
+      ref: ModelName.Post,
       required: true,
       unique: true,
       immutable: true,
     },
-    viewpoint: {
+    viewpointId: {
       type: Schema.Types.ObjectId,
-      ref: 'PostViewpoint',
+      ref: ModelName.PostViewpoint,
       required: true,
       unique: true,
       immutable: true,
     },
     reaction: { type: String, required: true, immutable: true },
+    reactionType: { type: String, required: true, immutable: true },
     /**
      * The id of the user that created this reaction.
      */
-    ceatedBy: {
+    createdBy: {
       type: Schema.Types.ObjectId,
-      ref: 'User',
+      ref: ModelName.User,
       required: true,
       unique: true,
       immutable: true,

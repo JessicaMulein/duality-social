@@ -3,7 +3,7 @@
 import express, { Application } from 'express';
 import https from 'https';
 import fs from 'fs';
-import { environment } from './environments/environment';
+import { environment } from './environment';
 import { setupPusher } from './setupPusher';
 import { setupDatabase } from './setupDatabase';
 import { setupMiddlewares } from './setupMiddlewares';

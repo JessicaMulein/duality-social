@@ -1,5 +1,7 @@
 export enum ModelName {
     AdminUser = 'AdminUser',
+    EmailChange = 'EmailChange',
+    ClaimedInvitation = 'ClaimedInvitation',
     Invitation = 'Invitation',
     Login = 'Login',
     Post = 'Post',
@@ -12,7 +14,8 @@ export enum ModelName {
     User = 'User',
     UserMeta = 'UserMeta',
     UsernameChange = 'UsernameChange',
-    ViewpointReaction = 'ViewpointReaction'
+    ViewpointReaction = 'ViewpointReaction',
+    Vote = 'Vote',
 }
 
 export default ModelName;

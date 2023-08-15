@@ -49,11 +49,11 @@ export async function devilsAdvocate(user: IUser, req: Request, res: Response): 
     }
     const post = await PostModel.create({
         _id: postId,
-        inputViewpoint: humanViewpointId,
+        inputViewpointId: humanViewpointId,
         imageUrls: [],
         parent: parentId,
-        parents: [],
-        viewpointParents: [],
+        parentIds: [],
+        viewpointParentIds: [],
         createdBy: userId,
         updatedBy: userId,
         deletedBy: undefined
@@ -94,10 +94,10 @@ export async function devilsAdvocate(user: IUser, req: Request, res: Response): 
         });
         const aiViewpointId = (await PostViewpointModel.create(aiViewpoint))._id;
         aiViewpoint._id = aiViewpointId;
-        post.aiViewpoint = aiViewpointId ?? new Schema.Types.ObjectId(PostViewpointModelData!.path);
+        post.aiViewpointId = aiViewpointId ?? new Schema.Types.ObjectId(PostViewpointModelData!.path);
         const updateStatus = await PostModel.updateOne(
             { _id: post._id },
-            { $set: { aiViewpoint: aiViewpointId } }
+            { $set: { aiViewpointId: aiViewpointId } }
         );
         if (updateStatus.modifiedCount == 0) {
             res.status(500).json({
