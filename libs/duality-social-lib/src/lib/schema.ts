@@ -50,7 +50,7 @@ export const ModelData: { [key: string]: IModelData } = {
     apiName: 'admin-users',
     pluralName: 'admin users',
     schema: AdminUserSchema,
-    path: '/admin-user',
+    path: '/admin-users',
   },
   EmailChange: {
     name: ModelName.EmailChange,
@@ -58,7 +58,7 @@ export const ModelData: { [key: string]: IModelData } = {
     apiName: 'email-changes',
     pluralName: 'email changes',
     schema: EmailChangeSchema,
-    path: '/email-change',
+    path: '/email-changes',
   },
   Invitation: {
     name: ModelName.Invitation,
@@ -66,7 +66,7 @@ export const ModelData: { [key: string]: IModelData } = {
     apiName: 'invitations',
     pluralName: 'invitations',
     schema: InvitationSchema,
-    path: '/invitation',
+    path: '/invitations',
   },
   Login: {
     name: ModelName.Login,
@@ -74,7 +74,7 @@ export const ModelData: { [key: string]: IModelData } = {
     apiName: 'logins',
     pluralName: 'logins',
     schema: LoginSchema,
-    path: '/login',
+    path: '/logins',
   },
   Post: {
     name: ModelName.Post,
@@ -82,7 +82,7 @@ export const ModelData: { [key: string]: IModelData } = {
     apiName: 'posts',
     pluralName: 'posts',
     schema: PostSchema,
-    path: '/post',
+    path: '/posts',
   },
   PostExpand: {
     name: ModelName.PostExpand,
@@ -90,15 +90,15 @@ export const ModelData: { [key: string]: IModelData } = {
     apiName: 'post-expands',
     pluralName: 'post expands',
     schema: PostExpandSchema,
-    path: '/post-expand',
+    path: '/post-expands',
   },
   PostImpression: {
     name: ModelName.PostImpression,
     description: 'A post impression event.',
     apiName: 'post-impressions',
-    pluralName: 'PostImpressions',
+    pluralName: 'post impressions',
     schema: PostImpressionSchema,
-    path: '/post-impression',
+    path: '/post-impressions',
   },
   PostViewpoint: {
     name: ModelName.PostViewpoint,
@@ -106,7 +106,7 @@ export const ModelData: { [key: string]: IModelData } = {
     apiName: 'post-viewpoints',
     pluralName: 'post viewpoints',
     schema: PostViewpointSchema,
-    path: '/post-viewpoint',
+    path: '/post-viewpoints',
   },
   Profile: {
     name: ModelName.Profile,
@@ -114,7 +114,7 @@ export const ModelData: { [key: string]: IModelData } = {
     apiName: 'profiles',
     pluralName: 'profiles',
     schema: ProfileSchema,
-    path: '/profile',
+    path: '/profiles',
   },
   Report: {
     name: ModelName.Report,
@@ -122,7 +122,7 @@ export const ModelData: { [key: string]: IModelData } = {
     apiName: 'reports',
     pluralName: 'reports',
     schema: ReportSchema,
-    path: '/report',
+    path: '/reports',
   },
   SudoLog: {
     name: ModelName.SudoLog,
@@ -130,7 +130,7 @@ export const ModelData: { [key: string]: IModelData } = {
     apiName: 'sudo-logs',
     pluralName: 'sudo logs',
     schema: SudoLogSchema,
-    path: '/sudo-log',
+    path: '/sudo-logs',
   },
   User: {
     name: ModelName.User,
@@ -138,7 +138,7 @@ export const ModelData: { [key: string]: IModelData } = {
     apiName: 'users',
     pluralName: 'users',
     schema: UserSchema,
-    path: '/user',
+    path: '/users',
   },
   UserMeta: {
     name: ModelName.UserMeta,
@@ -146,7 +146,7 @@ export const ModelData: { [key: string]: IModelData } = {
     apiName: 'user-metas',
     pluralName: 'user metas',
     schema: UserMetaSchema,
-    path: '/user-meta',
+    path: '/user-metas',
   },
   UsernameChange: {
     name: ModelName.UsernameChange,
@@ -154,7 +154,7 @@ export const ModelData: { [key: string]: IModelData } = {
     apiName: 'username-changes',
     pluralName: 'username changes',
     schema: UsernameChangeSchema,
-    path: '/username-change',
+    path: '/username-changes',
   },
   ViewpointReaction: {
     name: ModelName.ViewpointReaction,
@@ -162,7 +162,7 @@ export const ModelData: { [key: string]: IModelData } = {
     apiName: 'viewpoint-reaction',
     pluralName: 'viewpoint reactions',
     schema: ViewpointReactionSchema,
-    path: '/viewpoint-reaction',
+    path: '/viewpoint-reactions',
   },
   Vote: {
     name: ModelName.Vote,
@@ -170,7 +170,7 @@ export const ModelData: { [key: string]: IModelData } = {
     apiName: 'votes',
     pluralName: 'votes',
     schema: VoteSchema,
-    path: '/vote',
+    path: '/votes',
   }
 };
 

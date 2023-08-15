@@ -10,7 +10,7 @@ import { ModelNames } from './schema';
 import { IHasID } from './interfaces/hasId';
 
 export function registerModel<T extends IHasID>(modelData: IModelData): Model<T> {
-    const newModel = model<T>(modelData.name, modelData.schema, modelData.pluralName);
+    const newModel = model<T>(modelData.name, modelData.schema, modelData.apiName);
     const baseModel = new BaseModel<T>(modelData, newModel);
     return baseModel.Model;
 }
