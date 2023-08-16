@@ -1,11 +1,13 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
+import { useAuth0 } from '@auth0/auth0-react';
 import styles from './app.module.scss';
-
 import LoginLink from '../components/LoginLink';
+import UserProfile from '../components/UserProfile';
 
 import { Route, Routes, Link } from 'react-router-dom';
 
 export function App() {
+  const { isAuthenticated, loginWithRedirect } = useAuth0();
   return (
     <div>
       {/* START: routes */}
@@ -22,9 +24,11 @@ export function App() {
           <li>
             <Link to="/page-2">Page 2</Link>
           </li>
+          {!isAuthenticated && (
           <li>
             <LoginLink />
           </li>
+          )}
         </ul>
       </div>
       <Routes>
@@ -34,6 +38,14 @@ export function App() {
             <div>
               This is the generated root route.{' '}
               <Link to="/page-2">Click here for page 2.</Link>
+            </div>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <div>
+              <UserProfile />
             </div>
           }
         />
