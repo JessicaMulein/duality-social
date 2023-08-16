@@ -35,19 +35,21 @@ import { PostViewpointReactionSchema } from './schemas/postViewpointReaction';
 import { VoteSchema } from './schemas/vote';
 import { IUserMeta } from './interfaces/userMeta';
 import { UserMetaSchema } from './schemas/userMeta';
-import { IModelData } from './interfaces/modelData';
 import { IVote } from './interfaces/vote';
+import { ISchema } from './interfaces/schema';
+import { ISchemaModels } from './interfaces/schemaModels';
+import { ISchemaModelData } from './interfaces/schemaModelData';
 import { BaseModel } from './models/baseModel';
 
 function modelNameCollectionToPath(modelNameCollection: ModelNameCollection): string {
-  return `/${modelNameCollection.toLowerCase()}`;
+  return `/${modelNameCollection as string}`;
 }
 
 /**
  * The schema for all models in the system.
  * This includes the name, description, plural name, and api name of each model.
  */
-export const ModelData: { [key: string]: IModelData } = {
+export const ModelData: ISchemaModelData = {
   AdminUser: {
     name: ModelName.AdminUser,
     description: 'An admin user in the system.',
@@ -163,14 +165,9 @@ export const ModelData: { [key: string]: IModelData } = {
 };
 
 /**
- * The names of all models in the system.
- */
-export type ModelNames = keyof typeof ModelData;
-
-/**
  * A simple dictionary of schemas for all models in the system.
  */
-export const MongooseSchemas: { [key: ModelNames]: Schema } = {
+export const MongooseSchemas: ISchema = {
   AdminUser: AdminUserSchema,
   EmailChange: EmailChangeSchema,
   Invitation: InvitationSchema,
@@ -194,7 +191,7 @@ export const MongooseSchemas: { [key: ModelNames]: Schema } = {
  * This causes all of the models to register themselves with mongoose.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const MongooseModels: { [key: ModelNames]: Model<any> } = {
+export const MongooseModels: ISchemaModels = {
   AdminUser: BaseModel.create<IAdminUser>(ModelData[ModelName.AdminUser]).Model,
   EmailChange: BaseModel.create<IEmailChange>(ModelData[ModelName.EmailChange]).Model,
   Invitation: BaseModel.create<IInvitation>(ModelData[ModelName.Invitation]).Model,
