@@ -14,6 +14,7 @@
     "build:react:dev": "npx nx build duality-social-react --configuration development",
     "test:all": "npx nx test duality-social-lib && npx nx test duality-social-react && npx nx test duality-social-node",
     "build": "yarn build:all",
+    "build-serve:dev": "npx nx build duality-social-lib --configuration development && npx nx build duality-social-react --configuration development && npx nx serve duality-social-node --configuration development",
     "serve": "npx nx serve duality-social-node --configuration production",
     "serve:dev": "npx nx serve duality-social-node --configuration development",
     "serve:react:dev": "npx nx serve duality-social-react --configuration development",

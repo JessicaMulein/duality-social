@@ -22,6 +22,9 @@ export function App() {
           <li>
             <Link to="/page-2">Page 2</Link>
           </li>
+          <li>
+            <LoginLink />
+          </li>
         </ul>
       </div>
       <Routes>
@@ -31,14 +34,6 @@ export function App() {
             <div>
               This is the generated root route.{' '}
               <Link to="/page-2">Click here for page 2.</Link>
-            </div>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <div>
-              <LoginLink />
             </div>
           }
         />

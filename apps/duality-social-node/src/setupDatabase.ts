@@ -1,30 +1,14 @@
-import mongoose from 'mongoose';
+import mongoose, { connect, set } from 'mongoose';
 import { environment } from './environment';
-import { MongooseSchemas } from '@duality-social/duality-social-lib';
+import { ISchemaModels, SchemaModels } from '@duality-social/duality-social-lib';
 
 
-let db: mongoose.Mongoose | undefined;
-const Schemas = MongooseSchemas;
-
-export async function setupDatabase() {
-  mongoose.set('strictQuery', true);
-  db = await mongoose.connect(environment.mongo.uri, {
+export async function setupDatabase(): Promise<{db: mongoose.Mongoose, schema: ISchemaModels}> {
+  set('strictQuery', true);
+  const db = await connect(environment.mongo.uri, {
     socketTimeoutMS: 30000,
     connectTimeoutMS: 30000,
     waitQueueTimeoutMS: 30000,
   });
-}
-
-export async function getDatabase(): Promise<mongoose.Mongoose> {
-  if (!db) {
-    await setupDatabase();
-    if (db === undefined) {
-      throw new Error('Database not initialized');
-    }
-  }
-  return db;
-}
-
-export function getSchemas() {
-  return Schemas;
+  return { db, schema: SchemaModels};
 }
