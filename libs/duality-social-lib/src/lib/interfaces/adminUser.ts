@@ -10,6 +10,3 @@ export interface IAdminUser extends IHasID, IHasTimestamps {
     sudoHashSalt: string;
     get canSudo(): boolean;
   }
-
-  export type AdminUserKeys = { [P in keyof IAdminUser]: P }[keyof IAdminUser];
-  

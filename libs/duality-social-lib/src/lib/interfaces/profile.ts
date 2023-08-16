@@ -27,5 +27,3 @@ export interface IProfile extends IHasID, IHasTimestamps, IHasSoftDelete {
     verified: boolean;
     verifiedBy?: IUser['_id'];
   };
-
-  export type ProfileKeys = { [P in keyof IProfile]: P }[keyof IProfile];

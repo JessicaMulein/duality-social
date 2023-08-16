@@ -1,6 +1,5 @@
 export * from './lib/duality-social-lib';
 export * from './lib/enumerations/accountStatusType';
-export * from './lib/enumerations/adminLevel';
 export * from './lib/enumerations/defaultReactionsType';
 export * from './lib/enumerations/fontAwesomeTextClass';
 export * from './lib/enumerations/humanityType';

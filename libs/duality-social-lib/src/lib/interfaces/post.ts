@@ -61,5 +61,3 @@ export interface IPost extends IHasID, IHasTimestamps, IHasSoftDelete, IHasTimes
     //metadata
     meta: IPostMeta;
 }
-
-export type PostKeys = { [P in keyof IPost]: P; }[keyof IPost];

@@ -1,7 +1,6 @@
 import { Model, Schema } from 'mongoose';
 import validator from 'validator';
 import { AccountStatusTypeEnum } from '../enumerations/accountStatusType';
-import { AdminLevelEnum } from '../enumerations/adminLevel';
 import { LockTypeEnum } from '../enumerations/lockType';
 import { IUser } from '../interfaces/user';
 import { IHasID } from '../interfaces/hasId';
@@ -78,19 +77,9 @@ export const UserSchema = new Schema<IUser>(
       },
     },
     /**
-     * Quick reference field for whether the user is an administrator.
-     * Backed up by a record in the adminUsers collection with their
-     * sudo password hash and other admin metadata.
-     */
-    adminLevel: {
-      type: String,
-      enum: AdminLevelEnum,
-      default: AdminLevelEnum.User,
-    },
-    /**
      * Whether the account is under any kind of lock.
      */
-    adminFreezeType: {
+    lockStatus: {
       type: String,
       enum: LockTypeEnum,
       default: LockTypeEnum.PendingEmailVerification,

@@ -44,5 +44,3 @@ export interface IUserMeta extends Document, IHasID, IHasTimestamps, IHasTimesta
      */
     totalReplyViewsReceived: number;
   }
-
-  export type UserMetaKeys = { [P in keyof IUserMeta]: P }[keyof IUserMeta];

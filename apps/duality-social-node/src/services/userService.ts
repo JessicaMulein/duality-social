@@ -1,7 +1,7 @@
 // utils/userUtils.ts
 import { Document } from 'mongoose';
 import validator from 'validator';
-import { AccountStatusTypeEnum, AdminLevelEnum, BaseModel, IEmailChange, IUser, LockTypeEnum, ModelName } from '@duality-social/duality-social-lib';
+import { AccountStatusTypeEnum, BaseModel, IEmailChange, IUser, LockTypeEnum, ModelName } from '@duality-social/duality-social-lib';
 import { InvalidEmail } from '../errors/invalidEmail';
 import { InvalidPassword } from '../errors/invalidPassword';
 import { EmailExistsError } from '../errors/emailExists';
@@ -62,8 +62,7 @@ export class UserService {
         username: auth0User.username,
         auth0Id: auth0User.user_id,
         accountStatusType: AccountStatusTypeEnum.NewUnverified,
-        adminFreezeType: LockTypeEnum.PendingEmailVerification,
-        adminLevel: AdminLevelEnum.User,
+        lockStatus: LockTypeEnum.PendingEmailVerification,
         shadowBan: false,
         userHidden: true,
       });

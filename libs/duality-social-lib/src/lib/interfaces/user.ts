@@ -8,7 +8,6 @@ import { IHasSoftDelete } from './hasSoftDelete';
 import { IHasTimestampOwners } from './hasTimestampOwners';
 import { IHasTimestamps } from './hasTimestamps';
 import { HumanityTypeEnum } from '../enumerations/humanityType';
-import { AdminLevelEnum } from '../enumerations/adminLevel';
 import { IHasDeleter } from './hasDeleter';
 
 export const PasswordRounds = 10; 
@@ -24,8 +23,7 @@ export interface IUser extends Document, IHasID, IHasTimestamps, IHasTimestampOw
   /**
    * Whether the account is under any kind of lock.
    */
-    adminFreezeType: LockTypeEnum;
-    adminLevel: AdminLevelEnum;
+    lockStatus: LockTypeEnum;
     /**
      * Whether the user sees their own posts but no one else does.
      */
@@ -47,5 +45,3 @@ export interface IUser extends Document, IHasID, IHasTimestamps, IHasTimestampOw
   // metadata
     lastLogin?: Date;
   }
-
-  export type UserKeys = { [P in keyof IUser]: P }[keyof IUser];
