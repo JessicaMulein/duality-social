@@ -11,14 +11,14 @@ import { Schema } from 'mongoose';
 
 const maxPostLength = 1000;
 
-const UserModelData = BaseModel.ModelDataMap.get(ModelName.User);
+const UserModelData = BaseModel.getModelData(ModelName.User);
 const PostModel = BaseModel.getModel<IPost>(ModelName.Post);
 const PostViewpointModel = BaseModel.getModel<IPostViewpoint>(ModelName.PostViewpoint);
 
 export async function newPost(req: Request, res: Response) {
     const content = sanitizeWhitespace(req.body.content);
     const currentDate = new Date();
-    const createdById = new Schema.Types.ObjectId(UserModelData!.path);
+    const createdById = new Schema.Types.ObjectId(UserModelData.path);
 
     // validate the request
     if (content.length > maxPostLength) {
@@ -99,7 +99,7 @@ export async function newPost(req: Request, res: Response) {
 export async function newReply(req: Request, res: Response) {
     const content = sanitizeWhitespace(req.body.content);
     const currentDate = new Date();
-    const createdById = new Schema.Types.ObjectId(UserModelData!.path);
+    const createdById = new Schema.Types.ObjectId(UserModelData.path);
     const parentViewpointId = req.body.parentViewpointId;
     const parentPostId = req.body.parentPostId;
 

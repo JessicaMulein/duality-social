@@ -8,13 +8,13 @@ export enum ModelName {
     PostExpand = 'PostExpand',
     PostImpression = 'PostImpression',
     PostViewpoint = 'PostViewpoint',
+    PostViewpointReaction = 'PostViewpointReaction',
     Profile = 'Profile',
     Report = 'Report',
     SudoLog = 'SudoLog',
     User = 'User',
     UserMeta = 'UserMeta',
     UsernameChange = 'UsernameChange',
-    ViewpointReaction = 'ViewpointReaction',
     Vote = 'Vote',
 }
 

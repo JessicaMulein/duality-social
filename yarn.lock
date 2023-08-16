@@ -1843,6 +1843,11 @@
   resolved "https://registry.yarnpkg.com/@colors/colors/-/colors-1.5.0.tgz#bb504579c1cae923e6576a4f5da43d25f97bdbd9"
   integrity sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==
 
+"@coreui/react-pro@^4.12.4":
+  version "4.12.4"
+  resolved "https://registry.yarnpkg.com/@coreui/react-pro/-/react-pro-4.12.4.tgz#9a07c7da43da3d3436a1121a3f23d220e5680a35"
+  integrity sha512-b1nCaOUtrOIf5cZ6i2qm17L4LybEnE1DNquubnxji81QiPok3hHHQsoSHhcfdGXtjDnjvul1Aaf8cYgZxrW/Hg==
+
 "@cspotcode/source-map-support@^0.8.0":
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/@cspotcode/source-map-support/-/source-map-support-0.8.1.tgz#00629c35a688e05a88b1cda684fb9d5e73f000a1"

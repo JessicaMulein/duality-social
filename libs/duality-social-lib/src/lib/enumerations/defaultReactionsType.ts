@@ -15,7 +15,7 @@ export enum DefaultReactionsTypeEnum {
   Wow = 'Wow',
 }
 
-export const ReactionTypeIcons = {
+export const ReactionTypeIcons: { [key: string]: IconName } = {
   [DefaultReactionsTypeEnum.Angry]: 'face-angry',
   [DefaultReactionsTypeEnum.Celebrate]: 'party-horn',
   [DefaultReactionsTypeEnum.Hug]: 'face-smiling-hands',

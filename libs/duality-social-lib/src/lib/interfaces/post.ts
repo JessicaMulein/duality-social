@@ -1,18 +1,10 @@
-import { Document, Schema } from 'mongoose';
+import { Schema } from 'mongoose';
 import { IHasDeleter } from './hasDeleter';
 import { IHasID } from './hasId';
 import { IHasSoftDelete } from './hasSoftDelete';
 import { IHasTimestampOwners } from './hasTimestampOwners';
 import { IHasTimestamps } from './hasTimestamps';
-import { IPostViewpoint } from './postViewpoint';
-import ModelName from '../enumerations/modelName';
-
-export interface IPostMeta {
-    expands: number,
-    impressions: number,
-    reactions: number,
-    reactionsByType: { [key: string]: number };
-}
+import { IPostMeta } from './postMeta';
 
 /**
  * This interface represents a post, which is a piece of content that a user can create.
@@ -26,7 +18,7 @@ export interface IPostMeta {
  * Rendered - AI Translation
  * It inherits from IHasID, which provides the id property, IHasCreation, which provides the createdAt and updatedAt properties, and IHasSoftDelete, which provides the deletedAt property.
  */
-export interface IPost extends IHasID, IHasTimestamps, IHasSoftDelete, IHasTimestampOwners, IHasDeleter, Document {
+export interface IPost extends IHasID, IHasTimestamps, IHasSoftDelete, IHasTimestampOwners, IHasDeleter {
     hidden: boolean;
     /**
      * The id of the parent post if this is a reply.

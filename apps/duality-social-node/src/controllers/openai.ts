@@ -10,7 +10,7 @@ import { ViewpointTypeEnum, IUser } from '@duality-social/duality-social-lib';
 
 const PostModel = BaseModel.getModel<IPost>(ModelName.Post);
 const PostViewpointModel = BaseModel.getModel<IPostViewpoint>(ModelName.PostViewpoint);
-const PostViewpointModelData = BaseModel.ModelDataMap.get(ModelName.PostViewpoint);
+const PostViewpointModelData = BaseModel.getModelData(ModelName.PostViewpoint);
 
 export async function devilsAdvocate(user: IUser, req: Request, res: Response): Promise<void> {
     // stuff the entry in the queue.
@@ -94,7 +94,7 @@ export async function devilsAdvocate(user: IUser, req: Request, res: Response): 
         });
         const aiViewpointId = (await PostViewpointModel.create(aiViewpoint))._id;
         aiViewpoint._id = aiViewpointId;
-        post.aiViewpointId = aiViewpointId ?? new Schema.Types.ObjectId(PostViewpointModelData!.path);
+        post.aiViewpointId = aiViewpointId ?? new Schema.Types.ObjectId(PostViewpointModelData.path);
         const updateStatus = await PostModel.updateOne(
             { _id: post._id },
             { $set: { aiViewpointId: aiViewpointId } }

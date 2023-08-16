@@ -1,9 +1,9 @@
 // file: schema.ts
 // description: This file contains the schema for all models in the system
-// see also: ./db_functions.ts
 // ---------------------------------------------------------------------------------------------
 import { Model, Schema } from 'mongoose';
 import { ModelName } from './enumerations/modelName';
+import { ModelNameCollection } from './enumerations/modelNameCollection';
 import { IAdminUser } from './interfaces/adminUser';
 import { IEmailChange } from './interfaces/emailChange';
 import { IInvitation } from './interfaces/invitation';
@@ -17,7 +17,7 @@ import { IReport } from './interfaces/report';
 import { ISudoLog } from './interfaces/sudoLog';
 import { IUser } from './interfaces/user';
 import { IUsernameChange } from './interfaces/usernameChange';
-import { IViewpointReaction } from './interfaces/viewpointReaction';
+import { IPostViewpointReaction } from './interfaces/postViewpointReaction';
 import { AdminUserSchema } from './schemas/adminUser';
 import { EmailChangeSchema } from './schemas/emailChange';
 import { InvitationSchema } from './schemas/invitation';
@@ -31,13 +31,17 @@ import { ReportSchema } from './schemas/report';
 import { SudoLogSchema } from './schemas/sudoLog';
 import { UserSchema } from './schemas/user';
 import { UsernameChangeSchema } from './schemas/usernameChange';
-import { ViewpointReactionSchema } from './schemas/viewpointReaction';
+import { PostViewpointReactionSchema } from './schemas/postViewpointReaction';
 import { VoteSchema } from './schemas/vote';
 import { IUserMeta } from './interfaces/userMeta';
 import { UserMetaSchema } from './schemas/userMeta';
-import { registerModel } from './db_functions';
 import { IModelData } from './interfaces/modelData';
 import { IVote } from './interfaces/vote';
+import { BaseModel } from './models/baseModel';
+
+function modelNameCollectionToPath(modelNameCollection: ModelNameCollection): string {
+  return `/${modelNameCollection.toLowerCase()}`;
+}
 
 /**
  * The schema for all models in the system.
@@ -47,130 +51,114 @@ export const ModelData: { [key: string]: IModelData } = {
   AdminUser: {
     name: ModelName.AdminUser,
     description: 'An admin user in the system.',
-    apiName: 'admin-users',
-    pluralName: 'admin users',
+    collection: ModelNameCollection.AdminUser,
     schema: AdminUserSchema,
-    path: '/admin-users',
+    path: modelNameCollectionToPath(ModelNameCollection.AdminUser),
   },
   EmailChange: {
     name: ModelName.EmailChange,
     description: 'An email change event.',
-    apiName: 'email-changes',
-    pluralName: 'email changes',
+    collection: ModelNameCollection.EmailChange,
     schema: EmailChangeSchema,
-    path: '/email-changes',
+    path: modelNameCollectionToPath(ModelNameCollection.EmailChange),
   },
   Invitation: {
     name: ModelName.Invitation,
     description: 'An invitation to join the system.',
-    apiName: 'invitations',
-    pluralName: 'invitations',
+    collection: ModelNameCollection.Invitation,
     schema: InvitationSchema,
-    path: '/invitations',
+    path: modelNameCollectionToPath(ModelNameCollection.Invitation),
   },
   Login: {
     name: ModelName.Login,
     description: 'A login to the system.',
-    apiName: 'logins',
-    pluralName: 'logins',
+    collection: ModelNameCollection.Login,
     schema: LoginSchema,
-    path: '/logins',
+    path: modelNameCollectionToPath(ModelNameCollection.Login),
   },
   Post: {
     name: ModelName.Post,
     description: 'A post in the system containing two viewpoints.',
-    apiName: 'posts',
-    pluralName: 'posts',
+    collection: ModelNameCollection.Post,
     schema: PostSchema,
-    path: '/posts',
+    path: modelNameCollectionToPath(ModelNameCollection.Post),
   },
   PostExpand: {
     name: ModelName.PostExpand,
     description: 'A post expand event.',
-    apiName: 'post-expands',
-    pluralName: 'post expands',
+    collection: ModelNameCollection.PostExpand,
     schema: PostExpandSchema,
-    path: '/post-expands',
+    path: modelNameCollectionToPath(ModelNameCollection.PostExpand),
   },
   PostImpression: {
     name: ModelName.PostImpression,
     description: 'A post impression event.',
-    apiName: 'post-impressions',
-    pluralName: 'post impressions',
+    collection: ModelNameCollection.PostImpression,
     schema: PostImpressionSchema,
-    path: '/post-impressions',
+    path: modelNameCollectionToPath(ModelNameCollection.PostImpression),
   },
   PostViewpoint: {
     name: ModelName.PostViewpoint,
     description: 'A post viewpoint.',
-    apiName: 'post-viewpoints',
-    pluralName: 'post viewpoints',
+    collection: ModelNameCollection.PostViewpoint,
     schema: PostViewpointSchema,
-    path: '/post-viewpoints',
+    path: modelNameCollectionToPath(ModelNameCollection.PostViewpoint),
+  },
+  PostViewpointReaction: {
+    name: ModelName.PostViewpointReaction,
+    description: 'A reaction to a viewpoint.',
+    collection: ModelNameCollection.PostViewpointReaction,
+    schema: PostViewpointReactionSchema,
+    path: modelNameCollectionToPath(ModelNameCollection.PostViewpointReaction),
   },
   Profile: {
     name: ModelName.Profile,
     description: 'A user profile.',
-    apiName: 'profiles',
-    pluralName: 'profiles',
+    collection: ModelNameCollection.Profile,
     schema: ProfileSchema,
-    path: '/profiles',
+    path: modelNameCollectionToPath(ModelNameCollection.Profile),
   },
   Report: {
     name: ModelName.Report,
     description: 'A report of a post.',
-    apiName: 'reports',
-    pluralName: 'reports',
+    collection: ModelNameCollection.Report,
     schema: ReportSchema,
-    path: '/reports',
+    path: modelNameCollectionToPath(ModelNameCollection.Report),
   },
   SudoLog: {
     name: ModelName.SudoLog,
     description: 'A log of sudo events.',
-    apiName: 'sudo-logs',
-    pluralName: 'sudo logs',
+    collection: ModelNameCollection.SudoLog,
     schema: SudoLogSchema,
-    path: '/sudo-logs',
+    path: modelNameCollectionToPath(ModelNameCollection.SudoLog),
   },
   User: {
     name: ModelName.User,
     description: 'A user in the system.',
-    apiName: 'users',
-    pluralName: 'users',
+    collection: ModelNameCollection.User,
     schema: UserSchema,
-    path: '/users',
+    path: modelNameCollectionToPath(ModelNameCollection.User),
   },
   UserMeta: {
     name: ModelName.UserMeta,
     description: 'Metadata for a user in the system.',
-    apiName: 'user-metas',
-    pluralName: 'user metas',
+    collection: ModelNameCollection.UserMeta,
     schema: UserMetaSchema,
-    path: '/user-metas',
+    path: modelNameCollectionToPath(ModelNameCollection.UserMeta),
   },
   UsernameChange: {
     name: ModelName.UsernameChange,
     description: 'A username change event.',
-    apiName: 'username-changes',
-    pluralName: 'username changes',
+    collection: ModelNameCollection.UsernameChange,
     schema: UsernameChangeSchema,
-    path: '/username-changes',
-  },
-  ViewpointReaction: {
-    name: ModelName.ViewpointReaction,
-    description: 'A reaction to a viewpoint.',
-    apiName: 'viewpoint-reaction',
-    pluralName: 'viewpoint reactions',
-    schema: ViewpointReactionSchema,
-    path: '/viewpoint-reactions',
+    path: modelNameCollectionToPath(ModelNameCollection.UsernameChange),
   },
   Vote: {
     name: ModelName.Vote,
     description: 'A vote on the humanity of a viewpoint.',
-    apiName: 'votes',
-    pluralName: 'votes',
+    collection: ModelNameCollection.Vote,
     schema: VoteSchema,
-    path: '/votes',
+    path: modelNameCollectionToPath(ModelNameCollection.Vote),
   }
 };
 
@@ -191,37 +179,38 @@ export const MongooseSchemas: { [key: ModelNames]: Schema } = {
   PostExpand: PostExpandSchema,
   PostImpression: PostImpressionSchema,
   PostViewpoint: PostViewpointSchema,
+  PostViewpointReaction: PostViewpointReactionSchema,
   Profile: ProfileSchema,
   Report: ReportSchema,
   SudoLog: SudoLogSchema,
   User: UserSchema,
   UserMeta: UserMetaSchema,
   UsernameChange: UsernameChangeSchema,
-  ViewpointReaction: ViewpointReactionSchema,
   Vote: VoteSchema,
 };
 
 /**
  * A simple dictionary of models for all models in the system.
+ * This causes all of the models to register themselves with mongoose.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const MongooseModels: { [key: ModelNames]: Model<any> } = {
-  AdminUser: registerModel<IAdminUser>(ModelData['AdminUser']),
-  EmailChange: registerModel<IEmailChange>(ModelData['EmailChange']),
-  Invitation: registerModel<IInvitation>(ModelData['Invitation']),
-  Login: registerModel<ILogin>(ModelData['Login']),
-  Post: registerModel<IPost>(ModelData['Post']),
-  PostExpand: registerModel<IPostExpand>(ModelData['PostExpand']),
-  PostImpression: registerModel<IPostImpression>(ModelData['PostImpression']),
-  PostViewpoint: registerModel<IPostViewpoint>(ModelData['PostViewpoint']),
-  Profile: registerModel<IProfile>(ModelData['Profile']),
-  Report: registerModel<IReport>(ModelData['Report']),
-  SudoLog: registerModel<ISudoLog>(ModelData['SudoLog']),
-  User: registerModel<IUser>(ModelData['User']),
-  UserMeta: registerModel<IUserMeta>(ModelData['UserMeta']),
-  UsernameChange: registerModel<IUsernameChange>(ModelData['UsernameChange']),
-  ViewpointReaction: registerModel<IViewpointReaction>(
-    ModelData['ViewpointReaction']
-  ),
-  Vote: registerModel<IVote>(ModelData['Vote']),
+  AdminUser: BaseModel.create<IAdminUser>(ModelData[ModelName.AdminUser]).Model,
+  EmailChange: BaseModel.create<IEmailChange>(ModelData[ModelName.EmailChange]).Model,
+  Invitation: BaseModel.create<IInvitation>(ModelData[ModelName.Invitation]).Model,
+  Login: BaseModel.create<ILogin>(ModelData[ModelName.Login]).Model,
+  Post: BaseModel.create<IPost>(ModelData[ModelName.Post]).Model,
+  PostExpand: BaseModel.create<IPostExpand>(ModelData[ModelName.PostExpand]).Model,
+  PostImpression: BaseModel.create<IPostImpression>(ModelData[ModelName.PostImpression]).Model,
+  PostViewpoint: BaseModel.create<IPostViewpoint>(ModelData[ModelName.PostViewpoint]).Model,
+  PostViewpointReaction: BaseModel.create<IPostViewpointReaction>(
+    ModelData[ModelName.PostViewpointReaction]
+  ).Model,
+  Profile: BaseModel.create<IProfile>(ModelData[ModelName.Profile]).Model,
+  Report: BaseModel.create<IReport>(ModelData[ModelName.Report]).Model,
+  SudoLog: BaseModel.create<ISudoLog>(ModelData[ModelName.SudoLog]).Model,
+  User: BaseModel.create<IUser>(ModelData[ModelName.User]).Model,
+  UserMeta: BaseModel.create<IUserMeta>(ModelData[ModelName.UserMeta]).Model,
+  UsernameChange: BaseModel.create<IUsernameChange>(ModelData[ModelName.UsernameChange]).Model,
+  Vote: BaseModel.create<IVote>(ModelData[ModelName.Vote]).Model,
 };
