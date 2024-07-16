@@ -3,6 +3,10 @@
   "version": "0.0.0",
   "license": "MIT",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "libs/*"
+  ],
   "scripts": {
     "newSecret": "node -e \"console.log (require('crypto').randomBytes(32).toString ('hex'));\"",
     "build:all": "npx nx build duality-social-lib && npx nx build duality-social-react && npx nx build duality-social-node",
@@ -48,6 +52,7 @@
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
     "bson": "^5.2.0",
+    "caniuse-lite": "^1.0.30001642",
     "clsx": "^1.2.1",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
