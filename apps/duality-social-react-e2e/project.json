@@ -3,6 +3,8 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/duality-social-react-e2e/src",
   "projectType": "application",
+  "tags": [],
+  "implicitDependencies": ["duality-social-react"],
   "targets": {
     "e2e": {
       "executor": "@nx/cypress:cypress",
@@ -21,13 +23,7 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "outputs": ["{options.outputFile}"],
-      "options": {
-        "lintFilePatterns": ["apps/duality-social-react-e2e/**/*.{js,ts}"]
-      }
+      "executor": "@nx/eslint:lint"
     }
-  },
-  "tags": [],
-  "implicitDependencies": ["duality-social-react"]
+  }
 }

@@ -3,10 +3,6 @@
   "description": "Shared library for Duality Social front and back ends.",
   "version": "0.0.1",
   "license": "MIT",
-  "dependencies": {
-   
-  },
-  "devDependencies": {
-
-  }
+  "dependencies": {},
+  "devDependencies": {}
 }

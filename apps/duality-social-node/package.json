@@ -12,10 +12,6 @@
   },
   "author": "Freddie Mercurial (Jessica M.) <jessica@digitaldefiance.org>",
   "license": "MIT",
-  "dependencies": {
-    
-  },
-  "devDependencies": {
-
-  }
+  "dependencies": {},
+  "devDependencies": {}
 }
