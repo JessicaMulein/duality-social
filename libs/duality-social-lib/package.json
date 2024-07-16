@@ -3,6 +3,8 @@
   "description": "Shared library for Duality Social front and back ends.",
   "version": "0.0.1",
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "mongoose": "^8.5.1"
+  },
   "devDependencies": {}
 }
