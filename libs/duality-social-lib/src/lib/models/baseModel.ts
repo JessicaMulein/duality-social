@@ -24,7 +24,7 @@ abstract class Base {
     if (!Base.ModelRegistry.has(model)) {
       throw new Error(`Model ${model} does not exist`);
     }
-    return Base.ModelRegistry.get(model) as Model<T>;
+    return Base.ModelRegistry.get(model) as unknown as Model<T>;
   }
 }
 
@@ -44,7 +44,7 @@ export class BaseModel<
     modelData: IModelData,
     model: Model<T>,
   ) {
-    super(model as Model<unknown>);
+    super(model as unknown as Model<unknown>);
     this.Name = modelData.name;
     this.Path = modelData.path;
     this.Schema = modelData.schema;
