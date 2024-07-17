@@ -1,22 +1,25 @@
 import {
   model,
+  models,
   Model,
   Schema,
+  Document,
 } from 'mongoose';
 import { IHasID } from '../interfaces/hasId';
 import { IModelData } from '../interfaces/modelData';
 import ModelName from '../enumerations/modelName';
 
 abstract class Base {
-  protected static readonly ModelRegistry: Map<string, Model<unknown>> = new Map<
+  protected static readonly ModelRegistry: Map<string, Model<any>> = new Map<
     string,
-    Model<unknown>>();
-  constructor(model: Model<unknown>) {
+    Model<any>>();
+  constructor(model: Model<any>) {
     if (!model || !model.modelName) {
       return;
     }
     if (Base.ModelRegistry.has(model.modelName)) {
-      throw new Error(`Model ${model.modelName} already exists`);
+      console.warn(`Model ${model.modelName} already exists. Reusing the existing model.`);
+      return;
     }
     Base.ModelRegistry.set(model.modelName, model);
   }
@@ -33,8 +36,8 @@ export class BaseModel<
   U = Schema.Types.ObjectId
 > extends Base {
   protected static ModelDataMap: Map<string, IModelData> = new Map<
-  string,
-  IModelData>();
+    string,
+    IModelData>();
   public readonly Name: ModelName;
   public readonly Path: string;
   public readonly Schema: Schema;
@@ -44,7 +47,7 @@ export class BaseModel<
     modelData: IModelData,
     model: Model<T>,
   ) {
-    super(model as unknown as Model<unknown>);
+    super(model);
     this.Name = modelData.name;
     this.Path = modelData.path;
     this.Schema = modelData.schema;
@@ -53,9 +56,14 @@ export class BaseModel<
     BaseModel.ModelDataMap.set(modelData.name, modelData);
   }
   static create<T extends IHasID>(modelData: IModelData): BaseModel<T> {
-      const newModel = model<T>(modelData.name, modelData.schema, modelData.collection);
-      const baseModel = new BaseModel<T>(modelData, newModel);
-      return baseModel;
+    let modelInstance;
+    if (models[modelData.name]) {
+      modelInstance = model<T>(modelData.name);
+    } else {
+      modelInstance = model<T>(modelData.name, modelData.schema, modelData.collection);
+    }
+    const baseModel = new BaseModel<T>(modelData, modelInstance);
+    return baseModel;
   }
   static getModelData(model: ModelName): IModelData {
     if (!BaseModel.ModelDataMap.has(model)) {

@@ -90,6 +90,6 @@ export function parseIconMarkup(input: string): string {
 
 export function stripIconMarkup(input: string): string {
   // replace {{iconName}} or {{ iconName }} with ''
-  const regex = /\{\{([a-zA-Z0-9-_;:%#&*! ^ ]+)\}\}/g;
-  return input.replace(regex, '');
+  const regex = /\s*\{\{\s*([a-zA-Z0-9-_;:%#&*!^ ]+)\s*\}\}\s*/g;
+  return input.replace(regex, ' ').trim();
 }
