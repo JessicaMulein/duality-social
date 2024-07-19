@@ -3,4 +3,7 @@ export interface IPostViewpointMeta {
     impressions: number;
     reactions:  number;
     reactionsByType: { [key: string]: number };
+    aiVotes: number;
+    botVotes: number;
+    humanVotes: number;
   }
