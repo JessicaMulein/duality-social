@@ -36,3 +36,5 @@ export const PostImpressionSchema = new Schema<IPostImpression>(
   },
   { timestamps: true }
 );
+
+PostImpressionSchema.index({ postId: 1, createdAt: -1 });

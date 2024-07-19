@@ -29,3 +29,5 @@ export const PostExpandSchema = new Schema<IPostExpand>({
     immutable: true,
   },
 }, { timestamps: true });
+
+PostExpandSchema.index({ postId: 1, createdAt: -1 });

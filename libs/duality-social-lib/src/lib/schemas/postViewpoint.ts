@@ -15,6 +15,7 @@ export const PostViewpointSchema = new Schema<IPostViewpoint>(
       required: true,
       immutable: true,
     },
+    replyCount: { type: Number, default: 0, required: true },
     /**
      * What type of entity created this post.
      */
@@ -86,3 +87,7 @@ export const PostViewpointSchema = new Schema<IPostViewpoint>(
   },
   { timestamps: true }
 );
+
+PostViewpointSchema.index({ postId: 1, humanityType: 1 });
+PostViewpointSchema.index({ postId: 1, viewpointType: 1 });
+PostViewpointSchema.index({ parentViewpointId: 1, createdAt: -1 });

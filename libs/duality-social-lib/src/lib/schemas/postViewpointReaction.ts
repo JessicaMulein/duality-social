@@ -11,3 +11,5 @@ export const PostViewpointReactionSchema = new Schema<IPostViewpointReaction>({
     reaction: { type: String, required: true, null: false, immutable: true },
     createdBy: { type: Schema.Types.ObjectId, ref: ModelName.User, required: true, null: false, immutable: true },
 }, { timestamps: true });
+
+PostViewpointReactionSchema.index({ viewpointId: 1, reaction: 1 });

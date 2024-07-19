@@ -20,6 +20,10 @@ import { IPostMeta } from './postMeta';
  */
 export interface IPost extends IHasID, IHasTimestamps, IHasSoftDelete, IHasTimestampOwners, IHasDeleter {
     hidden: boolean;
+    depth: number;
+    replyCount: number;
+    lastReplyAt?: Date;
+    lastReplyBy?: Schema.Types.ObjectId;
     /**
      * The id of the parent post if this is a reply.
      */
