@@ -9,13 +9,6 @@ export interface IEnvironment {
       port: number;
       sslEnabled: boolean;
     };
-    auth0: {
-      database: string;
-      domain: string;
-      clientId: string;
-      clientSecret: string;
-      scope: string;
-    };
     openai: {
       type: OpenAiProvider;
       accessToken: string;

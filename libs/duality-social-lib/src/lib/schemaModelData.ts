@@ -15,7 +15,6 @@ import { UserSchema } from './schemas/user';
 import { UsernameChangeSchema } from './schemas/usernameChange';
 import { PostViewpointReactionSchema } from './schemas/postViewpointReaction';
 import { VoteSchema } from './schemas/vote';
-import { UserMetaSchema } from './schemas/userMeta';
 import { ISchemaModelData } from './interfaces/schemaModelData';
 
 function modelNameCollectionToPath(
@@ -119,13 +118,6 @@ export const ModelData: ISchemaModelData = {
     collection: ModelNameCollection.User,
     schema: UserSchema,
     path: modelNameCollectionToPath(ModelNameCollection.User),
-  },
-  UserMeta: {
-    name: ModelName.UserMeta,
-    description: 'Metadata for a user in the system.',
-    collection: ModelNameCollection.UserMeta,
-    schema: UserMetaSchema,
-    path: modelNameCollectionToPath(ModelNameCollection.UserMeta),
   },
   UsernameChange: {
     name: ModelName.UsernameChange,

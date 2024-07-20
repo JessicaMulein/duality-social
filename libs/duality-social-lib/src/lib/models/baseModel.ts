@@ -1,9 +1,7 @@
 import {
   model,
-  models,
   Model,
   Schema,
-  Document,
 } from 'mongoose';
 import { IHasID } from '../interfaces/hasId';
 import { IModelData } from '../interfaces/modelData';
@@ -53,15 +51,12 @@ export class BaseModel<
     this.Schema = modelData.schema;
     this.Collection = modelData.collection;
     this.Model = model;
-    BaseModel.ModelDataMap.set(modelData.name, modelData);
+    if (!BaseModel.ModelDataMap.has(modelData.name)) {
+      BaseModel.ModelDataMap.set(modelData.name, modelData);
+    }
   }
   static create<T extends IHasID>(modelData: IModelData): BaseModel<T> {
-    let modelInstance;
-    if (models[modelData.name]) {
-      modelInstance = model<T>(modelData.name);
-    } else {
-      modelInstance = model<T>(modelData.name, modelData.schema, modelData.collection);
-    }
+    const modelInstance = model<T>(modelData.name, modelData.schema, modelData.collection);
     const baseModel = new BaseModel<T>(modelData, modelInstance);
     return baseModel;
   }

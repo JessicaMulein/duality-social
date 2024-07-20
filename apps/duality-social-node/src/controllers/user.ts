@@ -1,8 +1,7 @@
-import { IUser, IUserMeta, ModelName, BaseModel } from '@duality-social/duality-social-lib';
+import { IUser, ModelName, BaseModel } from '@duality-social/duality-social-lib';
 import { Router } from 'express';
 
 const UserModel = BaseModel.getModel<IUser>(ModelName.User);
-const UserMetaModel = BaseModel.getModel<IUserMeta>(ModelName.UserMeta);
 
 export const userRouter = Router();
 
@@ -20,11 +19,6 @@ userRouter.post('/register', async (req, res) => {
     // Create a new user with email, hashed password, and username
     const newUser = new UserModel({ email: email, username });
     await newUser.save();
-
-    const newUserMeta = new UserMetaModel({
-      userId: newUser._id,
-    });
-    await newUserMeta.save();
 
     // Send the response without the password
     res.status(201).json({ message: 'User created successfully', user: { email: newUser.email, username: newUser.username } });

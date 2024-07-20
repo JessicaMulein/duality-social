@@ -1,5 +1,4 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { useAuth0 } from '@auth0/auth0-react';
 import styles from './app.module.scss';
 import LoginLink from '../components/LoginLink';
 import UserProfile from '../components/UserProfile';
@@ -7,7 +6,7 @@ import UserProfile from '../components/UserProfile';
 import { Route, Routes, Link } from 'react-router-dom';
 
 export function App() {
-  const { isAuthenticated, loginWithRedirect } = useAuth0();
+  const isAuthenticated = false;
   return (
     <div>
       {/* START: routes */}

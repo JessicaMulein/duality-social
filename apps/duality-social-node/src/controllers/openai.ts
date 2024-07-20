@@ -33,9 +33,9 @@ export async function devilsAdvocate(user: IUser, req: Request, res: Response): 
     const postId = new MongooseTypes.ObjectId(new ObjectId().toString());
     const humanViewpoint = new PostViewpointModel({
         post: postId,
-        humanityType: HumanityTypeEnum.Human,
+        humanity: HumanityTypeEnum.Human,
         content: body.postContent,
-        language: 'en',
+        lang: 'en',
         viewpointType: ViewpointTypeEnum.HumanSource,
         createdBy: userId,
         updatedBy: userId
@@ -49,11 +49,11 @@ export async function devilsAdvocate(user: IUser, req: Request, res: Response): 
     }
     const post = await PostModel.create({
         _id: postId,
-        inputViewpointId: humanViewpointId,
+        inVpId: humanViewpointId,
         imageUrls: [],
         parent: parentId,
-        parentIds: [],
-        viewpointParentIds: [],
+        pIds: [],
+        vpPIds: [],
         createdBy: userId,
         updatedBy: userId,
         deletedBy: undefined
@@ -94,10 +94,10 @@ export async function devilsAdvocate(user: IUser, req: Request, res: Response): 
         });
         const aiViewpointId = (await PostViewpointModel.create(aiViewpoint))._id;
         aiViewpoint._id = aiViewpointId;
-        post.aiViewpointId = aiViewpointId ?? new Schema.Types.ObjectId(PostViewpointModelData.path);
+        post.aiVpId = aiViewpointId ?? new Schema.Types.ObjectId(PostViewpointModelData.path);
         const updateStatus = await PostModel.updateOne(
             { _id: post._id },
-            { $set: { aiViewpointId: aiViewpointId } }
+            { $set: { aiVpId: aiViewpointId } }
         );
         if (updateStatus.modifiedCount == 0) {
             res.status(500).json({

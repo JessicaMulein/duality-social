@@ -13,7 +13,6 @@ export enum ModelNameCollection {
     Report = 'reports',
     SudoLog = 'sudo-logs',
     User = 'users',
-    UserMeta = 'user-metas',
     UsernameChange = 'username-changes',
     Vote = 'votes',
 }

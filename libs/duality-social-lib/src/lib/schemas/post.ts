@@ -1,4 +1,4 @@
-import {  Schema } from 'mongoose';
+import { Schema } from 'mongoose';
 import { IPost } from '../interfaces/post';
 import ModelName from '../enumerations/modelName';
 
@@ -7,40 +7,40 @@ import ModelName from '../enumerations/modelName';
  */
 export const PostSchema = new Schema<IPost>(
   {
-    depth: { type: Number, default: 0, required: true },
-    replyCount: { type: Number, default: 0, required: true },
+    depth: { type: Number, required: true },
+    replies: { type: Number, default: 0, required: true },
     lastReplyAt: { type: Date },
     lastReplyBy: { type: Schema.Types.ObjectId, ref: ModelName.User },
     /**
      * The id of the parent post if this is a reply.
      */
-    parentPostId: {
+    pId: {
       type: Schema.Types.ObjectId,
       ref: ModelName.Post,
       optional: true,
       default: null,
       readonly: true,
     },
-    inputViewpointId: {
+    inVpId: {
       type: Schema.Types.ObjectId,
       ref: ModelName.PostViewpoint,
       optional: true,
       required: false,
     },
-    inputViewpointTranslationIds: [
+    inVpTransIds: [
       {
         type: Schema.Types.ObjectId,
         ref: ModelName.PostViewpoint,
         required: true,
       },
     ],
-    aiViewpointId: {
+    aiVpId: {
       type: Schema.Types.ObjectId,
       ref: ModelName.PostViewpoint,
       required: false,
       optional: true,
     },
-    aiViewpointTranslationIds: [
+    aiVpTransIds: [
       {
         type: Schema.Types.ObjectId,
         ref: ModelName.PostViewpoint,
@@ -73,26 +73,43 @@ export const PostSchema = new Schema<IPost>(
       ref: ModelName.User,
       required: true,
     },
-    meta: {
+    metadata: {
       expands: Number,
       impressions: Number,
       reactions: Number,
+      reactionsByType: {
+        type: Map,
+        of: Number,
+        required: true,
+      },
     },
+    procLockId: { type: String, required: false },
+    procLockDate: { type: Date, required: false },
   },
   { timestamps: true }
 );
 
 // Index for efficient querying of posts by parent
-PostSchema.index({ parentPostId: 1 });
+PostSchema.index({ parentId: 1 }, { name: 'parentPostId_index' });
 // Index for efficient querying of posts by the viewpoint they're replying to
-PostSchema.index({ inReplyToViewpointId: 1 });
+PostSchema.index({ replyVpId: 1 }, { name: 'inReplyToViewpointId_index' });
 // Index for efficient querying of posts by their input viewpoint
-PostSchema.index({ inputViewpointId: 1 });
+PostSchema.index({ inVpId: 1 }, { name: 'inputViewpointId_index' });
 // Index for efficient querying of posts by their AI-generated viewpoint
-PostSchema.index({ aiViewpointId: 1 });
+PostSchema.index({ aiVpId: 1 }, { name: 'aiViewpointId_index' });
 // Index for efficient querying of posts by creator
-PostSchema.index({ createdBy: 1 });
+PostSchema.index({ createdBy: 1 }, { name: 'createdBy_index' });
 // Index for efficient querying of posts by last updater
-PostSchema.index({ updatedBy: 1 });
+PostSchema.index({ updatedBy: 1 }, { name: 'updatedBy_index' });
 // Index for efficient querying of posts by creation date
-PostSchema.index({ hidden: 1, createdAt: -1 });
+PostSchema.index({ hidden: 1, createdAt: -1, deletedAt: -1 }, { name: 'feed_index' });
+// Index for efficient querying of posts by processing lock
+PostSchema.index({ procLockId: 1 }, { name: 'processing_lock_index' });
+// Index for efficient querying of posts by multiple fields
+PostSchema.index({
+  hidden: 1,
+  deletedAt: 1,
+  procLockId: 1,
+  inVpId: 1,
+  aiVpId: 1
+}, { name: 'feed_query_optimization_index' });

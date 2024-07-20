@@ -211,13 +211,13 @@ export async function imageDataUrlToSizeAndFile(imageDataUrl: string): Promise<{
     // todo start spinner? deal with outside this?
     const currentDate = new Date();
     const post = new PostModel({
-      inReplyToViewpointId: undefined,
-      inputViewpointId: undefined,
-      aiViewpointId: undefined,
+      replyVpId: undefined,
+      inVpId: undefined,
+      aiVpId: undefined,
       parentId: undefined,
       parents: [],
-      viewpointParents: [],
-      meta: {
+      vpParentIds: [],
+      metadata: {
           expands: 0,
           impressions: 0,
           reactions: 0,
@@ -247,7 +247,7 @@ export async function imageDataUrlToSizeAndFile(imageDataUrl: string): Promise<{
       createdBy: createdById,
       updatedAt: currentDate,
       updatedBy: createdById,
-      meta: {
+      metadata: {
         expands: 0,
         impressions: 0,
         reactions: 0,
@@ -262,7 +262,7 @@ export async function imageDataUrlToSizeAndFile(imageDataUrl: string): Promise<{
     if ((aiResponse).postId !== postId) {
       throw new Error('Post id mismatch');
     }
-    post.inputViewpointId = firstViewpointId;
+    post.inVpId = firstViewpointId;
     // TODO: images
     const aiViewpoint = new PostViewpointModel({
       postId: postId,
@@ -275,7 +275,7 @@ export async function imageDataUrlToSizeAndFile(imageDataUrl: string): Promise<{
     if (!aiViewpointId) {
       throw new Error('AI viewpoint id not saved');
     }
-    post.aiViewpointId = aiViewpointId;
+    post.aiVpId = aiViewpointId;
     const updated = await PostViewpointModel.updateOne(
       { _id: firstViewpointId },
       { $set: { aiViewpoint: aiViewpointId } }

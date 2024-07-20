@@ -13,7 +13,6 @@ export enum ModelName {
     Report = 'Report',
     SudoLog = 'SudoLog',
     User = 'User',
-    UserMeta = 'UserMeta',
     UsernameChange = 'UsernameChange',
     Vote = 'Vote',
 }

@@ -19,7 +19,6 @@ import { IPostViewpointReaction } from './interfaces/postViewpointReaction';
 import { BaseModel } from './models/baseModel';
 import { ISchemaModels } from './interfaces/schemaModels';
 import { ModelData} from './schemaModelData';
-import { IUserMeta } from './interfaces/userMeta';
 import { IVote } from './interfaces/vote';
 
 export const SchemaModels: ISchemaModels = {
@@ -38,7 +37,6 @@ export const SchemaModels: ISchemaModels = {
   Report: BaseModel.create<IReport>(ModelData[ModelName.Report]).Model,
   SudoLog: BaseModel.create<ISudoLog>(ModelData[ModelName.SudoLog]).Model,
   User: BaseModel.create<IUser>(ModelData[ModelName.User]).Model,
-  UserMeta: BaseModel.create<IUserMeta>(ModelData[ModelName.UserMeta]).Model,
   UsernameChange: BaseModel.create<IUsernameChange>(ModelData[ModelName.UsernameChange]).Model,
   Vote: BaseModel.create<IVote>(ModelData[ModelName.Vote]).Model,
 };

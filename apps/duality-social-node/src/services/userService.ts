@@ -6,8 +6,6 @@ import { InvalidEmail } from '../errors/invalidEmail';
 import { InvalidPassword } from '../errors/invalidPassword';
 import { EmailExistsError } from '../errors/emailExists';
 import { UsernameExistsError } from '../errors/usernameExists';
-import { managementClient } from '../auth0';
-import { environment } from '../environment';
 
 const UserModel = BaseModel.getModel<IUser>(ModelName.User);
 const EmailChangeModel = BaseModel.getModel<IEmailChange>(ModelName.EmailChange);
@@ -45,22 +43,10 @@ export class UserService {
     }
 
     try {
-      // Register user in Auth0
-      const auth0User = await managementClient.createUser({
-        connection: environment.auth0.database,
-        email: email,
-        username: username,
-        password: password,
-        user_metadata: {
-          /* any user metadata */
-        },
-      });
-
       // Register user in local MongoDB
       const newUser = await UserModel.create({
         email: email,
-        username: auth0User.username,
-        auth0Id: auth0User.user_id,
+        username: username,
         accountStatusType: AccountStatusTypeEnum.NewUnverified,
         lockStatus: LockTypeEnum.PendingEmailVerification,
         shadowBan: false,

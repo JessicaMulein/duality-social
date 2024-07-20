@@ -12,7 +12,6 @@ import { IProfile } from './profile';
 import { IReport } from './report';
 import { ISudoLog } from './sudoLog';
 import { IUser } from './user';
-import { IUserMeta } from './userMeta';
 import { IUsernameChange } from './usernameChange';
 import { IVote } from './vote';
 
@@ -30,7 +29,6 @@ export interface ISchemaModels {
     Report: Model<IReport>;
     SudoLog: Model<ISudoLog>;
     User: Model<IUser>;
-    UserMeta: Model<IUserMeta>;
     UsernameChange: Model<IUsernameChange>;
     Vote: Model<IVote>;
 }

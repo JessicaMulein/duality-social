@@ -14,7 +14,6 @@ export interface ISchemaModelData {
     Report: IModelData;
     SudoLog: IModelData;
     User: IModelData;
-    UserMeta: IModelData;
     UsernameChange: IModelData;
     Vote: IModelData;
 }

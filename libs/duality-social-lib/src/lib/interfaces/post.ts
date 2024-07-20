@@ -4,7 +4,6 @@ import { IHasID } from './hasId';
 import { IHasSoftDelete } from './hasSoftDelete';
 import { IHasTimestampOwners } from './hasTimestampOwners';
 import { IHasTimestamps } from './hasTimestamps';
-import { IPostMeta } from './postMeta';
 
 /**
  * This interface represents a post, which is a piece of content that a user can create.
@@ -21,39 +20,49 @@ import { IPostMeta } from './postMeta';
 export interface IPost extends IHasID, IHasTimestamps, IHasSoftDelete, IHasTimestampOwners, IHasDeleter {
     hidden: boolean;
     depth: number;
-    replyCount: number;
+    replies: number;
     lastReplyAt?: Date;
     lastReplyBy?: Schema.Types.ObjectId;
     /**
      * The id of the parent post if this is a reply.
      */
-    parentPostId?: Schema.Types.ObjectId;
+    pId?: Schema.Types.ObjectId;
     /**
      * Tree of parentIDs
      */
-    parentIds: Schema.Types.ObjectId[];
+    pIds: Schema.Types.ObjectId[];
     /**
      * The id of the viewpoint that this viewpoint is a reply to.
      */
-    inReplyToViewpointId?: Schema.Types.ObjectId;
+    rVpId?: Schema.Types.ObjectId;
     /**
      * Tree of viewpoint parents
      */
-    viewpointParentIds: Schema.Types.ObjectId[];
+    vpPIds: Schema.Types.ObjectId[];
     /**
      * The id of the viewpoint that the user inputted.
      */
-    inputViewpointId?: Schema.Types.ObjectId;
-    inputViewpointTranslationIds: Schema.Types.ObjectId[];
+    inVpId?: Schema.Types.ObjectId;
+    inVpTransIds: Schema.Types.ObjectId[];
+    reqTransLangs: string[];
     /**
      * The id of the viewpoint that the AI generated.
      */
-    aiViewpointId?: Schema.Types.ObjectId;
-    aiViewpointTranslationIds: Schema.Types.ObjectId[];
+    aiVpId?: Schema.Types.ObjectId;
+    aiVpTransIds: Schema.Types.ObjectId[];
+    aiReqTransLangs: string[];
     /**
      * URLs of embedded images
      */
     imageUrls: string[];
     //metadata
-    meta: IPostMeta;
+    metadata: {
+        expands: number,
+        impressions: number,
+        reactions: number,
+        reactionsByType: { [key: string]: number };
+    };
+    // the id of the service that is processing the post
+    procLockId?: string;
+    procLockDate?: Date;
 }

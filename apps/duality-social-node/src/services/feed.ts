@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
-import { Schema } from 'mongoose';
+import { Schema, Types as MongooseTypes } from 'mongoose';
+import { ObjectId } from 'bson';
+import { franc, francAll } from 'franc';
 import { BaseModel, ModelName, IPost, IPostViewpoint, sanitizeWhitespace, HumanityTypeEnum } from '@duality-social/duality-social-lib';
 
 const PostModel = BaseModel.getModel<IPost>(ModelName.Post);
@@ -19,9 +21,11 @@ export class FeedService {
             const posts = await PostModel.aggregate([
                 {
                     $match: {
-                        parentPostId: null,
                         hidden: false,
-                        deletedAt: null
+                        deletedAt: null,
+                        procLockId: { $exists: false},
+                        inVpId: { $exists: true },
+                        aiVpId: { $exists: true },
                     }
                 },
                 {
@@ -50,7 +54,7 @@ export class FeedService {
                 {
                     $lookup: {
                         from: 'postviewpoints',
-                        localField: 'aiViewpointId',
+                        localField: 'aiVpId',
                         foreignField: '_id',
                         as: 'aiViewpoint'
                     }
@@ -77,7 +81,7 @@ export class FeedService {
                         from: 'posts',
                         startWith: '$_id',
                         connectFromField: '_id',
-                        connectToField: 'parentPostId',
+                        connectToField: 'pId',
                         as: 'replies',
                         maxDepth: depth - 1,
                         depthField: 'depth'
@@ -88,7 +92,7 @@ export class FeedService {
                         _id: 1,
                         createdAt: 1,
                         updatedAt: 1,
-                        meta: 1,
+                        metadata: 1,
                         'inputViewpoint._id': 1,
                         'inputViewpoint.content': 1,
                         'aiViewpoint._id': 1,
@@ -121,6 +125,7 @@ export class FeedService {
         const content = sanitizeWhitespace(req.body.content);
         const currentDate = new Date();
         const createdById = new Schema.Types.ObjectId(UserModelData.path);
+        const language = await this.detectPostLanguage(content);
 
         if (content.length > maxPostLength) {
             res.status(400).send('Post content is too long');
@@ -131,24 +136,49 @@ export class FeedService {
             return;
         }
 
+        const postId = new MongooseTypes.ObjectId(new ObjectId().toString());
+        const inputViewpointId = new MongooseTypes.ObjectId(new ObjectId().toString());
+        // ensure we always have a copy of the post in english
+        const requestedLanguages = language !== 'en' ? ['en'] : [];
         const post = new PostModel({
+            _id: postId,
             createdAt: currentDate,
             createdById: createdById,
             updatedAt: currentDate,
             updatedById: createdById,
-            meta: {
+            inVpId: inputViewpointId,
+            reqTransLangs: requestedLanguages,
+            metadata: {
                 expands: 0,
                 impressions: 0,
                 reactions: 0,
                 reactionsByType: {},
                 updatedAt: currentDate,
             },
-            // Other fields as necessary
         });
 
+        const inputViewpoint = new PostViewpointModel({
+            _id: inputViewpointId,
+            postId: postId,
+            humanity: HumanityTypeEnum.Human,
+            createdAt: currentDate,
+            createdBy: createdById,
+            content: content,
+            lang: language,
+            metadata: {
+                expands: 0,
+                impressions: 0,
+                reactions: 0,
+                reactionsByType: {},
+            },
+        });
         try {
             const newPost = await PostModel.create(post);
-            res.status(200).send(newPost);
+            const newViewpoint = await PostViewpointModel.create(inputViewpoint);
+            res.status(200).send({
+                post: newPost,
+                viewpoint: newViewpoint
+            });
         } catch (error) {
             console.error('Error creating new post:', error);
             res.status(500).send('An error occurred while creating the post');
@@ -195,6 +225,27 @@ export class FeedService {
         } catch (error) {
             console.error('Error creating new reply:', error);
             res.status(500).send('An error occurred while creating the reply');
+        }
+    }
+
+    /**
+     * Locally (without calling an external API) detect the language of a given text.
+     * @param text 
+     * @returns The detected language code or 'unknown' if the language cannot be detected.
+     */
+    async detectPostLanguage(text: string): Promise<string> {
+        try {
+            // Use franc to detect the language
+            const languageCode = franc(text);
+    
+            if (languageCode === 'und') {
+                return 'unknown';
+            } else {
+                return languageCode;
+            }
+        } catch (error) {
+            console.error('Error detecting language:', error);
+            throw new Error('An error occurred while detecting the language of the text');
         }
     }
 }

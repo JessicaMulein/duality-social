@@ -15,11 +15,11 @@ export const PostViewpointSchema = new Schema<IPostViewpoint>(
       required: true,
       immutable: true,
     },
-    replyCount: { type: Number, default: 0, required: true },
+    replies: { type: Number, default: 0, required: true },
     /**
      * What type of entity created this post.
      */
-    humanityType: {
+    humanity: {
       type: String,
       enum: HumanityTypeEnum,
       required: true,
@@ -34,7 +34,7 @@ export const PostViewpointSchema = new Schema<IPostViewpoint>(
     /**
      * The language the post is in- ISO language code, eg 'en-US' or 'en'
      */
-    language: {
+    lang: {
       type: String,
       required: true,
       immutable: true,
@@ -42,7 +42,7 @@ export const PostViewpointSchema = new Schema<IPostViewpoint>(
     /**
      * The id of the parent viewpoint if this is a reply.
      */
-    parentViewpointId: {
+    pVpId: {
       type: Schema.Types.ObjectId,
       ref: ModelName.PostViewpoint,
       optional: true,
@@ -56,11 +56,11 @@ export const PostViewpointSchema = new Schema<IPostViewpoint>(
      * Whether the content has been pre-rendered.
      * Not immutable because rendering may be improved or changed
      */
-    contentRendered: { type: String, required: false },
+    rendered: { type: String, required: false },
     /**
      * Whether the content is a translation.
      */
-    isTranslation: { type: Boolean, required: true, default: false },
+    translated: { type: Boolean, required: true, default: false },
     deletedAt: { type: Date, optional: true },
     createdAt: {
       type: Date,
@@ -79,10 +79,15 @@ export const PostViewpointSchema = new Schema<IPostViewpoint>(
       ref: ModelName.User,
       optional: true,
     },
-    meta: {
+    metadata: {
       expands: Number,
       impressions: Number,
       reactions: Number,
+      reactionsByType: {
+        type: Map,
+        of: Number,
+        required: true,
+      },
     },
   },
   { timestamps: true }

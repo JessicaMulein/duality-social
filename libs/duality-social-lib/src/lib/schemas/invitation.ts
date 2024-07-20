@@ -35,7 +35,7 @@ export const InvitationSchema = new Schema<IInvitation>(
     } },
     code: { type: String, default: generateRandomCode, required: true, immutable: true },
     maxUses: { type: Number, required: true, immutable: true },
-    meta: {
+    metadata: {
       uses: { type: Number, required: true },
       views: { type: Number, required: true },
     },

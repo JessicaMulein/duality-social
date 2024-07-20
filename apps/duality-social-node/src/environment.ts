@@ -27,13 +27,6 @@ export const environment: IEnvironment = {
     port: port,
     sslEnabled: sslEnabled,
   },
-  auth0: {
-    database: process.env.AUTH0_DATABASE ?? '',
-    domain: process.env.AUTH0_DOMAIN ?? '',
-    clientId: process.env.AUTH0_CLIENT_ID ?? '',
-    clientSecret: process.env.AUTH0_CLIENT_SECRET ?? '',
-    scope: process.env.AUTH0_SCOPE ?? ''
-  },
   openai: {
     type: process.env.OPENAI_PROVIDER === 'azure' ? 'azure' : 'openai',
     accessToken: process.env.OPENAI_API_KEY ?? '',

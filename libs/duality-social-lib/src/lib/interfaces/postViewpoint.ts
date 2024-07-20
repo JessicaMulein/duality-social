@@ -14,11 +14,11 @@ export interface IPostViewpoint extends IHasID, IHasTimestamps, IHasSoftDelete, 
    * Correlation id to link the dualities.
    */
   postId: IPost['_id'];
-  replyCount: number;
+  replies: number;
   /**
    * What type of entity created this post.
    */
-  humanityType: HumanityTypeEnum;
+  humanity: HumanityTypeEnum;
   /**
    * The raw content of the viewpoint.
    */
@@ -26,20 +26,25 @@ export interface IPostViewpoint extends IHasID, IHasTimestamps, IHasSoftDelete, 
   /**
    * Pre-rendered content of the viewpoint.
    */
-  contentRendered: string;
+  rendered: string;
   /**
    * Whether the content is a translation.
    */
-  isTranslation: boolean;
+  translated: boolean;
   /**
    * The language of the content.
    */
-  language: string;
+  lang: string;
   /**
    * The id of the parent viewpoint if this is a reply.
    */
-  parentViewpointId?: IPostViewpoint['_id'];
-  meta: IPostViewpointMeta;
+  pVpId?: IPostViewpoint['_id'];
+  metadata: {
+    expands: number;
+    impressions: number;
+    reactions:  number;
+    reactionsByType: { [key: string]: number };
+  };
   viewpointType: ViewpointTypeEnum;
   createdBy: IUser['_id'];
   updatedBy: IUser['_id'];

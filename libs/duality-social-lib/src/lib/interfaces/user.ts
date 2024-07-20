@@ -10,38 +10,75 @@ import { IHasTimestamps } from './hasTimestamps';
 import { HumanityTypeEnum } from '../enumerations/humanityType';
 import { IHasDeleter } from './hasDeleter';
 
-export const PasswordRounds = 10; 
+export const PasswordRounds = 10;
 
 export interface IUser extends Document, IHasID, IHasTimestamps, IHasTimestampOwners, IHasSoftDelete, IHasDeleter {
-    _id?: ObjectId;
-    auth0Id: string;
-    username: string;
-    givenName: string;
-    surname: string;
-    userPrincipalName: string;
+  _id?: ObjectId;
+  username: string;
+  givenName: string;
+  surname: string;
+  userPrincipalName: string;
   // duality social specific fields
   /**
    * Whether the account is under any kind of lock.
    */
-    lockStatus: LockTypeEnum;
-    /**
-     * Whether the user sees their own posts but no one else does.
-     */
-    shadowBan: boolean;
-    /**
-     * Whether the user is hidden from the public in search.
-     */
-    userHidden: boolean;
-    /**
-     * Current account status/standing
-     */
-    accountStatusType: AccountStatusTypeEnum;
-    humanityType: HumanityTypeEnum,
+  lockStatus: LockTypeEnum;
+  /**
+   * Whether the user sees their own posts but no one else does.
+   */
+  shadowBan: boolean;
+  /**
+   * Whether the user is hidden from the public in search.
+   */
+  userHidden: boolean;
+  /**
+   * Current account status/standing
+   */
+  accountStatusType: AccountStatusTypeEnum;
+  humanityType: HumanityTypeEnum,
   /**
    * The user's email address, used for login if accountType is email/password.
    * Used for sending notifications, regardless.
    */
-    email: string;
+  email: string;
+  lastLogin?: Date;
   // metadata
-    lastLogin?: Date;
+  metadata: {
+    /**
+     * How many posts the user has made.
+     */
+    totalPosts: number;
+    /**
+     * How many replies the user has made.
+     */
+    totalReplies: number;
+    /**
+     * The total number of reactions the user has made on other posts.
+     */
+    totalReactions: number;
+    /**
+     * The total number of reactions the user has received on their posts.
+     */
+    totalReactionsReceived: number;
+    /**
+     * The total number of votes the user has made on other posts.
+     */
+    totalVotes: number;
+    /**
+     * The total number of votes the user has received on their posts.
+     */
+    totalVotesReceived: number;
+    /**
+     * The total number of impressions the user has received on their profile.
+     */
+    totalProfileViewsReceived: number;
+    /**
+     * The total number of impressions the user has received on their posts.
+     */
+    totalPostViewsReceived: number;
+    /**
+     * The total number of impressions the user has received on their replies.
+     */
+    totalReplyViewsReceived: number;
   }
+}
