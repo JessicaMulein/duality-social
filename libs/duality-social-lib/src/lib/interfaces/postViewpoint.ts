@@ -45,7 +45,7 @@ export interface IPostViewpoint extends IHasID, IHasTimestamps, IHasSoftDelete, 
     reactions:  number;
     reactionsByType: { [key: string]: number };
   };
-  viewpointType: ViewpointTypeEnum;
+  type: ViewpointTypeEnum;
   createdBy: IUser['_id'];
   updatedBy: IUser['_id'];
 }

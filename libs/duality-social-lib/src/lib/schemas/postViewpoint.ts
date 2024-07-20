@@ -25,7 +25,7 @@ export const PostViewpointSchema = new Schema<IPostViewpoint>(
       required: true,
       immutable: true,
     },
-    viewpointType: {
+    type: {
       type: String,
       enum: ViewpointTypeEnum,
       required: true,
@@ -94,5 +94,5 @@ export const PostViewpointSchema = new Schema<IPostViewpoint>(
 );
 
 PostViewpointSchema.index({ postId: 1, humanityType: 1 });
-PostViewpointSchema.index({ postId: 1, viewpointType: 1 });
+PostViewpointSchema.index({ postId: 1, type: 1 });
 PostViewpointSchema.index({ parentViewpointId: 1, createdAt: -1 });
