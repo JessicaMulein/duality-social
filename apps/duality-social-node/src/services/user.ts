@@ -1,14 +1,15 @@
 // utils/userUtils.ts
 import { Document } from 'mongoose';
 import validator from 'validator';
-import { AccountStatusTypeEnum, BaseModel, IEmailChange, IUser, LockTypeEnum, ModelName } from '@duality-social/duality-social-lib';
+import { AccountStatusTypeEnum, BaseModel, EmailChangeDocument, IEmailChange, IUser, LockTypeEnum, ModelName, UserDocument } from '@duality-social/duality-social-lib';
 import { InvalidEmail } from '../errors/invalidEmail';
 import { InvalidPassword } from '../errors/invalidPassword';
 import { EmailExistsError } from '../errors/emailExists';
 import { UsernameExistsError } from '../errors/usernameExists';
+import { compare } from 'bcrypt';
 
-const UserModel = BaseModel.getModel<IUser>(ModelName.User);
-const EmailChangeModel = BaseModel.getModel<IEmailChange>(ModelName.EmailChange);
+const UserModel = BaseModel.getModel<UserDocument>(ModelName.User);
+const EmailChangeModel = BaseModel.getModel<EmailChangeDocument>(ModelName.EmailChange);
 
 export class UserService {
   public static async register(
@@ -64,5 +65,30 @@ export class UserService {
       console.error('Error registering user:', error);
       throw error;
     }
+  }
+
+  // Add this login method to UserService.ts
+  public static async login(email: string, password: string): Promise<any> {
+    // Validate email
+    if (!validator.isEmail(email)) {
+      throw new InvalidEmail(email);
+    }
+
+    // Attempt to find the user by email
+    const user = await UserModel.findOne({ email: email });
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    // Here, you should compare the provided password with the stored hash.
+    // This is a placeholder for password comparison logic, e.g., using bcrypt.
+    const isMatch = await compare(password, user.passwordHash);
+    if (!isMatch) {
+      throw new Error('Invalid password');
+    }
+
+    // Assuming the password matches, return the user (excluding the password hash)
+    const { passwordHash, ...userWithoutPassword } = user.toObject();
+    return userWithoutPassword;
   }
 }

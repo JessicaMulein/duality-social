@@ -75,6 +75,7 @@ export const UserSchema = new Schema<IUser>(
         message: 'The username is already in use.',
       },
     },
+    passwordHash: { type: String, required: true },
     languages: {
       type: [String],
       default: [],

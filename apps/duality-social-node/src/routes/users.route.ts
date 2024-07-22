@@ -1,5 +1,5 @@
 import { Request, Response, Router} from 'express';
-import { UserService } from '../services/userService';
+import { UserService } from '../services/user';
 export const usersRouter = Router();
 
 usersRouter.post('/register', async (req: Request, res: Response) => {
@@ -14,5 +14,18 @@ usersRouter.post('/register', async (req: Request, res: Response) => {
   }
   catch (error) {
     res.status(400).json(error);
+  }
+});
+
+usersRouter.post('/login', async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+  try {
+    const user = await UserService.login(email, password);
+    res.status(200).json({
+      message: 'User logged in successfully',
+      user,
+    });
+  } catch (error) {
+    res.status(401).json({ message: 'Invalid credentials', error });
   }
 });

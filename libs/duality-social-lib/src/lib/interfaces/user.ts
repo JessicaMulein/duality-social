@@ -41,6 +41,7 @@ export interface IUser extends IHasTimestamps, IHasTimestampOwners, IHasSoftDele
    */
   email: string;
   lastLogin?: Date;
+  passwordHash: string;
   // metadata
   metadata: {
     /**

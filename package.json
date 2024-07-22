@@ -102,7 +102,7 @@
     "@nx/react": "19.5.1",
     "@nx/webpack": "19.5.1",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.7",
-    "@svgr/webpack": "^8.0.1",
+    "@svgr/webpack": "^8.1.0",
     "@swc/cli": "~0.3.12",
     "@swc/core": "~1.5.7",
     "@testing-library/react": "15.0.6",

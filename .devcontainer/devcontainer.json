@@ -19,7 +19,7 @@
 	"forwardPorts": [3000],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "yarn",
+	"postCreateCommand": "yarn && cd libs/duality-social-lib && yarn && cd ../../apps/duality-social-node && yarn",
 
 	// Configure tool-specific properties.
 	// "customizations": {},
@@ -31,7 +31,9 @@
 				"GitHub.copilot",
 				"GitHub.copilot-labs",
 				"mongodb.mongodb-vscode",
-				"ms-azuretools.vscode-docker"
+				"ms-azuretools.vscode-docker",
+				"eamodio.gitlens",
+				"rangav.vscode-thunder-client"
 			],
 			// Set *default* container specific settings.json values on container create.
 			"settings": {

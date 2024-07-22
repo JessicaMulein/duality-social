@@ -1,6 +1,7 @@
 import { Schema } from 'mongoose';
 import ModelName from '../enumerations/modelName';
 import { IPostViewpointReaction } from '../interfaces/postViewpointReaction';
+import { DefaultReactionsTypeEnum } from '../enumerations/defaultReactionsType';
 
 /**
  * Represents a user reacting to a viewpoint
@@ -8,7 +9,13 @@ import { IPostViewpointReaction } from '../interfaces/postViewpointReaction';
 export const PostViewpointReactionSchema = new Schema<IPostViewpointReaction>({
     postId: { type: Schema.Types.ObjectId, ref: ModelName.Post, required: true, null: false, immutable: true },
     viewpointId: { type: Schema.Types.ObjectId, ref: ModelName.PostViewpoint, required: true, null: false, immutable: true },
-    reaction: { type: String, required: true, null: false, immutable: true },
+    reaction: {
+        type: String,
+        required: true,
+        null: false,
+        immutable: true,
+        enum: Object.values(DefaultReactionsTypeEnum) // Reference the enum values here
+    },
     createdBy: { type: Schema.Types.ObjectId, ref: ModelName.User, required: true, null: false, immutable: true },
 }, { timestamps: true });
 

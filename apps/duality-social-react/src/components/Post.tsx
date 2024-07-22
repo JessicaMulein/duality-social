@@ -1,7 +1,21 @@
 import React, { CSSProperties, useState } from 'react';
 import './Post.scss';
 
-const Post = ({ post, depth = 0, initialDepth = 2 }) => {
+// Define the interface for the component props
+interface PostProps {
+  post: {
+    _id: string;
+    author: {
+      username: string;
+    };
+    content: string;
+    replies?: Array<PostProps['post']>;
+  };
+  depth?: number;
+  initialDepth?: number;
+}
+
+const Post: React.FC<PostProps> = ({ post, depth = 0, initialDepth = 2 }) => {
     const [showReplies, setShowReplies] = useState(depth < initialDepth);
 
     const toggleReplies = () => setShowReplies(!showReplies);
@@ -32,3 +46,5 @@ const Post = ({ post, depth = 0, initialDepth = 2 }) => {
         </div>
     );
 };
+
+export default Post;

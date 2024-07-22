@@ -83,6 +83,9 @@ export const PostViewpointSchema = new Schema<IPostViewpoint>(
       expands: Number,
       impressions: Number,
       reactions: Number,
+      aiVotes: Number,
+      botVotes: Number,
+      humanVotes: Number,
       reactionsByType: {
         type: Map,
         of: Number,
