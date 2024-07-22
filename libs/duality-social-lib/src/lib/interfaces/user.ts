@@ -3,7 +3,6 @@
 import { ObjectId } from 'mongoose';
 import { AccountStatusTypeEnum } from '../enumerations/accountStatusType';
 import { LockTypeEnum } from '../enumerations/lockType';
-import { IHasID } from './hasId';
 import { IHasSoftDelete } from './hasSoftDelete';
 import { IHasTimestampOwners } from './hasTimestampOwners';
 import { IHasTimestamps } from './hasTimestamps';
@@ -12,13 +11,13 @@ import { IHasDeleter } from './hasDeleter';
 
 export const PasswordRounds = 10;
 
-export interface IUser extends Document, IHasID, IHasTimestamps, IHasTimestampOwners, IHasSoftDelete, IHasDeleter {
-  _id?: ObjectId;
+export interface IUser extends IHasTimestamps, IHasTimestampOwners, IHasSoftDelete, IHasDeleter {
   username: string;
   givenName: string;
   surname: string;
   userPrincipalName: string;
   // duality social specific fields
+  languages: string[];
   /**
    * Whether the account is under any kind of lock.
    */

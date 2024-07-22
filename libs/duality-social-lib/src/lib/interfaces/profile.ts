@@ -1,13 +1,12 @@
-import { IHasID } from "./hasId";
 import { IHasTimestamps } from "./hasTimestamps";
-import { IUser } from "./user";
 import { IHasSoftDelete } from "./hasSoftDelete";
+import { ObjectId } from "mongoose";
 
 /**
  * Authentication object based profile
  */
-export interface IProfile extends IHasID, IHasTimestamps, IHasSoftDelete {
-    userId: IUser['_id'];
+export interface IProfile extends IHasTimestamps, IHasSoftDelete {
+    userId: ObjectId;
     givenName?: string;
     surname?: string;
     /**
@@ -25,5 +24,5 @@ export interface IProfile extends IHasID, IHasTimestamps, IHasSoftDelete {
     socialUrls: string[];
     website?: string;
     verified: boolean;
-    verifiedBy?: IUser['_id'];
+    verifiedBy?: ObjectId;
   };

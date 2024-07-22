@@ -1,9 +1,9 @@
 import {
+  Document,
   model,
   Model,
   Schema,
 } from 'mongoose';
-import { IHasID } from '../interfaces/hasId';
 import { IModelData } from '../interfaces/modelData';
 import ModelName from '../enumerations/modelName';
 
@@ -30,7 +30,7 @@ abstract class Base {
 }
 
 export class BaseModel<
-  T extends IHasID<U>,
+  T extends Document,
   U = Schema.Types.ObjectId
 > extends Base {
   protected static ModelDataMap: Map<string, IModelData> = new Map<
@@ -55,7 +55,7 @@ export class BaseModel<
       BaseModel.ModelDataMap.set(modelData.name, modelData);
     }
   }
-  static create<T extends IHasID>(modelData: IModelData): BaseModel<T> {
+  static create<T extends Document>(modelData: IModelData): BaseModel<T> {
     const modelInstance = model<T>(modelData.name, modelData.schema, modelData.collection);
     const baseModel = new BaseModel<T>(modelData, modelInstance);
     return baseModel;

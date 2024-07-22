@@ -1,9 +1,8 @@
-import { IHasID } from "./hasId";
+import { ObjectId } from "mongoose";
 import { IHasTimestamps } from "./hasTimestamps";
-import { IUser } from "./user";
 
-export interface IAdminUser extends IHasID, IHasTimestamps {
-    userId: IUser['_id'];
+export interface IAdminUser extends IHasTimestamps {
+    userId: ObjectId
     lastSudo?: Date;
     lastFailedSudo?: Date;
     sudoHash: string;

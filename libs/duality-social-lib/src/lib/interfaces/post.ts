@@ -1,6 +1,5 @@
-import { Schema } from 'mongoose';
+import { ObjectId } from 'mongoose';
 import { IHasDeleter } from './hasDeleter';
-import { IHasID } from './hasId';
 import { IHasSoftDelete } from './hasSoftDelete';
 import { IHasTimestampOwners } from './hasTimestampOwners';
 import { IHasTimestamps } from './hasTimestamps';
@@ -17,39 +16,39 @@ import { IHasTimestamps } from './hasTimestamps';
  * Rendered - AI Translation
  * It inherits from IHasID, which provides the id property, IHasCreation, which provides the createdAt and updatedAt properties, and IHasSoftDelete, which provides the deletedAt property.
  */
-export interface IPost extends IHasID, IHasTimestamps, IHasSoftDelete, IHasTimestampOwners, IHasDeleter {
+export interface IPost extends IHasTimestamps, IHasSoftDelete, IHasTimestampOwners, IHasDeleter {
     hidden: boolean;
     depth: number;
     replies: number;
     lastReplyAt?: Date;
-    lastReplyBy?: Schema.Types.ObjectId;
+    lastReplyBy?: ObjectId;
     /**
      * The id of the parent post if this is a reply.
      */
-    pId?: Schema.Types.ObjectId;
+    pId?: ObjectId;
     /**
      * Tree of parentIDs
      */
-    pIds: Schema.Types.ObjectId[];
+    pIds: ObjectId[];
     /**
      * The id of the viewpoint that this viewpoint is a reply to.
      */
-    rVpId?: Schema.Types.ObjectId;
+    rVpId?: ObjectId;
     /**
      * Tree of viewpoint parents
      */
-    vpPIds: Schema.Types.ObjectId[];
+    vpPIds: ObjectId[];
     /**
      * The id of the viewpoint that the user inputted.
      */
-    inVpId?: Schema.Types.ObjectId;
-    inVpTransIds: Schema.Types.ObjectId[];
+    inVpId?: ObjectId;
+    inVpTransIds: ObjectId[];
     reqTransLangs: string[];
     /**
      * The id of the viewpoint that the AI generated.
      */
-    aiVpId?: Schema.Types.ObjectId;
-    aiVpTransIds: Schema.Types.ObjectId[];
+    aiVpId?: ObjectId;
+    aiVpTransIds: ObjectId[];
     aiReqTransLangs: string[];
     /**
      * URLs of embedded images

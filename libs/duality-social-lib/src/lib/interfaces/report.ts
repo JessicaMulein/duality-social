@@ -1,14 +1,11 @@
 import { ReportTypeEnum } from "../enumerations/reportType";
-import { IPost } from "./post";
-import { IPostViewpoint } from "./postViewpoint";
-import { IUser } from "./user";
-import { IHasID } from "./hasId";
+import { ObjectId } from "mongoose";
 
-export interface IReport extends IHasID {
-    postId: IPost['_id'];
-    viewpointId: IPostViewpoint['_id'];
+export interface IReport {
+    postId: ObjectId;
+    viewpointId: ObjectId;
     reportType: ReportTypeEnum;
     notes: string;
-    createdBy: IUser['_id'];
+    createdBy: ObjectId;
     createdAt: Date;
 }

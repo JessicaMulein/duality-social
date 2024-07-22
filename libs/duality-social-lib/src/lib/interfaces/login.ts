@@ -1,7 +1,6 @@
 import { Schema } from "mongoose";
-import { IHasID } from "./hasId";
 
-export interface ILogin extends IHasID {
+export interface ILogin {
     userId: Schema.Types.ObjectId;
     ip: string;
     userAgent: string;

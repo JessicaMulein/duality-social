@@ -8,6 +8,8 @@ import {
   IPostViewpoint,
   makeDataUrl,
   ModelName,
+  PostDocument,
+  PostViewpointDocument
 } from '@duality-social/duality-social-lib';
 import {
     Configuration,
@@ -24,12 +26,13 @@ import { promptResultParser } from '../models/promptResultParser';
 import { decode, encode } from 'fast-png';
 import { ImageData } from 'fast-png/lib/types';
 import { environment } from '../environment';
-import { Types as MongooseTypes, Schema } from "mongoose";
+import { ObjectId } from "mongoose";
+import { ObjectId as BsonObjectId } from 'bson';
 export const DevilsAdvocatePrompt = "Given the following post by a human, rewrite it, taking an opposite position, like playing Devil's Advocate, using a similar tone and style:";
 export const DevilsAdvocateImagePrompt = "Given the following position text, and a supplied image, generate an image that depicts the position:";
 
-const PostModel = BaseModel.getModel<IPost>(ModelName.Post);
-const PostViewpointModel = BaseModel.getModel<IPostViewpoint>(ModelName.PostViewpoint);
+const PostModel = BaseModel.getModel<PostDocument>(ModelName.Post);
+const PostViewpointModel = BaseModel.getModel<PostViewpointDocument>(ModelName.PostViewpoint);
 
 const openAiConfig: ConfigurationParameters = {
   basePath: environment.openai.type === 'azure' ? 'https://api.openai.com/v1' : 'https://api.openai.com/v1',
@@ -112,8 +115,8 @@ export async function imageDataUrlToSizeAndFile(imageDataUrl: string): Promise<{
    */
   export async function getOppositeResponseFromOpenAI(
     post: string,
-    postId: Schema.Types.ObjectId,
-    userId?: MongooseTypes.ObjectId
+    postId: ObjectId,
+    userId?: ObjectId | BsonObjectId
   ): Promise<OpenAIGenerationResult> {
     const model = 'gpt-3.5-turbo';
     const maxTokens = 1000;
@@ -174,7 +177,7 @@ export async function imageDataUrlToSizeAndFile(imageDataUrl: string): Promise<{
   export async function generateDallEImage(
     prompt: string,
     sourceImageDataUrl: string,
-    userId?: MongooseTypes.ObjectId,
+    userId?: ObjectId,
   ): Promise<string> {
     const sourceSizeEnum = await getImageSizeFromImageDataUrl(sourceImageDataUrl);
     const sourceSize = createImageRequestSizeEnumToNumber(sourceSizeEnum);
@@ -207,7 +210,7 @@ export async function imageDataUrlToSizeAndFile(imageDataUrl: string): Promise<{
     );
   }
 
-   async function runPrompt(createdById: MongooseTypes.ObjectId, humanity: HumanityTypeEnum, postContent: string): Promise<IPost> {
+   async function runPrompt(createdById: ObjectId, humanity: HumanityTypeEnum, postContent: string): Promise<IPost> {
     // todo start spinner? deal with outside this?
     const currentDate = new Date();
     const post = new PostModel({
@@ -230,8 +233,8 @@ export async function imageDataUrlToSizeAndFile(imageDataUrl: string): Promise<{
       updatedById: createdById,
   });
    ;
-    const savedPost = await PostModel.create(post);
-    const postId: Schema.Types.ObjectId | undefined = savedPost._id;
+    const savedPost: PostDocument = await PostModel.create(post);
+    const postId = savedPost._id;
     if (!postId) {
       throw new Error('Post id not saved');
     }

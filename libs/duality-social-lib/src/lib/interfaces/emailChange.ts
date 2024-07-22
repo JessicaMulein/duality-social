@@ -1,9 +1,8 @@
-import { IHasID } from './hasId';
+import { ObjectId } from 'mongoose';
 import { IHasTimestamps } from './hasTimestamps';
-import { IUser } from './user';
 
-export interface IEmailChange extends IHasID, IHasTimestamps {
-    userId: IUser['_id'];
+export interface IEmailChange extends IHasTimestamps {
+    userId: ObjectId;
     email: string;
     token: string;
     createdAt: Date;

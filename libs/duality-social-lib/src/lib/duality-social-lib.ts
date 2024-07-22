@@ -1,5 +1,4 @@
 import { CreateImageRequestSizeEnum } from 'openai';
-import { Buffer } from 'buffer';
 import sanitizeHtml from 'sanitize-html';
 import { parseIconMarkup, stripIconMarkup } from './font-awesome/font-awesome';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -27,12 +26,23 @@ export function closestImageSize(size: number): CreateImageRequestSizeEnum {
   return CreateImageRequestSizeEnum._256x256;
 }
 
-export function imageDataUrlToFile(imageDataUrl: string): File {
+export function imageDataUrlToFile(imageDataUrl: string, filename = 'image.png'): File {
   if (!imageDataUrl.startsWith('data:image/png;base64,')) {
     throw new Error('Invalid image data URL');
   }
-  const imageData = Buffer.from(imageDataUrl.split(',', 2)[1]);
-  const imageFile = new File([imageData], 'image.png');
+  // Extract the base64 data from the URL
+  const base64Data = imageDataUrl.split(',')[1];
+  // Convert base64 to binary data
+  const byteCharacters = atob(base64Data);
+  const byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+  const byteArray = new Uint8Array(byteNumbers);
+  // Create a blob from the binary data
+  const imageBlob = new Blob([byteArray], { type: 'image/png' });
+  // Convert the blob to a file
+  const imageFile = new File([imageBlob], filename, { type: 'image/png' });
   return imageFile;
 }
 

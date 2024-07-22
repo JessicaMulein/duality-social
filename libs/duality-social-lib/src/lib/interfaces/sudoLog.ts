@@ -1,11 +1,9 @@
-import { IAdminUser } from "./adminUser";
-import { IUser } from "./user";
-import { IHasID } from "./hasId";
 import { IHasCreator } from "./hasCreator";
 import { IHasTimestamps } from "./hasTimestamps";
+import { ObjectId } from "mongoose";
 
-export interface ISudoLog extends IHasID, IHasCreator, IHasTimestamps {
-    userId: IUser['_id'];
-    adminUserId: IAdminUser['_id'];
+export interface ISudoLog extends IHasCreator, IHasTimestamps {
+    userId: ObjectId;
+    adminUserId: ObjectId;
     success: boolean;
 }

@@ -1,19 +1,17 @@
+import { ObjectId } from 'mongoose';
 import { DefaultReactionsTypeEnum } from '../enumerations/defaultReactionsType';
 import { IHasCreator } from './hasCreator';
-import { IHasID } from './hasId';
 import { IHasTimestamps } from './hasTimestamps';
-import { IPost } from './post';
-import { IPostViewpoint } from './postViewpoint';
 
-export interface IPostViewpointReaction extends IHasID, IHasTimestamps, IHasCreator {
+export interface IPostViewpointReaction extends IHasTimestamps, IHasCreator {
     /**
      * The post that the reaction is on.
      */
-    postId: IPost['_id'];
+    postId: ObjectId;
     /**
      * The viewpoint that the reaction is on.
      */
-    viewpointId: IPostViewpoint['_id'];
+    viewpointId: ObjectId;
     /**
      * The built-in reaction that was made.
      */

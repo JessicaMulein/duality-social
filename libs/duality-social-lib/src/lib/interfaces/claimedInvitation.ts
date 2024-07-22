@@ -1,8 +1,7 @@
-import { IHasID } from "./hasId";
-import { IInvitation } from "./invitation";
+import { ObjectId } from "mongoose";
 
-export interface IClaimedInvitation extends IHasID {
-    invitationId: IInvitation['_id'];
+export interface IClaimedInvitation {
+    invitationId: ObjectId;
     ip: string;
     email?: string;
     code?: string;

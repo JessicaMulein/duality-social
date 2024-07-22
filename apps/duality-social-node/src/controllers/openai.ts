@@ -3,13 +3,13 @@ import {
     DevilsAdvocateImagePrompt,
     getOppositeResponseFromOpenAI
 } from '../services/openai';
-import { IDevilsAdvocateRequest, IDevilsAdvocateResponse, HumanityTypeEnum, BaseModel, IPost, ModelName, IPostViewpoint } from '@duality-social/duality-social-lib';
-import { Schema, Types as MongooseTypes } from 'mongoose';
-import { ObjectId } from 'bson';
+import { IDevilsAdvocateRequest, IDevilsAdvocateResponse, HumanityTypeEnum, BaseModel, ModelName, PostDocument, PostViewpointDocument } from '@duality-social/duality-social-lib';
+import { ObjectId as MongooseObjectId } from 'mongoose';
+import { ObjectId as BsonObjectId } from 'bson';
 import { ViewpointTypeEnum, IUser } from '@duality-social/duality-social-lib';
 
-const PostModel = BaseModel.getModel<IPost>(ModelName.Post);
-const PostViewpointModel = BaseModel.getModel<IPostViewpoint>(ModelName.PostViewpoint);
+const PostModel = BaseModel.getModel<PostDocument>(ModelName.Post);
+const PostViewpointModel = BaseModel.getModel<PostViewpointDocument>(ModelName.PostViewpoint);
 const PostViewpointModelData = BaseModel.getModelData(ModelName.PostViewpoint);
 
 export async function devilsAdvocate(user: IUser, req: Request, res: Response): Promise<void> {
@@ -21,8 +21,8 @@ export async function devilsAdvocate(user: IUser, req: Request, res: Response): 
     // I say input viewpoint because we may have bots allowed on the platform.
 
     const body = req.body;
-    const parentId: MongooseTypes.ObjectId | undefined = new MongooseTypes.ObjectId(req.params.parentId) ?? undefined;
-    const userId = new MongooseTypes.ObjectId(new ObjectId().toString()); // TODO: get from auth
+    const parentId: BsonObjectId | undefined = new BsonObjectId(req.params.parentId) ?? undefined;
+    const userId = new BsonObjectId(new BsonObjectId().toString()); // TODO: get from auth
     console.log('user', user, userId);
     if (body === undefined) {
         res.status(400).json({
@@ -30,7 +30,7 @@ export async function devilsAdvocate(user: IUser, req: Request, res: Response): 
         });
         return;
     }
-    const postId = new MongooseTypes.ObjectId(new ObjectId().toString());
+    const postId = new BsonObjectId();
     const humanViewpoint = new PostViewpointModel({
         post: postId,
         humanity: HumanityTypeEnum.Human,
@@ -94,7 +94,7 @@ export async function devilsAdvocate(user: IUser, req: Request, res: Response): 
         });
         const aiViewpointId = (await PostViewpointModel.create(aiViewpoint))._id;
         aiViewpoint._id = aiViewpointId;
-        post.aiVpId = aiViewpointId ?? new Schema.Types.ObjectId(PostViewpointModelData.path);
+        post.aiVpId = aiViewpointId;
         const updateStatus = await PostModel.updateOne(
             { _id: post._id },
             { $set: { aiVpId: aiViewpointId } }

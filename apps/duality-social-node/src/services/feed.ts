@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
-import { Schema, Types as MongooseTypes } from 'mongoose';
+import { Schema, Types as MongooseTypes, PipelineStage } from 'mongoose';
 import { ObjectId } from 'bson';
-import { franc, francAll } from 'franc';
-import { BaseModel, ModelName, IPost, IPostViewpoint, sanitizeWhitespace, HumanityTypeEnum } from '@duality-social/duality-social-lib';
+import { franc } from 'franc';
+import { BaseModel, ModelName, IPost, IPostViewpoint, sanitizeWhitespace, HumanityTypeEnum, parsePostContent, IUser } from '@duality-social/duality-social-lib';
 
 const PostModel = BaseModel.getModel<IPost>(ModelName.Post);
 const PostViewpointModel = BaseModel.getModel<IPostViewpoint>(ModelName.PostViewpoint);
@@ -10,119 +10,104 @@ const UserModelData = BaseModel.getModelData(ModelName.User);
 const maxPostLength = 1000;
 
 export class FeedService {
-    async getFeed(req: Request, res: Response) {
-        const userId = new Schema.Types.ObjectId(req.params.userId);
-        const depth = parseInt(req.query.depth as string) || 1;
-        const limit = parseInt(req.query.limit as string) || 20;
-        const page = parseInt(req.query.page as string) || 1;
-        const skip = (page - 1) * limit;
-
-        try {
-            const posts = await PostModel.aggregate([
-                {
-                    $match: {
-                        hidden: false,
-                        deletedAt: null,
-                        procLockId: { $exists: false},
-                        inVpId: { $exists: true },
-                        aiVpId: { $exists: true },
-                    }
-                },
-                {
-                    $sort: { createdAt: -1 }
-                },
-                {
-                    $skip: skip
-                },
-                {
-                    $limit: limit
-                },
-                // In the getFeed method, adjust the aggregation pipeline to include both viewpoints and their replies.
-                // This is a conceptual adjustment and might need further refinement based on the actual data model.
-                {
-                    $lookup: {
-                        from: 'viewpoints', // Assuming 'viewpoints' collection stores both original and AI viewpoints
-                        localField: '_id',
-                        foreignField: 'postId',
-                        as: 'viewpoints'
-                    }
-                },
-                {
-                    $unwind: '$viewpoints'
-                },
-                // Further adjustments to fetch replies for each viewpoint might be needed here.
-                {
-                    $lookup: {
-                        from: 'postviewpoints',
-                        localField: 'aiVpId',
-                        foreignField: '_id',
-                        as: 'aiViewpoint'
-                    }
-                },
-                {
-                    $unwind: {
-                        path: '$aiViewpoint',
-                        preserveNullAndEmptyArrays: true
-                    }
-                },
-                {
-                    $lookup: {
-                        from: 'users',
-                        localField: 'createdBy',
-                        foreignField: '_id',
-                        as: 'author'
-                    }
-                },
-                {
-                    $unwind: '$author'
-                },
-                {
-                    $graphLookup: {
-                        from: 'posts',
-                        startWith: '$_id',
-                        connectFromField: '_id',
-                        connectToField: 'pId',
-                        as: 'replies',
-                        maxDepth: depth - 1,
-                        depthField: 'depth'
-                    }
-                },
-                {
-                    $project: {
-                        _id: 1,
-                        createdAt: 1,
-                        updatedAt: 1,
-                        metadata: 1,
-                        'inputViewpoint._id': 1,
-                        'inputViewpoint.content': 1,
-                        'aiViewpoint._id': 1,
-                        'aiViewpoint.content': 1,
-                        'author._id': 1,
-                        'author.username': 1,
-                        replies: {
-                            $slice: ['$replies', 5]
-                        },
-                        hasMoreReplies: {
-                            $gt: [{ $size: '$replies' }, 5]
-                        }
-                    }
+    async getFeed(currentUser: IUser): Promise<IPostViewpoint[]> {
+        const preferredLanguages = currentUser.languages;
+        const currentDate = new Date();
+      
+        const aggregationPipeline: PipelineStage[] = [
+          // Updated match stage to exclude locked, hidden, or deleted posts
+          // and ensure both input viewpoint and AI viewpoint are present
+          { 
+            $match: {
+              active: true, 
+              createdAt: { $lte: currentDate },
+              locked: { $ne: true }, // Excludes locked posts
+              hidden: { $ne: true }, // Excludes hidden posts
+              deleted: { $ne: true }, // Excludes deleted posts
+              inputViewpoint: { $exists: true }, // Ensures input viewpoint exists
+              aiViewpoint: { $exists: true } // Ensures AI viewpoint exists
+            } 
+          },
+          // Lookup stage to join with translations
+          { 
+            $lookup: {
+              from: "translations",
+              localField: "_id",
+              foreignField: "viewpointId",
+              as: "translations"
+            }
+          },
+          // Project stage to filter and prioritize translations
+          { 
+            $project: {
+              content: 1,
+              translations: {
+                $filter: {
+                  input: "$translations",
+                  as: "translation",
+                  cond: { $in: ["$$translation.language", preferredLanguages] }
                 }
-            ]);
-
-            res.status(200).json({
-                posts,
-                page,
-                limit,
-                hasMore: posts.length === limit
-            });
+              },
+            }
+          },
+          // Add field for translation priority
+          { 
+            $addFields: {
+              translations: {
+                $map: {
+                  input: "$translations",
+                  as: "translation",
+                  in: {
+                    $mergeObjects: [
+                      "$$translation",
+                      { priority: { $indexOfArray: [preferredLanguages, "$$translation.language"] } }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          // Unwind translations for sorting
+          { 
+            $unwind: {
+              path: "$translations",
+              preserveNullAndEmptyArrays: true
+            }
+          },
+          // Sort by translation priority
+          { 
+            $sort: { "translations.priority": 1 } 
+          },
+          // Group to ensure only top-priority translation is kept
+          { 
+            $group: {
+              _id: "$_id",
+              content: { $first: "$content" },
+              translation: { $first: "$translations" }
+            }
+          },
+          // Optionally, project to format the output
+          { 
+            $project: {
+              _id: 1,
+              content: 1,
+              translation: 1,
+            }
+          }
+        ];
+      
+        try {
+            const feedItems: IPostViewpoint[] = await PostViewpointModel.aggregate(aggregationPipeline).exec();
+            return feedItems;
         } catch (error) {
             console.error('Error fetching feed:', error);
-            res.status(500).send('An error occurred while fetching the feed');
+            throw error;
         }
-    }
+      }
 
     async newPost(req: Request, res: Response) {
         const content = sanitizeWhitespace(req.body.content);
+        const rendered = parsePostContent(content);
         const currentDate = new Date();
         const createdById = new Schema.Types.ObjectId(UserModelData.path);
         const language = await this.detectPostLanguage(content);
@@ -164,6 +149,7 @@ export class FeedService {
             createdAt: currentDate,
             createdBy: createdById,
             content: content,
+            rendered: rendered,
             lang: language,
             metadata: {
                 expands: 0,

@@ -1,19 +1,15 @@
-import { Schema } from 'mongoose';
+import { ObjectId } from 'mongoose';
 import { HumanityTypeEnum } from '../enumerations/humanityType';
 import { ViewpointTypeEnum } from '../enumerations/viewpointType';
-import { IPostViewpointMeta } from './postViewpointMeta';
-import { IHasID } from './hasId';
 import { IHasSoftDelete } from './hasSoftDelete';
 import { IHasTimestamps } from './hasTimestamps';
-import { IUser } from './user';
-import { IPost } from './post';
 import { IHasDeleter } from './hasDeleter';
 
-export interface IPostViewpoint extends IHasID, IHasTimestamps, IHasSoftDelete, IHasDeleter {
+export interface IPostViewpoint extends IHasTimestamps, IHasSoftDelete, IHasDeleter {
   /**
    * Correlation id to link the dualities.
    */
-  postId: IPost['_id'];
+  postId: ObjectId;
   replies: number;
   /**
    * What type of entity created this post.
@@ -38,7 +34,7 @@ export interface IPostViewpoint extends IHasID, IHasTimestamps, IHasSoftDelete, 
   /**
    * The id of the parent viewpoint if this is a reply.
    */
-  pVpId?: IPostViewpoint['_id'];
+  pVpId?: ObjectId;
   metadata: {
     expands: number;
     impressions: number;
@@ -46,6 +42,6 @@ export interface IPostViewpoint extends IHasID, IHasTimestamps, IHasSoftDelete, 
     reactionsByType: { [key: string]: number };
   };
   type: ViewpointTypeEnum;
-  createdBy: IUser['_id'];
-  updatedBy: IUser['_id'];
+  createdBy: ObjectId;
+  updatedBy: ObjectId;
 }

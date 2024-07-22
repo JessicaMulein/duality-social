@@ -1,10 +1,9 @@
-import { Schema } from "mongoose";
-import { IHasID } from "./hasId";
+import { ObjectId } from "mongoose";
 import { IHasTimestamps } from "./hasTimestamps";
 import { IHasCreator } from "./hasCreator";
 
-export interface IPostExpand extends IHasID, IHasTimestamps, IHasCreator {
-    postId: Schema.Types.ObjectId;
-    postImpression: Schema.Types.ObjectId;
+export interface IPostExpand extends IHasTimestamps, IHasCreator {
+    postId: ObjectId;
+    postImpression: ObjectId;
     botExclude: boolean;
 }

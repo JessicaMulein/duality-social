@@ -3,8 +3,8 @@ import validator from 'validator';
 import { AccountStatusTypeEnum } from '../enumerations/accountStatusType';
 import { LockTypeEnum } from '../enumerations/lockType';
 import { IUser } from '../interfaces/user';
-import { IHasID } from '../interfaces/hasId';
 import ModelName from '../enumerations/modelName';
+import { UserDocument } from '../documents/user';
 
 /**
  * A user in the system.
@@ -34,10 +34,10 @@ export const UserSchema = new Schema<IUser>(
           if (!validator.isEmail(value)) {
             return false;
           }
-          const userModel = this.constructor as Model<IUser>;
+          const userModel = this.constructor as Model<UserDocument>;
           const user = await userModel.findOne({ email: value });
           if (user) {
-            const currentDocument = this as IHasID;
+            const currentDocument = this as UserDocument;
             if (user._id === currentDocument._id) {
               return true;
             }
@@ -61,10 +61,10 @@ export const UserSchema = new Schema<IUser>(
       maxlength: 20,
       validate: {
         validator: async function (value: any) {
-          const userModel = this.constructor as Model<IUser>;
+          const userModel = this.constructor as Model<UserDocument>;
           const user = await userModel.findOne({ username: value });
           if (user) {
-            const currentDocument = this as IHasID;
+            const currentDocument = this as UserDocument;
             if (user._id === currentDocument._id) {
               return true;
             }
@@ -74,6 +74,10 @@ export const UserSchema = new Schema<IUser>(
         },
         message: 'The username is already in use.',
       },
+    },
+    languages: {
+      type: [String],
+      default: [],
     },
     /**
      * Whether the account is under any kind of lock.

@@ -1,8 +1,7 @@
-import { Document } from "mongoose";
-import { IPost } from "./post";
+import { Document, ObjectId } from "mongoose";
 
 export class OpenAiTask extends Document {
     public readonly createdAt: Date = new Date();
     public completedAt?: Date;
-    public post?: IPost['_id'];
+    public post?: ObjectId;
 }
