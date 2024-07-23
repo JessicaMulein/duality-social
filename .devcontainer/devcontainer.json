@@ -19,7 +19,7 @@
 	"forwardPorts": [3000],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "yarn && cd libs/duality-social-lib && yarn && cd ../../apps/duality-social-node && yarn",
+	"postCreateCommand": "yarn && cd libs/duality-social-lib && yarn && cd ../../apps/duality-social-node && yarn && git config --global --add safe.directory /workspace",
 
 	// Configure tool-specific properties.
 	// "customizations": {},
