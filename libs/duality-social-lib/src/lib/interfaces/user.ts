@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 /* eslint-disable @typescript-eslint/no-namespace */
-import { ObjectId } from 'mongoose';
 import { AccountStatusTypeEnum } from '../enumerations/accountStatusType';
 import { LockTypeEnum } from '../enumerations/lockType';
 import { IHasSoftDelete } from './hasSoftDelete';

@@ -1,12 +1,13 @@
 // utils/userUtils.ts
 import { Document } from 'mongoose';
 import validator from 'validator';
-import { AccountStatusTypeEnum, BaseModel, EmailChangeDocument, IEmailChange, IUser, LockTypeEnum, ModelName, UserDocument } from '@duality-social/duality-social-lib';
+import { AccountStatusTypeEnum, BaseModel, EmailChangeDocument, IUser, LockTypeEnum, ModelName, UserDocument } from '@duality-social/duality-social-lib';
 import { InvalidEmail } from '../errors/invalidEmail';
 import { InvalidPassword } from '../errors/invalidPassword';
 import { EmailExistsError } from '../errors/emailExists';
 import { UsernameExistsError } from '../errors/usernameExists';
-import { compare } from 'bcrypt';
+import { compare, hash } from 'bcryptjs';
+import { randomBytes } from 'crypto';
 
 const UserModel = BaseModel.getModel<UserDocument>(ModelName.User);
 const EmailChangeModel = BaseModel.getModel<EmailChangeDocument>(ModelName.EmailChange);
@@ -42,6 +43,8 @@ export class UserService {
         'Password must be at least 8 characters long and contain both letters and numbers'
       );
     }
+    // crypt the password with bcrypt
+    const passwordHash: string = await hash(password, 10);
 
     try {
       // Register user in local MongoDB
@@ -52,12 +55,16 @@ export class UserService {
         lockStatus: LockTypeEnum.PendingEmailVerification,
         shadowBan: false,
         userHidden: true,
+        createdAt: new Date(),
+        passwordHash: passwordHash
       });
 
       // create email registration token
       await EmailChangeModel.create({
         userId: newUser._id,
         email: email,
+        token: randomBytes(32).toString('hex'),
+        createdAt: new Date(),
       });
 
       return newUser;
@@ -68,7 +75,7 @@ export class UserService {
   }
 
   // Add this login method to UserService.ts
-  public static async login(email: string, password: string): Promise<any> {
+  public static async login(email: string, password: string): Promise<UserDocument> {
     // Validate email
     if (!validator.isEmail(email)) {
       throw new InvalidEmail(email);
@@ -87,8 +94,10 @@ export class UserService {
       throw new Error('Invalid password');
     }
 
-    // Assuming the password matches, return the user (excluding the password hash)
-    const { passwordHash, ...userWithoutPassword } = user.toObject();
-    return userWithoutPassword;
+    if (user.lockStatus !== LockTypeEnum.Unlocked || user.accountStatusType !== AccountStatusTypeEnum.Active) {
+      throw new Error('Account locked or inactive');
+    }
+
+    return user;
   }
 }
