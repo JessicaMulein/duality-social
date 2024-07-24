@@ -33,7 +33,10 @@
 				"mongodb.mongodb-vscode",
 				"ms-azuretools.vscode-docker",
 				"eamodio.gitlens",
-				"rangav.vscode-thunder-client"
+				"rangav.vscode-thunder-client",
+				"Greptile.greptile-vscode",
+				"GitHub.remotehub",
+				"ms-vscode-remote.remote-containers"
 			],
 			// Set *default* container specific settings.json values on container create.
 			"settings": {
