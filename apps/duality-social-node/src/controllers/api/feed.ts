@@ -1,11 +1,19 @@
-import { Request, Response } from 'express';
-import { FeedService } from '../services/feed';
+import { Request, Response, Router } from 'express';
+import { FeedService } from '../../services/feed';
 
 export class FeedController {
+    public router: Router;
     private feedService: FeedService;
 
     constructor() {
+        this.router = Router();
         this.feedService = new FeedService();
+        this.initializeRoutes();
+    }
+
+    private initializeRoutes() {
+        this.router.post('/', this.newPost.bind(this));
+        this.router.post('/preview', this.newReply.bind(this));
     }
 
     async getFeed(req: Request, res: Response) {
@@ -38,3 +46,5 @@ export class FeedController {
         }
     }
 }
+
+export default FeedController;
