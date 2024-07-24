@@ -1,12 +1,37 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import React, { useState, useEffect } from 'react';
 import styles from './app.module.scss';
 import LoginLink from '../components/LoginLink';
 import UserProfile from '../components/UserProfile';
-
 import { Route, Routes, Link } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
+import LoginPage from '../components/LoginPage';
+
+// Function to get the token from localStorage
+const getToken = () => {
+  return localStorage.getItem('token');
+};
+
+// Function to verify the token
+const verifyToken = (token: string) => {
+  try {
+    const decoded = jwtDecode<any>(token);
+    // Add any additional verification logic if needed
+    return true;
+  } catch (error) {
+    return false;
+  }
+};
 
 export function App() {
-  const isAuthenticated = false;
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const token = getToken();
+    if (token && verifyToken(token)) {
+      setIsAuthenticated(true);
+    }
+  }, []);
+
   return (
     <div>
       {/* START: routes */}
@@ -24,9 +49,9 @@ export function App() {
             <Link to="/page-2">Page 2</Link>
           </li>
           {!isAuthenticated && (
-          <li>
-            <LoginLink />
-          </li>
+            <li>
+              <LoginLink />
+            </li>
           )}
         </ul>
       </div>
@@ -45,6 +70,14 @@ export function App() {
           element={
             <div>
               <UserProfile />
+            </div>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <div>
+              <LoginPage />
             </div>
           }
         />
