@@ -8,11 +8,15 @@ import { EmailExistsError } from '../errors/emailExists';
 import { UsernameExistsError } from '../errors/usernameExists';
 import { compare, hash } from 'bcryptjs';
 import { randomBytes } from 'crypto';
+import { sign, verify } from 'jsonwebtoken';
 
 const UserModel = BaseModel.getModel<UserDocument>(ModelName.User);
 const EmailChangeModel = BaseModel.getModel<EmailChangeDocument>(ModelName.EmailChange);
 
 export class UserService {
+  public static readonly JWT_SECRET = process.env.JWT_SECRET ?? randomBytes(32).toString('hex');
+  public static readonly JWT_EXPIRATION = process.env.JWT_EXPIRATION ?? '1h';
+
   public static async register(
     email: string,
     username: string,
@@ -74,8 +78,7 @@ export class UserService {
     }
   }
 
-  // Add this login method to UserService.ts
-  public static async login(email: string, password: string): Promise<UserDocument> {
+  public static async login(email: string, password: string): Promise<{ user: UserDocument, token: string }> {
     // Validate email
     if (!validator.isEmail(email)) {
       throw new InvalidEmail(email);
@@ -87,8 +90,7 @@ export class UserService {
       throw new Error('User not found');
     }
 
-    // Here, you should compare the provided password with the stored hash.
-    // This is a placeholder for password comparison logic, e.g., using bcrypt.
+    // Compare the provided password with the stored hash
     const isMatch = await compare(password, user.passwordHash);
     if (!isMatch) {
       throw new Error('Invalid password');
@@ -98,6 +100,29 @@ export class UserService {
       throw new Error('Account locked or inactive');
     }
 
-    return user;
+    // Generate JWT token
+    const token = this.generateToken(user);
+
+    return { user, token };
+  }
+
+  private static generateToken(user: UserDocument): string {
+    return sign(
+      { userId: user._id, email: user.email },
+      UserService.JWT_SECRET,
+      { expiresIn: UserService.JWT_EXPIRATION }
+    );
+  }
+
+  public static verifyToken(token: string): any {
+    try {
+      return verify(token, UserService.JWT_SECRET);
+    } catch (error) {
+      throw new Error('Invalid token');
+    }
+  }
+
+  public static findById(id: string): Promise<UserDocument | null> {
+    return UserModel.findById(id).exec();
   }
 }

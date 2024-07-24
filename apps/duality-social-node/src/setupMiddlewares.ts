@@ -5,6 +5,7 @@ import { json } from 'body-parser';
 import { environment } from './environment';
 import compression from 'compression';
 import path from 'path';
+import { authenticateJWT } from './middlewares/authenticateJwt';
 
 const serveStaticOptions = {
     index: ['index.html'],
@@ -19,4 +20,5 @@ export function setupMiddlewares(app: Application) {
     app.use(urlencoded({ extended: true }));
     app.use(expressStatic(environment.developer.reactDir, serveStaticOptions));
     app.use('/assets', expressStatic(path.join(environment.developer.reactDir, 'src', 'assets')));
+    app.use(authenticateJWT);
 }

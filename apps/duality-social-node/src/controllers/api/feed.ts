@@ -1,5 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { FeedService } from '../../services/feed';
+import { requireAuth } from '../../middlewares/requireAuth';
 
 export class FeedController {
     public router: Router;
@@ -12,8 +13,8 @@ export class FeedController {
     }
 
     private initializeRoutes() {
-        this.router.post('/', this.newPost.bind(this));
-        this.router.post('/preview', this.newReply.bind(this));
+        this.router.post('/', requireAuth, this.newPost.bind(this));
+        this.router.post('/preview', requireAuth, this.newReply.bind(this));
     }
 
     async getFeed(req: Request, res: Response) {

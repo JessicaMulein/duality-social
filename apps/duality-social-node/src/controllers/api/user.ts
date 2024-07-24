@@ -31,11 +31,13 @@ class UserController {
   private async login(req: Request, res: Response) {
     const { email, password } = req.body;
     try {
-      const user = await UserService.login(email, password);
-      res.status(200).json({
-        message: 'User logged in successfully',
-        user,
-      });
+      const { user, token } = await UserService.login(email, password);
+      res.status(200)
+        .header('Authorization', `Bearer ${token}`)
+        .json({
+          message: 'User logged in successfully',
+          user,
+        });
     } catch (error) {
       res.status(401).json({ message: 'Invalid credentials', error });
     }
