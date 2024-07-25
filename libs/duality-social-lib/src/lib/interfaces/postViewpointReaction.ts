@@ -15,5 +15,5 @@ export interface IPostViewpointReaction extends IHasTimestamps, IHasCreator {
     /**
      * The built-in reaction that was made.
      */
-    reaction?: DefaultReactionsTypeEnum;
+    reaction: DefaultReactionsTypeEnum;
 }

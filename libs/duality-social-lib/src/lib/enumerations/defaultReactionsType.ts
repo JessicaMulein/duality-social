@@ -1,6 +1,7 @@
 
 export enum DefaultReactionsTypeEnum {
   Angry = 'Angry',
+  Care = 'Care',
   Celebrate = 'Celebrate',
   Hug = 'Hug',
   Huh = 'Huh?',
@@ -9,4 +10,5 @@ export enum DefaultReactionsTypeEnum {
   Love = 'Love',
   Sad = 'Sad',
   Wow = 'Wow',
+  Yuck = 'Yuck',
 }

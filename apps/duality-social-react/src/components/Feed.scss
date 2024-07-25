@@ -1,5 +1,32 @@
-.feed {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-}
+.feed-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+  }
+  
+  .feed-post {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    position: relative;
+  }
+  
+  .feed-post::before {
+    content: '';
+    position: absolute;
+    left: 20px; /* Adjust based on your layout */
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: #ccc; /* Vertical line color */
+  }
+  
+  .post-content {
+    margin-left: 40px; /* Adjust based on your layout */
+  }
+  
+  .viewpoint {
+    margin-left: 10px;
+  }

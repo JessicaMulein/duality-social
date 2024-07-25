@@ -10,10 +10,10 @@ export interface ISchemaModelData {
     PostImpression: IModelData;
     PostViewpoint: IModelData;
     PostViewpointReaction: IModelData;
+    PostViewpointHumanity: IModelData;
     Profile: IModelData;
     Report: IModelData;
     SudoLog: IModelData;
     User: IModelData;
     UsernameChange: IModelData;
-    Vote: IModelData;
 }

@@ -23,6 +23,7 @@ export interface IProfile extends IHasTimestamps, IHasSoftDelete {
     profileImageUrl?: string;
     socialUrls: string[];
     website?: string;
+    defaultDepth: number;
     verified: boolean;
     verifiedBy?: ObjectId;
   };

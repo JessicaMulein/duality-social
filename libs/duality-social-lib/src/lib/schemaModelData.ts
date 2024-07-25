@@ -14,7 +14,7 @@ import { SudoLogSchema } from './schemas/sudoLog';
 import { UserSchema } from './schemas/user';
 import { UsernameChangeSchema } from './schemas/usernameChange';
 import { PostViewpointReactionSchema } from './schemas/postViewpointReaction';
-import { VoteSchema } from './schemas/vote';
+import { PostViewpointHumanitySchema } from './schemas/postViewpointHumanity';
 import { ISchemaModelData } from './interfaces/schemaModelData';
 
 function modelNameCollectionToPath(
@@ -91,6 +91,13 @@ export const ModelData: ISchemaModelData = {
     schema: PostViewpointReactionSchema,
     path: modelNameCollectionToPath(ModelNameCollection.PostViewpointReaction),
   },
+  PostViewpointHumanity: {
+    name: ModelName.PostViewpointHumanity,
+    description: 'A vote on the humanity of a viewpoint.',
+    collection: ModelNameCollection.PostViewpointHumanity,
+    schema: PostViewpointHumanitySchema,
+    path: modelNameCollectionToPath(ModelNameCollection.PostViewpointHumanity),
+  },
   Profile: {
     name: ModelName.Profile,
     description: 'A user profile.',
@@ -125,12 +132,5 @@ export const ModelData: ISchemaModelData = {
     collection: ModelNameCollection.UsernameChange,
     schema: UsernameChangeSchema,
     path: modelNameCollectionToPath(ModelNameCollection.UsernameChange),
-  },
-  Vote: {
-    name: ModelName.Vote,
-    description: 'A vote on the humanity of a viewpoint.',
-    collection: ModelNameCollection.Vote,
-    schema: VoteSchema,
-    path: modelNameCollectionToPath(ModelNameCollection.Vote),
-  },
+  }
 };

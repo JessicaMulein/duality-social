@@ -9,12 +9,12 @@ export enum ModelName {
     PostImpression = 'PostImpression',
     PostViewpoint = 'PostViewpoint',
     PostViewpointReaction = 'PostViewpointReaction',
+    PostViewpointHumanity = 'PostViewpointHumanity',
     Profile = 'Profile',
     Report = 'Report',
     SudoLog = 'SudoLog',
     User = 'User',
     UsernameChange = 'UsernameChange',
-    Vote = 'Vote',
 }
 
 export default ModelName;

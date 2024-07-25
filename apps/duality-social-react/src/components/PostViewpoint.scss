@@ -1,5 +1,5 @@
-.post {
-  background-color: #fff;
+.viewpoint {
+  background-color: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 5px;
   padding: 10px;
@@ -7,16 +7,16 @@
   width: 100%;
 }
 
-.post-header {
+.viewpoint-header {
   font-weight: bold;
   margin-bottom: 5px;
 }
 
-.post-body {
+.viewpoint-body {
   margin-bottom: 10px;
 }
 
-.post-footer {
+.viewpoint-footer {
   display: flex;
   justify-content: space-between;
   font-size: 0.9em;

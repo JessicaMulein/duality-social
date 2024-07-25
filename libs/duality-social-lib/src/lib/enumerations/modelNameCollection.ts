@@ -9,12 +9,12 @@ export enum ModelNameCollection {
     PostImpression = 'post-impressions',
     PostViewpoint = 'post-viewpoints',
     PostViewpointReaction = 'post-viewpoint-reactions',
+    PostViewpointHumanity = 'post-viewpoint-humanities',
     Profile = 'profiles',
     Report = 'reports',
     SudoLog = 'sudo-logs',
     User = 'users',
     UsernameChange = 'username-changes',
-    Vote = 'votes',
 }
 
 export default ModelNameCollection;

@@ -3,24 +3,8 @@ import styles from './app.module.scss';
 import LoginLink from '../components/LoginLink';
 import UserProfile from '../components/UserProfile';
 import { Route, Routes, Link } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
+import { getToken, verifyToken } from '../utils/auth';
 import LoginPage from '../components/LoginPage';
-
-// Function to get the token from localStorage
-const getToken = () => {
-  return localStorage.getItem('token');
-};
-
-// Function to verify the token
-const verifyToken = (token: string) => {
-  try {
-    const decoded = jwtDecode<any>(token);
-    // Add any additional verification logic if needed
-    return true;
-  } catch (error) {
-    return false;
-  }
-};
 
 export function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);

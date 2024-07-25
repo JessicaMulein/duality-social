@@ -7,7 +7,7 @@ import { IUsernameChange } from './interfaces/usernameChange';
 import { BaseModel } from './models/baseModel';
 import { ISchemaModels } from './interfaces/schemaModels';
 import { ModelData} from './schemaModelData';
-import { IVote } from './interfaces/vote';
+import { IPostViewpointHumanity } from './interfaces/postViewpointHumanity';
 import { UserDocument } from './documents/user';
 import { AdminUserDocument } from './documents/adminUser';
 import { EmailChangeDocument } from './documents/emailChange';
@@ -22,7 +22,7 @@ import { ProfileDocument } from './documents/profile';
 import { ReportDocument } from './documents/report';
 import { SudoLogDocument } from './documents/sudoLog';
 import { UsernameChangeDocument } from './documents/usernameChange';
-import { VoteDocument } from './documents/vote';
+import { PostViewpointHumanityDocument } from './documents/postViewpointHumanity';
 
 export const SchemaModels: ISchemaModels = {
   AdminUser: BaseModel.create<AdminUserDocument>(ModelData[ModelName.AdminUser]).Model,
@@ -36,10 +36,10 @@ export const SchemaModels: ISchemaModels = {
   PostViewpointReaction: BaseModel.create<PostViewpointReactionDocument>(
     ModelData[ModelName.PostViewpointReaction]
   ).Model,
+  PostViewpointHumanity: BaseModel.create<PostViewpointHumanityDocument>(ModelData[ModelName.PostViewpointHumanity]).Model,
   Profile: BaseModel.create<ProfileDocument>(ModelData[ModelName.Profile]).Model,
   Report: BaseModel.create<ReportDocument>(ModelData[ModelName.Report]).Model,
   SudoLog: BaseModel.create<SudoLogDocument>(ModelData[ModelName.SudoLog]).Model,
   User: BaseModel.create<UserDocument>(ModelData[ModelName.User]).Model,
   UsernameChange: BaseModel.create<UsernameChangeDocument>(ModelData[ModelName.UsernameChange]).Model,
-  Vote: BaseModel.create<VoteDocument>(ModelData[ModelName.Vote]).Model,
 };
