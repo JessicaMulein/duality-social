@@ -5,6 +5,7 @@ import { LockTypeEnum } from '../enumerations/lockType';
 import { IUser } from '../interfaces/user';
 import ModelName from '../enumerations/modelName';
 import { UserDocument } from '../documents/user';
+import { HumanityTypeEnum } from '../enumerations/humanityType';
 
 /**
  * A user in the system.
@@ -76,6 +77,11 @@ export const UserSchema = new Schema<IUser>(
       },
     },
     passwordHash: { type: String, required: true },
+    humanityType: {
+      type: String,
+      required: true,
+      enum: Object.values(HumanityTypeEnum),
+    },
     languages: {
       type: [String],
       default: [],

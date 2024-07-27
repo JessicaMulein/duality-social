@@ -414,6 +414,9 @@ export class FeedService {
   }
 
   async newPost(req: Request, res: Response) {
+    if (req.user === undefined) {
+      throw new Error('User not authenticated');
+    }
     const content = sanitizeWhitespace(req.body.content);
     const rendered = parsePostContent(content);
     const currentDate = new Date();
@@ -453,7 +456,7 @@ export class FeedService {
     const inputViewpoint = new PostViewpointModel({
       _id: inputViewpointId,
       postId: postId,
-      humanity: HumanityTypeEnum.Human,
+      humanity: req.user?.humanityType ?? HumanityTypeEnum.Human,
       createdAt: currentDate,
       createdBy: createdById,
       content: content,
@@ -480,6 +483,9 @@ export class FeedService {
   }
 
   async newReply(req: Request, res: Response) {
+    if (req.user === undefined) {
+      throw new Error('User not authenticated');
+    }
     const parentId = req.body.parentId;
     const content = sanitizeWhitespace(req.body.content);
     const createdBy = new Schema.Types.ObjectId(req.body.createdBy); // Assuming the user ID is passed in the request
