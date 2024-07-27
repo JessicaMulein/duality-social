@@ -21,7 +21,7 @@ export class FeedController {
 
     async getFeed(req: Request, res: Response) {
         try {
-            const feed = await this.feedService.getFeed(req, res);
+            const feed = await this.feedService.getFeed(req);
             res.status(200).json(feed);
         } catch (error) {
             console.error('Error fetching feed:', error);

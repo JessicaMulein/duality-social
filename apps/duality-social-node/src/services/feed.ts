@@ -2,12 +2,12 @@ import { Request, Response } from 'express';
 import { Schema, Types as MongooseTypes, PipelineStage } from 'mongoose';
 import { ObjectId } from 'bson';
 import { franc } from 'franc';
-import { BaseModel, ModelName, IPost, IPostViewpoint, sanitizeWhitespace, HumanityTypeEnum, parsePostContent, IUser, IFeedPost, UserDocument, IProfile, IPostViewpointReaction, IPostViewpointHumanity } from '@duality-social/duality-social-lib';
+import { BaseModel, ModelName, sanitizeWhitespace, HumanityTypeEnum, parsePostContent, IFeedPost, UserDocument, PostDocument, PostViewpointDocument, PostViewpointReactionDocument, PostViewpointHumanityDocument } from '@duality-social/duality-social-lib';
 
-const PostModel = BaseModel.getModel<IPost>(ModelName.Post);
-const PostViewpointModel = BaseModel.getModel<IPostViewpoint>(ModelName.PostViewpoint);
-const PostViewpointReactionModel = BaseModel.getModel<IPostViewpointReaction>(ModelName.PostViewpointReaction);
-const PostViewpointHumanityModel = BaseModel.getModel<IPostViewpointHumanity>(ModelName.PostViewpointHumanity);
+const PostModel = BaseModel.getModel<PostDocument>(ModelName.Post);
+const PostViewpointModel = BaseModel.getModel<PostViewpointDocument>(ModelName.PostViewpoint);
+const PostViewpointReactionModel = BaseModel.getModel<PostViewpointReactionDocument>(ModelName.PostViewpointReaction);
+const PostViewpointHumanityModel = BaseModel.getModel<PostViewpointHumanityDocument>(ModelName.PostViewpointHumanity);
 const UserModelData = BaseModel.getModelData(ModelName.User);
 const maxPostLength = 1000;
 
