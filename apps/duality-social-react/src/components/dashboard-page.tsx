@@ -10,9 +10,11 @@ import {
   ListItemText,
   Divider,
   CircularProgress,
+  useTheme,
 } from '@mui/material';
 
 const DashboardPage: React.FC = () => {
+  const theme = useTheme();
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
 
@@ -27,7 +29,12 @@ const DashboardPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
         <CircularProgress />
       </Box>
     );
@@ -46,15 +53,22 @@ const DashboardPage: React.FC = () => {
         {/* Main content area */}
         <Box display="flex" gap={3} flexDirection={{ xs: 'column', md: 'row' }}>
           {/* Hot Posts */}
-          <Paper sx={{ p: 2, flex: 1 }}>
-            <Typography variant="h6" color="primary" gutterBottom>
+          <Paper sx={{ p: theme.spacing(2), flex: 1 }}>
+            <Typography
+              variant="h6"
+              sx={{ color: theme.palette.primary.main }}
+              gutterBottom
+            >
               Hot Posts
             </Typography>
             <List>
               {['Post 1', 'Post 2', 'Post 3'].map((post, index) => (
                 <React.Fragment key={index}>
                   <ListItem>
-                    <ListItemText primary={post} secondary={`Topic: Sample Topic ${index + 1}`} />
+                    <ListItemText
+                      primary={post}
+                      secondary={`Topic: Sample Topic ${index + 1}`}
+                    />
                   </ListItem>
                   {index < 2 && <Divider />}
                 </React.Fragment>
@@ -71,7 +85,10 @@ const DashboardPage: React.FC = () => {
               {['Comment 1', 'Comment 2', 'Comment 3'].map((comment, index) => (
                 <React.Fragment key={index}>
                   <ListItem>
-                    <ListItemText primary={comment} secondary={`On: Post ${index + 1}`} />
+                    <ListItemText
+                      primary={comment}
+                      secondary={`On: Post ${index + 1}`}
+                    />
                   </ListItem>
                   {index < 2 && <Divider />}
                 </React.Fragment>
@@ -86,7 +103,12 @@ const DashboardPage: React.FC = () => {
             Your Statistics
           </Typography>
           <Box display="flex" flexWrap="wrap" gap={2}>
-            {['Total Posts', 'Total Comments', 'Likes Received', 'Days Active'].map((stat, index) => (
+            {[
+              'Total Posts',
+              'Total Comments',
+              'Likes Received',
+              'Days Active',
+            ].map((stat, index) => (
               <Box key={index} flex="1 1 calc(25% - 16px)" minWidth="120px">
                 <Typography variant="h4">
                   {Math.floor(Math.random() * 100)}

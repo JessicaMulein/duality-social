@@ -300,6 +300,7 @@ export class UserService {
     }
 
     user.emailVerified = true;
+    user.accountStatusType = AccountStatusTypeEnum.Active;
     user.lockStatus = LockTypeEnum.Unlocked;
     await user.save();
 
