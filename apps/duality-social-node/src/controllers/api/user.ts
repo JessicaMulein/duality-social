@@ -165,7 +165,7 @@ export class UserController extends BaseController {
   public async changePassword(req: Request, res: Response): Promise<void> {
     try {
       const { currentPassword, newPassword } = req.body;
-      const userId = req.user!.id
+      const userId = req.user?.id
 
       await this.userService.changePassword(userId, currentPassword, newPassword);
       this.sendApiMessageResponse(200, { message: 'Password changed successfully' } as IApiMessageResponse, res);

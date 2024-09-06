@@ -40,7 +40,7 @@ import {
   );
   
   export const AuthProvider = ({ children }: AuthProviderProps) => {
-    const [user, setUser] = useState<any | null>(null);
+    const [user, setUser] = useState<unknown | null>(null);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);

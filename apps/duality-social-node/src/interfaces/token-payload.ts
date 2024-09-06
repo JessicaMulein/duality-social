@@ -7,6 +7,6 @@ export interface ITokenPayload {
     iat: number; // Issued-at time of the token
     iss: string; // Issuer of the token
     aud: string; // Audience of the token (usually your app's client ID)
-    [key: string]: any; // Allows for any additional claims
+    [key: string]: unknown; // Allows for any additional claims
   }
   
