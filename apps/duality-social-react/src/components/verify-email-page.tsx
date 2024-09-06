@@ -17,7 +17,6 @@ const VerifyEmailPage: React.FC = () => {
   const [verificationStatus, setVerificationStatus] = useState<
     'pending' | 'success' | 'error'
   >('pending');
-  const [verificationAttempted, setVerificationAttempted] = useState(false);
 
   const location = useLocation();
 
