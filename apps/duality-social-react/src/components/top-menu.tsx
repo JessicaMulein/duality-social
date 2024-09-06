@@ -39,8 +39,8 @@ const TopMenu: React.FC = () => {
   };
 
   return (
-    <AppBar position="fixed">
-      <Toolbar>
+    <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+      <Toolbar sx={{ minHeight: 64 }}>
         <Box display="flex" alignItems="center" flexGrow={1}>
           <img
             src={dualitySocialSymbol}

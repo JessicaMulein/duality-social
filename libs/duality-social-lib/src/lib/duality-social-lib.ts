@@ -1,4 +1,3 @@
-import { CreateImageRequestSizeEnum } from 'openai';
 import sanitizeHtml from 'sanitize-html';
 import { parseIconMarkup, stripIconMarkup } from './font-awesome/font-awesome';
 
@@ -13,24 +12,24 @@ export function makeDataUrl(imageBase64Json: string): string {
   return `data:image/png;base64,${imageBase64Json}`;
 }
 
-/**
- * Given an input image size, return the closest image size our AI can process
- * @param size 
- * @returns 
- */
-export function closestImageSize(size: number): CreateImageRequestSizeEnum {
-  // If size is greater than or equal to 1024, return 1024
-  // If size is greater than or equal to 768, return 1024 (round up)
-  // If size is greater than or equal to 512, return 512
-  // If size is greater than or equal to 256, return 512 (round up)
-  // If size is less than or equal to 384, return 256
-  if (size >= 1024 || (size >= 768 && size < 1024)) {
-    return CreateImageRequestSizeEnum._1024x1024;
-  } else if (size >= 512 || (size >= 256 && size < 512)) {
-    return CreateImageRequestSizeEnum._512x512;
-  }
-  return CreateImageRequestSizeEnum._256x256;
-}
+// /**
+//  * Given an input image size, return the closest image size our AI can process
+//  * @param size 
+//  * @returns 
+//  */
+// export function closestImageSize(size: number): CreateImageRequestSizeEnum {
+//   // If size is greater than or equal to 1024, return 1024
+//   // If size is greater than or equal to 768, return 1024 (round up)
+//   // If size is greater than or equal to 512, return 512
+//   // If size is greater than or equal to 256, return 512 (round up)
+//   // If size is less than or equal to 384, return 256
+//   if (size >= 1024 || (size >= 768 && size < 1024)) {
+//     return CreateImageRequestSizeEnum._1024x1024;
+//   } else if (size >= 512 || (size >= 256 && size < 512)) {
+//     return CreateImageRequestSizeEnum._512x512;
+//   }
+//   return CreateImageRequestSizeEnum._256x256;
+// }
 
 /**
  * Converts an image data url to a File object

@@ -5,6 +5,5 @@
   "license": "MIT",
   "dependencies": {
     "mongoose": "^8.5.1"
-  },
-  "devDependencies": {}
+  }
 }

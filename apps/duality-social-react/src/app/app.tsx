@@ -11,6 +11,7 @@ import VerifyEmailPage from '../components/verify-email-page';
 import ChangePasswordPage from '../components/change-password-page';
 import ForgotPasswordPage from '../components/forgot-password-page';
 import { ThemeProvider } from '@mui/material/styles';
+import { Box } from '@mui/material';
 import theme from '../theme';
 
 function App() {
@@ -19,29 +20,35 @@ function App() {
       <div className="app-container">
         <MenuProvider>
           <TopMenu />
-          <Routes>
-            <Route path="/" element={<SplashPage />} />
-            <Route
-              path="/change-password"
-              element={
-                <PrivateRoute>
-                  <ChangePasswordPage />
-                </PrivateRoute>
-              }
-            />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
-            <Route
-              path="/dashboard"
-              element={
-                <PrivateRoute>
-                  <DashboardPage />
-                </PrivateRoute>
-              }
-            />
-            <Route path="/verify-email" element={<VerifyEmailPage />} />
-            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          </Routes>
+          <Box
+            sx={{
+              paddingTop: (theme) => `${theme.mixins.toolbar.minHeight}px`,
+            }}
+          >
+            <Routes>
+              <Route path="/" element={<SplashPage />} />
+              <Route
+                path="/change-password"
+                element={
+                  <PrivateRoute>
+                    <ChangePasswordPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
+              <Route
+                path="/dashboard"
+                element={
+                  <PrivateRoute>
+                    <DashboardPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route path="/verify-email" element={<VerifyEmailPage />} />
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            </Routes>
+          </Box>
         </MenuProvider>
       </div>
     </ThemeProvider>

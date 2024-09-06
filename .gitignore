@@ -4,6 +4,8 @@
 .npmrc
 .yarn/
 .yarnrc
+.pnp.cjs
+.pnp.loader.mjs
 
 # keys
 /dev.key
