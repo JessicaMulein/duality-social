@@ -47,7 +47,7 @@ export class UserService {
       case EmailTokenType.AccountVerification:
         msg = {
           to: emailToken.email,
-          from: environment.emailSender,
+          from: AppConstants.EmailFrom,
           subject: `${AppConstants.ApplicationName} email confirmation`,
           text: `Please click the link below to confirm your email.\r\n\r\n${verifyUrl}`,
           html: `<p>Please click the link below to confirm your email.</p><br/><p><a href="${verifyUrl}">${verifyUrl}</a></p><p>Link expires in ${AppConstants.EmailTokenResendInterval / 1000} minutes.</p>`,
@@ -56,7 +56,7 @@ export class UserService {
       case EmailTokenType.PasswordReset:
         msg = {
           to: emailToken.email,
-          from: environment.emailSender,
+          from: AppConstants.EmailFrom,
           subject: `${AppConstants.ApplicationName} password reset`,
           text: `Please click the link below to reset your password.\r\n\r\n${passwordUrl}`,
           html: `<p>Please click the link below to reset your password.</p><br/><p><a href="${passwordUrl}">${passwordUrl}</a></p><p>Link expires in ${AppConstants.EmailTokenResendInterval / 1000} minutes.</p>`,

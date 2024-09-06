@@ -18,7 +18,6 @@ function getServerUrl() {
 export const environment: IEnvironment = {
   production: production,
   serverUrl: process.env.SITE_URL ?? getServerUrl(),
-  emailSender: process.env.EMAIL_SENDER ?? 'noreply@duality.social',
   jwtSecret: process.env.JWT_SECRET ?? randomBytes(32).toString('hex'),
   jwtExpiration: process.env.JWT_EXPIRATION ?? '1h',
   sendgridKey: process.env.SENDGRID_API_KEY ?? '',

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo, useRef } from 'react';
 import { useLocation, Link as RouterLink } from 'react-router-dom';
 import api from '../services/api';
 import {
@@ -17,19 +17,25 @@ const VerifyEmailPage: React.FC = () => {
   const [verificationStatus, setVerificationStatus] = useState<
     'pending' | 'success' | 'error'
   >('pending');
+  const [verificationAttempted, setVerificationAttempted] = useState(false);
 
   const location = useLocation();
 
-  useEffect(() => {
-    const query = new URLSearchParams(location.search);
-    const tokenFromQuery = query.get('token');
+  const verificationRef = useRef(false);
 
-    if (tokenFromQuery) {
-      verifyEmail(tokenFromQuery);
-    } else {
-      setLoading(false);
-      setMessage('No verification token provided.');
-      setVerificationStatus('error');
+  useEffect(() => {
+    if (!verificationRef.current) {
+      const query = new URLSearchParams(location.search);
+      const tokenFromQuery = query.get('token');
+
+      if (tokenFromQuery) {
+        verificationRef.current = true;
+        verifyEmail(tokenFromQuery);
+      } else {
+        setLoading(false);
+        setMessage('No verification token provided.');
+        setVerificationStatus('error');
+      }
     }
   }, [location]);
 
@@ -99,4 +105,4 @@ const VerifyEmailPage: React.FC = () => {
   );
 };
 
-export default VerifyEmailPage;
+export default memo(VerifyEmailPage);

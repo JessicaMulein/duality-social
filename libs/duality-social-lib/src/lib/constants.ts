@@ -40,4 +40,6 @@ export abstract class AppConstants {
      */
     public static readonly EmailTokenResendInterval = 5 * 60 * 1000; // 5 minutes
     public static readonly ApplicationName = 'Duality Social';
+    public static readonly EmailSender = "noreply@duality.social";
+    public static readonly EmailFrom = "Duality Social <noreply@duality.social>";
 }

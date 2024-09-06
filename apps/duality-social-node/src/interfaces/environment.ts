@@ -2,7 +2,6 @@ export type OpenAiProvider = 'azure' | 'openai';
 
 export interface IEnvironment {
     production: boolean;
-    emailSender: string;
     serverUrl: string;
     jwtSecret: string;
     jwtExpiration: string;
