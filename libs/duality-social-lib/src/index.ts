@@ -52,6 +52,7 @@ export * from './lib/interfaces/api-responses/api-mongo-validation-error-respons
 export * from './lib/interfaces/api-responses/api-validation-response';
 export * from './lib/interfaces/api-responses/token-response';
 export * from './lib/interfaces/api-responses/user-response';
+export * from './lib/interfaces/api-responses/api-user-profile-response';
 export * from './lib/interfaces/admin-user';
 export * from './lib/interfaces/devils-advocate-request';
 export * from './lib/interfaces/devils-advocate-response';

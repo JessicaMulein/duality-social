@@ -1,4 +1,4 @@
-import { Application, static as expressStatic, NextFunction, Request, Response } from "express";
+import { Application, static as expressStatic } from "express";
 import { join } from "path";
 import { ApiRouter } from './api';
 import { environment } from "../environment";

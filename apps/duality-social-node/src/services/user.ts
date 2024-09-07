@@ -1,6 +1,6 @@
 import { MailDataRequired, MailService } from '@sendgrid/mail';
 import { environment } from '../environment';
-import { AccountDeletedError, AccountLockedError, AccountStatusError, AccountStatusTypeEnum, AppConstants, EmailInUseError, EmailTokenExpiredError, EmailTokenModel, EmailTokenSentTooRecentlyError, EmailTokenType, EmailTokenUsedOrInvalidError, EmailVerifiedError, IEmailTokenDocument, InvalidCredentialsError, InvalidPasswordError, InvalidTokenError, InvalidUsernameError, IRequestUser, IRoleDocument, IUser, IUserDocument, ICreateUserBasics, LockTypeEnum, PendingEmailVerificationError, UserModel, UsernameInUseError, UsernameOrEmailRequiredError, UserNotFoundError, IProfileDocument, ProfileModel, IProfile } from '@duality-social/duality-social-lib';
+import { AccountDeletedError, AccountLockedError, AccountStatusError, AccountStatusTypeEnum, AppConstants, EmailInUseError, EmailTokenExpiredError, EmailTokenModel, EmailTokenSentTooRecentlyError, EmailTokenType, EmailTokenUsedOrInvalidError, EmailVerifiedError, IEmailTokenDocument, InvalidCredentialsError, InvalidPasswordError, InvalidTokenError, InvalidUsernameError, IRequestUser, IRoleDocument, IUser, IUserDocument, ICreateUserBasics, LockTypeEnum, PendingEmailVerificationError, UserModel, UsernameInUseError, UsernameOrEmailRequiredError, UserNotFoundError, ProfileModel, IProfile, IApiUserProfileResponse } from '@duality-social/duality-social-lib';
 import { compare, hash } from 'bcrypt';
 import { randomBytes } from 'crypto';
 import { MongooseValidationError } from '../errors/mongoose-validation-error';
@@ -166,7 +166,7 @@ export class UserService {
       password: hashedPassword,
     } as IUser;
     const newUserDoc: IUserDocument = new UserModel(newUserData);
-    
+
     const validationError = newUserDoc.validateSync();
     if (validationError) {
       throw new MongooseValidationError(validationError.errors);
@@ -438,5 +438,48 @@ export class UserService {
     await EmailTokenModel.deleteOne({ _id: emailToken._id });
 
     return user;
+  }
+
+  /**
+   * Get the public user profile
+   * @param username 
+   * @returns 
+   */
+  public async getPublicUserProfile(username: string): Promise<IApiUserProfileResponse | null> {
+    const user = await UserModel.findOne({ username: { $regex: new RegExp(`^${username}$`, 'i') } });
+
+    if (!user) {
+      throw new UserNotFoundError();
+    }
+
+    // Check if the user is locked or hidden
+    if (user.lockStatus !== LockTypeEnum.Unlocked || user.userHidden) {
+      return null;
+    }
+
+    const profile = await ProfileModel.findOne({ userId: user._id });
+
+    if (!profile) {
+      return null;
+    }
+
+    // Return only public information
+    return {
+      message: `${user.username}'s Profile`,
+      profile: {
+        username: user.username,
+        bio: profile.bio,
+        formattedBio: profile.formattedBio,
+        socialUrls: profile.socialUrls,
+        verified: profile.verified,
+        createdAt: user.createdAt,
+        metadata: {
+          totalPosts: user.metadata.totalPosts,
+          totalReplies: user.metadata.totalReplies,
+          totalReactionsReceived: user.metadata.totalReactionsReceived,
+          totalVotesReceived: user.metadata.totalVotesReceived,
+        }
+      }
+    };
   }
 }

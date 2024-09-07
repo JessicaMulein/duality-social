@@ -13,6 +13,7 @@ import ForgotPasswordPage from '../components/forgot-password-page';
 import { ThemeProvider } from '@mui/material/styles';
 import { Box } from '@mui/material';
 import theme from '../theme';
+import UserProfilePage from '../components/user-profile-page';
 
 function App() {
   return (
@@ -47,6 +48,14 @@ function App() {
               />
               <Route path="/verify-email" element={<VerifyEmailPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route
+                path="/profile/:username"
+                element={
+                  <PrivateRoute>
+                    <UserProfilePage />
+                  </PrivateRoute>
+                }
+              />
             </Routes>
           </Box>
         </MenuProvider>

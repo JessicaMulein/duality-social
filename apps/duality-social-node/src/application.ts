@@ -47,7 +47,8 @@ export class App {
             Middlewares.init(this.app);
             AppRouter.init(this.app);
             // if none of the above handle the request, pass it to error handler
-            this.app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+            // this.app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+            this.app.use((err: Error, req: Request, res: Response) => {
                 console.error('Unhandled error:', err);
                 res.status(500).send('Internal Server Error');
             });

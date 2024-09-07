@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import { FeedService } from '../../services/feed';
-import { requireAuth } from '../../middlewares/require-auth';
 import { BaseController } from '../base';
 import { RouteConfig } from '../../interfaces/route-config';
 

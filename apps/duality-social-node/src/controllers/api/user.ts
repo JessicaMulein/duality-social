@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { body, query } from 'express-validator';
+import { body, param, query } from 'express-validator';
 import {
   AccountStatusTypeEnum,
   AppConstants,
@@ -12,8 +12,9 @@ import {
   ITokenResponse,
   IUserResponse,
   UserModel,
-  ICreateUserBasics,
   HumanityTypeEnum,
+  UserNotFoundError,
+  IApiUserProfileResponse,
 } from '@duality-social/duality-social-lib';
 import { findAuthToken } from '../../middlewares/authenticate-token';
 import { UserService } from '../../services/user';
@@ -154,6 +155,15 @@ export class UserController extends BaseController {
         ],
         useAuthentication: false,
       },
+      {
+        method: 'get',
+        path: '/profile/:username',
+        handler: this.getUserProfile,
+        validation: [
+          param('username').matches(AppConstants.UsernameRegex).withMessage(AppConstants.UsernameRegexError),
+        ],
+        useAuthentication: true,
+      },
     ];
   }
 
@@ -166,6 +176,10 @@ export class UserController extends BaseController {
     try {
       const { currentPassword, newPassword } = req.body;
       const userId = req.user?.id
+      if (!userId) {
+        this.sendApiMessageResponse(401, { message: 'User not authenticated' } as IApiMessageResponse, res);
+        return;
+      }
 
       await this.userService.changePassword(userId, currentPassword, newPassword);
       this.sendApiMessageResponse(200, { message: 'Password changed successfully' } as IApiMessageResponse, res);
@@ -386,6 +400,30 @@ export class UserController extends BaseController {
       } else {
         console.error('Error resetting password:', error);
         this.sendApiMessageResponse(500, { message: 'Internal server error' } as IApiMessageResponse, res);
+      }
+    }
+  }
+
+  /**
+   * Get a user's public profile
+   */
+  public async getUserProfile(req: Request, res: Response): Promise<void> {
+    try {
+      const { username } = req.params;
+      const userProfileResponse = await this.userService.getPublicUserProfile(username);
+
+      if (!userProfileResponse) {
+        this.sendApiMessageResponse(404, { message: 'User not found' } as IApiMessageResponse, res);
+        return;
+      }
+
+      this.sendApiMessageResponse(200, userProfileResponse, res);
+    } catch (error) {
+      if (error instanceof UserNotFoundError) {
+        this.sendApiMessageResponse(404, { message: 'User not found' } as IApiMessageResponse, res);
+      } else {
+        console.error('Error fetching user profile:', error);
+        this.sendApiErrorResponse(500, 'Internal server error', error, res);
       }
     }
   }
