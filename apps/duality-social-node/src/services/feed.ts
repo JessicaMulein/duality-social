@@ -1,11 +1,24 @@
 import { Request, Response } from 'express';
 import { Schema, Types as MongooseTypes, PipelineStage } from 'mongoose';
 import { ObjectId } from 'bson';
-import { sanitizeWhitespace, HumanityTypeEnum, parsePostContent, IFeedPost, IRequestUser, ModelData, PostModel, PostViewpointModel, PostViewpointReactionModel, PostViewpointHumanityModel, DefaultReactionsTypeEnum, PostImpressionModel, PostExpandModel, IFeedPostViewpoint } from '@duality-social/duality-social-lib';
-
-const maxPostLength = 1000;
+import AWS from 'aws-sdk';
+import { v4 as uuidv4 } from 'uuid';
+import sizeOf from 'image-size';
+import { sanitizeWhitespace, HumanityTypeEnum, parsePostContent, IFeedPost, IRequestUser, ModelData, PostModel, PostViewpointModel, PostViewpointReactionModel, PostViewpointHumanityModel, DefaultReactionsTypeEnum, PostImpressionModel, PostExpandModel, IFeedPostViewpoint, AppConstants } from '@duality-social/duality-social-lib';
+import { environment } from '../environment';
+import { MulterRequest } from '../interfaces/multer-request';
 
 export class FeedService {
+  private s3: AWS.S3;
+
+  constructor() {
+    this.s3 = new AWS.S3({
+      accessKeyId: environment.aws.accessKeyId,
+      secretAccessKey: environment.aws.secretAccessKey,
+      region: environment.aws.region
+    });
+  }
+
   async recalculateViewpointMetadata(viewpointId: ObjectId): Promise<void> {
     const viewpoint = await PostViewpointModel.findById(viewpointId);
     if (viewpoint === null) {
@@ -260,13 +273,19 @@ export class FeedService {
     if (req.user === undefined) {
       throw new Error('User not authenticated');
     }
+  
     const content = sanitizeWhitespace(req.body.content);
+    const isBlogPost = req.body.isBlogPost === 'true';
+    const parentViewpointId = req.body.parentViewpointId;
+    const parentPostId = req.body.parentPostId;
     const rendered = parsePostContent(content);
     const currentDate = new Date();
     const createdById = new Schema.Types.ObjectId(ModelData.User.path);
     const language = await this.detectPostLanguage(content);
-
-    if (content.length > maxPostLength) {
+  
+    const maxLength = isBlogPost ? AppConstants.MaxBlogPostLength : AppConstants.MaxPostLength;
+  
+    if (content.length > maxLength) {
       res.status(400).send('Post content is too long');
       return;
     }
@@ -274,10 +293,48 @@ export class FeedService {
       res.status(400).send('Post content is empty');
       return;
     }
+  
+    // Handle image uploads
+    const imageUrls: string[] = [];
+    const multerReq = req as MulterRequest;
+    if (multerReq.files && Array.isArray(multerReq.files.images)) {
+      for (const image of multerReq.files.images as Express.Multer.File[]) {
+        // Validate image size
+        if (image.size > AppConstants.MaxImageSize) {
+          res.status(400).send(`Image size should not exceed ${AppConstants.MaxImageSize} bytes`);
+          return;
+        }
+
+        // Validate image dimensions
+        const dimensions = sizeOf(image.buffer);
+        if (dimensions.width && dimensions.height &&
+            (dimensions.width > AppConstants.MaxImageDimensions.width ||
+             dimensions.height > AppConstants.MaxImageDimensions.height)) {
+          res.status(400).send(`Image dimensions should not exceed ${AppConstants.MaxImageDimensions.width}x${AppConstants.MaxImageDimensions.height}`);
+          return;
+        }
+
+        // Upload to S3
+        const uploadParams = {
+          Bucket: environment.aws.bucketName,
+          Key: `posts/${uuidv4()}-${image.originalname}`,
+          Body: image.buffer,
+          ContentType: image.mimetype
+        };
+
+        try {
+          const uploadResult = await this.s3.upload(uploadParams).promise();
+          imageUrls.push(uploadResult.Location);
+        } catch (error) {
+          console.error('Error uploading image to S3:', error);
+          res.status(500).send('Error uploading image');
+          return;
+        }
+      }
+    }
 
     const postId = new MongooseTypes.ObjectId(new ObjectId().toString());
     const inputViewpointId = new MongooseTypes.ObjectId(new ObjectId().toString());
-    // ensure we always have a copy of the post in english
     const requestedLanguages = language !== 'en' ? ['en'] : [];
     const post = new PostModel({
       _id: postId,
@@ -285,8 +342,11 @@ export class FeedService {
       createdById: createdById,
       updatedAt: currentDate,
       updatedById: createdById,
+      pId: parentPostId,
+      vpId: parentViewpointId,
       inVpId: inputViewpointId,
       reqTransLangs: requestedLanguages,
+      imageUrls: imageUrls,
       metadata: {
         expands: 0,
         impressions: 0,
@@ -322,52 +382,6 @@ export class FeedService {
     } catch (error) {
       console.error('Error creating new post:', error);
       res.status(500).send('An error occurred while creating the post');
-    }
-  }
-
-  async newReply(req: Request, res: Response) {
-    if (req.user === undefined) {
-      throw new Error('User not authenticated');
-    }
-    const parentId = req.body.parentId;
-    const content = sanitizeWhitespace(req.body.content);
-    const createdBy = new Schema.Types.ObjectId(req.body.createdBy); // Assuming the user ID is passed in the request
-    const currentDate = new Date();
-
-    if (!parentId) {
-      res.status(400).send('Parent post ID is required');
-      return;
-    }
-    if (content.length === 0) {
-      res.status(400).send('Reply content cannot be empty');
-      return;
-    }
-    if (content.length > maxPostLength) {
-      res.status(400).send('Reply content exceeds maximum length');
-      return;
-    }
-
-    try {
-      const parentPost = await PostModel.findById(parentId);
-      if (!parentPost) {
-        res.status(404).send('Parent post not found');
-        return;
-      }
-
-      const reply = new PostModel({
-        content: content,
-        createdBy: createdBy,
-        createdAt: currentDate,
-        updatedAt: currentDate,
-        parentPostId: parentId,
-        // Other fields as necessary
-      });
-
-      const newReply = await reply.save();
-      res.status(201).json(newReply);
-    } catch (error) {
-      console.error('Error creating new reply:', error);
-      res.status(500).send('An error occurred while creating the reply');
     }
   }
 

@@ -25,6 +25,12 @@ export interface IEnvironment {
       enabled: boolean;
       secret: string;
     };
+    aws: {
+      accessKeyId: string;
+      secretAccessKey: string;
+      region: string;
+      bucketName: string;
+    }
   };
 
   
@@ -44,6 +50,15 @@ export function validateEnvironment(environment: IEnvironment, then: () => void)
   }
   if (!environment.sendgridKey.startsWith('SG')) {
     throw new Error(`SENDGRID_API_KEY does not start with "SG": ${environment.sendgridKey}`);
+  }
+  if (!environment.aws.accessKeyId) {
+    throw new Error('AWS_ACCESS_KEY_ID is not set');
+  }
+  if (!environment.aws.secretAccessKey) {
+    throw new Error('AWS_SECRET_ACCESS_KEY is not set');
+  }
+  if (!environment.aws.region) {
+    throw new Error('AWS_REGION is not set');
   }
   then();
 }

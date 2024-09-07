@@ -39,7 +39,36 @@ export abstract class AppConstants {
      * The regular expression for valid email addresses.
      */
     public static readonly EmailTokenResendInterval = 5 * 60 * 1000; // 5 minutes
+    /**
+     * The name of the application. This is used in various places to identify the application. For example, in emails sent to users.
+     */
     public static readonly ApplicationName = 'Duality Social';
+    /**
+     * The email address that emails sent (registration, etc) appear to be from.
+     */
     public static readonly EmailSender = "noreply@duality.social";
-    public static readonly EmailFrom = "Duality Social <noreply@duality.social>";
+    /**
+     * The email address and sender name that emails sent (registration, etc) appear to be from
+     */
+    public static readonly EmailFrom = `${AppConstants.ApplicationName} <${AppConstants.EmailSender}>`;
+    /**
+     * The maximum length of a post. This is currently set to 280 characters.
+     */
+    public static readonly MaxPostLength = 280;
+    /**
+     * The maximum length of a blog post. This is currently set to 1000 characters.
+     */
+    public static readonly MaxBlogPostLength = 1000;
+    /**
+     * The maximum number of images that can be attached to a post. This is currently set to 4.
+     */
+    public static readonly MaxPostImages = 4;
+    /**
+     * The maximum size of an image that can be attached to a post.
+     */
+    public static readonly MaxImageSize = 5 * 1024 * 1024; // 5 MB
+    /**
+     * The maximum dimensions of an image that can be attached to a post.
+     */
+    public static readonly MaxImageDimensions = { width: 1920, height: 1080 };
 }

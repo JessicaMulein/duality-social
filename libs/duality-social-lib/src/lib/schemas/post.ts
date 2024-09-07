@@ -21,6 +21,16 @@ export const PostSchema = new Schema<IPostDocument>(
       default: null,
       readonly: true,
     },
+    /**
+     * The viewpoint id of the parent viewpoint if this is a reply.
+     */
+    vpId: {
+      type: Schema.Types.ObjectId,
+      ref: ModelName.PostViewpoint,
+      required: true,
+      default: null,
+      readonly: true,
+    },
     inVpId: {
       type: Schema.Types.ObjectId,
       ref: ModelName.PostViewpoint,

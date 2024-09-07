@@ -41,6 +41,10 @@ export interface IPost extends IHasTimestamps, IHasSoftDelete, IHasTimestampOwne
      */
     rVpId?: ObjectId;
     /**
+     * The id of the parent viewpoint if this is a reply
+     */
+    vpId?: ObjectId;
+    /**
      * Tree of viewpoint parents
      */
     vpPIds: ObjectId[];

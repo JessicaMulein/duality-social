@@ -19,7 +19,7 @@
 	"forwardPorts": [3000],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "./fontawesome-npmrc.sh & yarn && cd libs/duality-social-lib && yarn && cd ../../apps/duality-social-node && yarn && git config --global --add safe.directory /workspace",
+	"postCreateCommand": "./fontawesome-npmrc.sh & yarn && cd libs/duality-social-lib && yarn && cd ../../apps/duality-social-node && yarn && git config --global --add safe.directory /workspace && cd /workspace && yarn build:all:dev",
 
 	// Configure tool-specific properties.
 	// "customizations": {},
