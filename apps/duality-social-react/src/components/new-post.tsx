@@ -144,23 +144,24 @@ const NewPost: React.FC<NewPostProps> = ({
         multiple
         disabled={images.length >= AppConstants.MaxPostImages}
       />
-      <label htmlFor="image-upload">
+      <Box display="flex" alignItems="center" gap={2} mt={2}>
+        <label htmlFor="image-upload">
+          <Button
+            component="span"
+            variant="contained"
+            disabled={images.length >= AppConstants.MaxPostImages}
+          >
+            Upload Image
+          </Button>
+        </label>
         <Button
-          component="span"
+          type="submit"
           variant="contained"
-          disabled={images.length >= AppConstants.MaxPostImages}
+          disabled={formik.isSubmitting}
         >
-          Upload Image
+          {parentPostId ? 'Reply' : 'Post'}
         </Button>
-      </label>
-      <Button
-        type="submit"
-        variant="contained"
-        sx={{ mt: 2 }}
-        disabled={formik.isSubmitting}
-      >
-        {parentPostId ? 'Reply' : 'Post'}
-      </Button>
+      </Box>
       <ImageCropDialog
         open={cropDialogOpen}
         image={imageToEdit || ''}

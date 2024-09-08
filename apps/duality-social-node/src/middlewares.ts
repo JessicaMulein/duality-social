@@ -26,7 +26,14 @@ export class Middlewares {
     };
     public static init(app: Application): void {
         // Helmet helps you secure your Express apps by setting various HTTP headers
-        app.use(helmet());
+        app.use(helmet({
+            contentSecurityPolicy: {
+              directives: {
+                ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+                "img-src": ["'self'", "data:", "blob:"]
+              }
+            }
+          }));
         // Enable CORS
         app.use(cors(Middlewares.corsOptionsDelegate));
         // Parse incoming requests with JSON payloads

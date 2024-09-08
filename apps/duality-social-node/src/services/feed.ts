@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import { Schema, Types as MongooseTypes, PipelineStage } from 'mongoose';
 import { ObjectId } from 'bson';
-import AWS from 'aws-sdk';
+import { Upload } from '@aws-sdk/lib-storage';
+import { S3 } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid';
 import sizeOf from 'image-size';
 import { sanitizeWhitespace, HumanityTypeEnum, parsePostContent, IFeedPost, IRequestUser, ModelData, PostModel, PostViewpointModel, PostViewpointReactionModel, PostViewpointHumanityModel, DefaultReactionsTypeEnum, PostImpressionModel, PostExpandModel, IFeedPostViewpoint, AppConstants } from '@duality-social/duality-social-lib';
@@ -9,13 +10,16 @@ import { environment } from '../environment';
 import { MulterRequest } from '../interfaces/multer-request';
 
 export class FeedService {
-  private s3: AWS.S3;
+  private s3: S3;
 
   constructor() {
-    this.s3 = new AWS.S3({
-      accessKeyId: environment.aws.accessKeyId,
-      secretAccessKey: environment.aws.secretAccessKey,
-      region: environment.aws.region
+    this.s3 = new S3({
+      credentials: {
+        accessKeyId: environment.aws.accessKeyId,
+        secretAccessKey: environment.aws.secretAccessKey,
+      },
+
+      region: environment.aws.region,
     });
   }
 
@@ -323,7 +327,13 @@ export class FeedService {
         };
 
         try {
-          const uploadResult = await this.s3.upload(uploadParams).promise();
+          const uploadResult = await new Upload({
+            client: this.s3,
+            params: uploadParams,
+          }).done();
+          if (!uploadResult || !uploadResult.Location) {
+            throw new Error('Upload failed');
+          }
           imageUrls.push(uploadResult.Location);
         } catch (error) {
           console.error('Error uploading image to S3:', error);

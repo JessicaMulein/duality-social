@@ -17,7 +17,7 @@ const Feed: React.FC = () => {
       if (token && verifyToken(token)) {
         try {
           const response = await authenticatedApi.get('/feed', {
-            headers: { Authorization: `Bearer ${token}` }
+            headers: { Authorization: `Bearer ${token}` },
           });
           setPosts(response.data.posts);
         } catch (err) {
@@ -40,9 +40,11 @@ const Feed: React.FC = () => {
   return (
     <Container maxWidth="md">
       <NewPost isBlogPost={false} />
-      {posts.map((post) => (
-        <Post key={post.id?.toString()} post={post} />
-      ))}
+      {posts && posts.length > 0 ? (
+        posts.map((post) => <Post key={post.id?.toString()} post={post} />)
+      ) : (
+        <Typography>No posts to display</Typography>
+      )}
     </Container>
   );
 };
