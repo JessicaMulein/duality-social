@@ -11,7 +11,7 @@ import {
   Box,
 } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faComment } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faComment } from '@awesome.me/kit-89ec609b07/icons/classic/regular';
 import { AuthContext } from '../auth-provider';
 import { CommentMenuOption, useMenu } from '../menu-context';
 import dualitySocialSymbol from '../assets/DSImageOnlySmall.png';

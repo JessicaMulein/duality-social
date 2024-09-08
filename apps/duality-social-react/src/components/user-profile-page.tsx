@@ -1,7 +1,7 @@
 // file: user-profile.tsx
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+import { faCheckCircle } from '@awesome.me/kit-89ec609b07/icons/classic/regular';
 import {
   Box,
   Chip,

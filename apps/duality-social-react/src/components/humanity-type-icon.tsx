@@ -1,6 +1,6 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faRobot, faDesktop } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faRobot, faDesktop } from '@awesome.me/kit-89ec609b07/icons/classic/regular';
 import { HumanityTypeEnum } from '@duality-social/duality-social-lib';
 
 interface HumanityTypeIconProps {

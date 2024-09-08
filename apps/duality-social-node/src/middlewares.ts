@@ -28,12 +28,15 @@ export class Middlewares {
         // Helmet helps you secure your Express apps by setting various HTTP headers
         app.use(helmet({
             contentSecurityPolicy: {
-              directives: {
-                ...helmet.contentSecurityPolicy.getDefaultDirectives(),
-                "img-src": ["'self'", "data:", "blob:"]
-              }
+                directives: {
+                    ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+                    "img-src": ["'self'", "data:", "blob:"],
+                    "script-src": ["'self'", "https://kit.fontawesome.com"],
+                    "connect-src": ["'self'", "https://ka-p.fontawesome.com"],
+                    "style-src": ["'self'", "https://ka-p.fontawesome.com", "'unsafe-inline'"]
+                }
             }
-          }));
+        }));
         // Enable CORS
         app.use(cors(Middlewares.corsOptionsDelegate));
         // Parse incoming requests with JSON payloads

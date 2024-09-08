@@ -1,14 +1,5 @@
-export const FontAwesomeIconPrefixes = ["fas", "far", "fal", "fat", "fad", "fab", "fak", "fass"] as const;
-export type FontAwesomeIconPrefix = typeof FontAwesomeIconPrefixes[number];
-export const FontAwesomeIconStyle = ["solid", "regular", "light", "thin", "duotone", "brands" ] as const;
-export type FontAwesomeIconStyle = typeof FontAwesomeIconStyle[number];
-export const FontAwesomeIconFamilies = ["classic", "sharp", "duotone"] as const;
-export type FontAwesomeIconFamily = typeof FontAwesomeIconFamilies[number];
-export const FontAwesomeIconCssStyleClasses = ["fa-solid", "fa-regular", "fa-kit", "fa-light", "fa-thin", "fa-duotone", "fa-brands" ] as const;
-export type FontAwesomeIconCssStyleClass = typeof FontAwesomeIconCssStyleClasses[number];
-
 export enum FontAwesomeTextStyleTypeEnum {
-  Classic = 'classic',
+  Classic = 'fa-classic',
   DuoTone = 'fa-duotone',
   Kit = 'fa-kit',
   Light = 'fa-light',

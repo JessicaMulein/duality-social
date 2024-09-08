@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { Button, TextField, Box } from '@mui/material';
+import { Link } from 'react-router-dom';
+import { Button, TextField, Box, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import ImagePreview from './image-preview';
+import LivePostPreview from './live-post-preview';
 import ImageCropDialog from './image-crop-dialog';
 import authenticatedApi from '../services/authenticated-api';
 import { AppConstants } from '@duality-social/duality-social-lib';
@@ -127,6 +129,10 @@ const NewPost: React.FC<NewPostProps> = ({
           (parentPostId ? 'Write a reply' : "What's on your mind?")
         }
       />
+      <Typography variant="body2" sx={{ mt: 1, mb: 2 }}>
+        Need help with formatting? Check out our{' '}
+        <Link to="/help/post-format" target="_blank" rel="noopener noreferrer">post formatting guide</Link>.
+      </Typography>
       {images.map((img, index) => (
         <ImagePreview
           key={index}
@@ -168,6 +174,7 @@ const NewPost: React.FC<NewPostProps> = ({
         onClose={() => setCropDialogOpen(false)}
         onSave={handleCropSave}
       />
+      <LivePostPreview content={formik.values.content} />
     </Box>
   );
 };

@@ -1,5 +1,6 @@
 import { DefaultReactionsTypeEnum } from '@duality-social/duality-social-lib';
-import { faFaceAngry, faFaceKissWinkHeart, faPartyHorn, faFaceSmilingHands, faFaceConfused, faFaceLaugh, faThumbsUp, faHeart, faFaceSadTear, faFaceHushed, faFaceDizzy, IconDefinition } from '@fortawesome/pro-solid-svg-icons';
+import { faFaceAngry, faFaceKissWinkHeart, faPartyHorn, faFaceSmilingHands, faFaceConfused, faFaceLaugh, faThumbsUp, faHeart, faFaceSadTear, faFaceHushed, faFaceDizzy } from '@awesome.me/kit-89ec609b07/icons/classic/regular';
+import { IconDefinition } from '@awesome.me/kit-89ec609b07/icons';
 
 export const reactionEmojis: { [type in DefaultReactionsTypeEnum]: string } = {
   [DefaultReactionsTypeEnum.Angry]: '😡',

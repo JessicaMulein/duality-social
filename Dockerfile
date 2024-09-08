@@ -17,9 +17,7 @@ COPY ./apps/duality-social-react ./apps/duality-social-react
 COPY ./apps/duality-social-node ./apps/duality-social-node
 
 # Build the application
-RUN yarn fontawesome:setup
-RUN yarn all
-RUN yarn all:build
+RUN yarn build:all:dev
 
 # Expose the desired port (e.g., 3000, 4200, or 8080)
 EXPOSE 3000

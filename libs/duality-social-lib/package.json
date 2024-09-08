@@ -4,10 +4,14 @@
   "version": "0.0.1",
   "license": "MIT",
   "dependencies": {
+    "@awesome.me/kit-89ec609b07": "^1.0.4",
     "@fortawesome/fontawesome-common-types": "^6.6.0",
+    "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "bson": "^6.8.0",
     "express-validator": "^7.2.0",
+    "known-css-properties": "^0.34.0",
     "mongoose": "^8.5.1",
+    "postcss": "^8.4.45",
     "sanitize-html": "^2.13.0"
   },
   "devDependencies": {

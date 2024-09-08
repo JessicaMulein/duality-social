@@ -1,5 +1,5 @@
 import sanitizeHtml from 'sanitize-html';
-import { parseIconMarkup, stripIconMarkup } from './font-awesome/font-awesome';
+import { isValidIconMarkup, parseIconMarkup, stripIconMarkup } from './font-awesome/font-awesome';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const MarkdownIt = require('markdown-it');
@@ -86,6 +86,50 @@ export function parsePostContent(content: string): string {
   // Phase 3: Parse our custom icon syntax
   content = parseIconMarkup(content);
   return content;
+}
+
+/**
+ * Custom character counter:
+ * 1) emoji are 1 count
+ * 2) unicode characters are 1 count each
+ * 3) our special icon markup {{xxx}} is 1 count. But we only want to recognize valid {{ }} icon codes, and ignore any invalid ones. See parseIconMarkup.
+ * @param input 
+ * @returns 
+ */
+export function getCharacterCount(input: string): number {
+  let count = 0;
+  let i = 0;
+
+  while (i < input.length) {
+    if (input[i] === '{' && input[i + 1] === '{') {
+      // Potential icon markup
+      const endIndex = input.indexOf('}}', i);
+      if (endIndex !== -1) {
+        const potentialMarkup = input.slice(i, endIndex + 2);
+        if (isValidIconMarkup(potentialMarkup)) {
+          count += 1; // Count valid icon markup as one character
+          i = endIndex + 2;
+          continue;
+        } else {
+          // Count invalid icon markup as individual characters
+          count += 2; // For the opening braces {{
+          i += 2;
+          continue;
+        }
+      }
+    }
+
+    // Handle emojis and other Unicode characters
+    const codePoint = input.codePointAt(i);
+    if (codePoint !== undefined) {
+      count += 1;
+      i += codePoint > 0xFFFF ? 2 : 1; // Surrogate pair check
+    } else {
+      i += 1;
+    }
+  }
+
+  return count;
 }
 
 /**

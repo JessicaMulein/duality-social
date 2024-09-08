@@ -1,5 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
+import { ThemeProvider } from '@mui/material/styles';
+import { Box } from '@mui/material';
 import DashboardPage from '../components/dashboard-page';
 import { MenuProvider } from '../menu-context';
 import TopMenu from '../components/top-menu';
@@ -10,10 +12,9 @@ import PrivateRoute from '../components/private-route';
 import VerifyEmailPage from '../components/verify-email-page';
 import ChangePasswordPage from '../components/change-password-page';
 import ForgotPasswordPage from '../components/forgot-password-page';
-import { ThemeProvider } from '@mui/material/styles';
-import { Box } from '@mui/material';
 import theme from '../theme';
 import UserProfilePage from '../components/user-profile-page';
+import FormatGuide from '../components/format-guide';
 
 function App() {
   return (
@@ -53,6 +54,14 @@ function App() {
                 element={
                   <PrivateRoute>
                     <UserProfilePage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/help/post-format"
+                element={
+                  <PrivateRoute>
+                    <FormatGuide />
                   </PrivateRoute>
                 }
               />

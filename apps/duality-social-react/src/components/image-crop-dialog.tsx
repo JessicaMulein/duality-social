@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Dialog, DialogActions, DialogContent, Button } from '@mui/material';
 import Cropper from 'react-easy-crop';
-import { Point, Area } from 'react-easy-crop/types';
+import { Point, Area } from 'react-easy-crop';
 
 interface ImageCropDialogProps {
   open: boolean;
