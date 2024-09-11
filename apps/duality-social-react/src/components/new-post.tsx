@@ -7,7 +7,10 @@ import ImagePreview from './image-preview';
 import LivePostPreview from './live-post-preview';
 import ImageCropDialog from './image-crop-dialog';
 import authenticatedApi from '../services/authenticated-api';
-import { AppConstants } from '@duality-social/duality-social-lib';
+import {
+  AppConstants,
+  getCharacterCount,
+} from '@duality-social/duality-social-lib';
 import { isAxiosError } from 'axios';
 
 interface NewPostProps {
@@ -131,7 +134,10 @@ const NewPost: React.FC<NewPostProps> = ({
       />
       <Typography variant="body2" sx={{ mt: 1, mb: 2 }}>
         Need help with formatting? Check out our{' '}
-        <Link to="/help/post-format" target="_blank" rel="noopener noreferrer">post formatting guide</Link>.
+        <Link to="/help/post-format" target="_blank" rel="noopener noreferrer">
+          post formatting guide
+        </Link>
+        .
       </Typography>
       {images.map((img, index) => (
         <ImagePreview
@@ -175,6 +181,12 @@ const NewPost: React.FC<NewPostProps> = ({
         onSave={handleCropSave}
       />
       <LivePostPreview content={formik.values.content} />
+      <Typography variant="body2" sx={{ mt: 1, textAlign: 'right' }}>
+        {getCharacterCount(formik.values.content)}/
+        {isBlogPost
+          ? AppConstants.MaxBlogPostLength
+          : AppConstants.MaxPostLength}
+      </Typography>
     </Box>
   );
 };
