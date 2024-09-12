@@ -110,10 +110,28 @@ describe('DualitySocialLib', () => {
 
         it('should handle plain text when isBlogPost is false', () => {
             const testMarkdown = '# Title\n**Bold** and *Italic* text\n```\nCode Block\n```\n1. First Item\n2. Second Item\n- List Item';
-            const expectedHtml = '# Title\n**Bold** and *Italic* text\n```\nCode Block\n```\n1. First Item\n2. Second Item\n- List Item';
+            const expectedHtml = '# Title<br />**Bold** and *Italic* text<br />```<br />Code Block<br />```<br />1. First Item<br />2. Second Item<br />- List Item';
 
             const result = parsePostContent(testMarkdown, false);
             expect(result).toEqual(expectedHtml);
+        });
+
+        it('should preserve newlines when isBlogPost is false', () => {
+            const testMarkdown = 'Line 1\nLine 2\nLine 3';
+            const expectedHtml = 'Line 1<br />Line 2<br />Line 3';
+
+            const result = parsePostContent(testMarkdown, false);
+            expect(result).toEqual(expectedHtml);
+        });
+
+        it('should handle a two-line post with one letter per line correctly when isBlogPost is false', () => {
+            const input = 'x\nx';
+            const isBlogPost = false;
+            const expected = 'x<br />x';
+
+            const result = parsePostContent(input, isBlogPost);
+            expect(result).toEqual(expected);
+            expect(result).not.toContain('<p>');
         });
     });
 

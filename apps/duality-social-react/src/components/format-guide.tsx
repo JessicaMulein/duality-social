@@ -1,275 +1,213 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Typography,
   Paper,
-  List,
-  ListItem,
-  ListItemText,
   Divider,
-  ListItemIcon,
+  TextField,
+  Box,
+  FormControlLabel,
+  Checkbox,
 } from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart as faHeartSolid } from '@awesome.me/kit-89ec609b07/icons/classic/solid';
-import { faHeart as faHeartRegular } from '@awesome.me/kit-89ec609b07/icons/classic/regular';
+import {
+  AppConstants,
+  prepareContentForCharacterCount,
+} from '@duality-social/duality-social-lib';
+import LivePostPreview from './live-post-preview';
+import IconMarkupGuide from './icon-markup-guide';
+import BlogPostGuide from './blog-post-guide';
+import CharacterCountGuide from './character-count-guide';
+import { environment } from '../environments/environment';
+
+const exampleBlurb = `
+# Welcome to the Blog Post Guide
+
+## Formatting Features
+
+### Text Styles
+
+You can use **bold** and *italic* text to emphasize your points. You can also combine them for ***bold italic*** text.
+
+### Links
+
+Include links in your posts like this: [Visit FontAwesome](https://fontawesome.com).
+
+### Lists
+
+#### Unordered List
+- Item 1
+- Item 2
+- Item 3
+
+#### Ordered List
+1. First item
+2. Second item
+3. Third item
+
+### Code
+
+Inline code: \`const example = true;\`
+
+Block code:
+\`\`\`
+function greet() {
+  console.log("Hello, world!");
+}
+\`\`\`
+
+### Horizontal Rules
+
+Use horizontal rules to separate sections:
+---
+***
+___
+
+### Images
+
+![Duality Social](${environment.siteUrl}/assets/DSImageOnlySmall.png)
+
+### Tables
+
+| Header 1 | Header 2 |
+| -------- | -------- |
+| Cell 1   | Cell 2   |
+| Cell 3   | Cell 4   |
+
+### Strikethrough
+
+~~This text is struck through.~~
+
+### Task Lists
+
+- [x] Completed task
+- [ ] Incomplete task
+
+### Footnotes
+
+Here is a footnote reference[^1].
+
+[^1]: This is the footnote.
+
+### Definition Lists
+
+Term
+: Definition
+
+### Abbreviations
+
+*[HTML]: Hyper Text Markup Language
+
+### Custom Containers
+
+::: info
+This is an info container.
+:::
+`;
+
+const iconExampleBlurb = `
+# Icon Markup Examples
+
+## Basic Icons
+
+Here is a regular heart icon: {{heart}}
+
+## Styled Icons
+
+Here is a solid heart icon: {{solid heart}}
+
+## Icons with Additional Properties
+
+Here is a large, spinning, solid heart icon: {{solid heart lg spin}}
+
+## Custom Styled Icons
+
+Here is a red, 20px solid heart icon: {{solid heart; color: red; font-size: 20px;}}
+`;
 
 const FormatGuide: React.FC = () => {
+  const [content, setContent] = useState<string>(exampleBlurb + '---\n' + iconExampleBlurb);
+  const [isBlogPost, setIsBlogPost] = useState<boolean>(true);
+  const [characterCount, setCharacterCount] = useState(0);
+  const maxCharacterCount = isBlogPost
+    ? AppConstants.MaxBlogPostLength
+    : AppConstants.MaxPostLength;
+
+  const handleContentChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newContent = e.target.value;
+    setContent(newContent);
+    setCharacterCount(
+      prepareContentForCharacterCount(newContent, isBlogPost).length
+    );
+  };
+
   return (
-    <Paper elevation={3} sx={{ padding: 2, maxWidth: 600, margin: 'auto' }}>
+    <Paper elevation={3} sx={{ padding: 2, paddingTop: 4, maxWidth: 600, margin: 'auto', marginTop: 8 }}>
       <Typography variant="h4" gutterBottom>
         Post Formatting Guide
       </Typography>
       <Typography variant="body1" component="div" sx={{ marginBottom: 2 }}>
-        <p>
-          Blog posts support Markdown syntax and all posts support a special
-          custom FontAwesome powered icon markup in your posts (explained
-          below).
-        </p>
-        <p>
-          A complete list of icons available (we're using a complete Pro set)
-          can be found here{' '}
-          <a
-            href="https://fontawesome.com/icons"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            https://fontawesome.com/icons
-          </a>
-        </p>
-        <p>Here's a quick guide:</p>
+        Blog posts support Markdown syntax and all posts support a special
+        custom FontAwesome powered icon markup in your posts (explained below).
+      </Typography>
+      <Typography variant="body1" component="div" sx={{ marginBottom: 2 }}>
+        Here's a quick guide:
       </Typography>
       <Divider />
-      <Typography variant="h6" mt={2}>
-        Icon Markup:
-      </Typography>
-      <List>
-        <ListItem>
-          <ListItemIcon>
-            <FontAwesomeIcon icon={faHeartRegular} />
-          </ListItemIcon>
-          <ListItemText
-            primary="Basic Icon"
-            secondary="{{heart}} renders as a regular heart icon"
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemIcon>
-            <FontAwesomeIcon icon={faHeartSolid} />
-          </ListItemIcon>
-          <ListItemText
-            primary="Styled Icon"
-            secondary="{{solid heart}} renders as a solid heart icon"
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemText
-            primary="Available Styles"
-            secondary="classic, duotone, light, regular, solid, thin, brands, sharp solid"
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemText
-            primary="Sizes"
-            secondary="xs, sm, lg, xl, 2xl, 1x, 2x, 3x, 4x, 5x, 6x, 7x, 8x, 9x, 10x"
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemIcon>
-            <FontAwesomeIcon icon={faHeartSolid} size="lg" />
-          </ListItemIcon>
-          <ListItemText
-            primary="Size Example"
-            secondary="{{solid heart lg}} renders a large solid heart icon"
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemText
-            primary="Animations"
-            secondary="spin, spin-pulse, spin-reverse, pulse, beat, fade, beat-fade, flip, flip-both, flip-horizontal, flip-vertical, rotate-90, rotate-180, rotate-270, rotate-by"
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemIcon>
-            <FontAwesomeIcon icon={faHeartSolid} spin />
-          </ListItemIcon>
-          <ListItemText
-            primary="Animation Example"
-            secondary="{{solid heart spin}} renders a spinning solid heart icon"
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemIcon>
-            <FontAwesomeIcon icon={faHeartSolid} size="lg" spin />
-          </ListItemIcon>
-          <ListItemText
-            primary="Combined Usage"
-            secondary="{{solid heart lg spin}} renders a large, spinning, solid heart icon"
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemIcon>
-            <FontAwesomeIcon
-              icon={faHeartSolid}
-              style={{ color: 'red', fontSize: '20px' }}
-            />
-          </ListItemIcon>
-          <ListItemText
-            primary="Custom Styled Icon"
-            secondary="{{solid heart; color: red; font-size: 20px;}} renders as a red, 20px solid heart icon. CSS styles are added after a semicolon."
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemText
-            primary="Custom Style Order"
-            secondary={
-              <React.Fragment>
-                <Typography variant="body2">
-                  When using icons, follow this order:
-                  <ol>
-                    <li>Icon style (optional, e.g., solid, regular)</li>
-                    <li>Icon name (required, e.g., heart)</li>
-                    <li>Additional properties (optional, e.g., lg, spin)</li>
-                    <li>Semicolon (;) - only if adding CSS styles</li>
-                    <li>CSS styles (optional)</li>
-                  </ol>
-                </Typography>
-                <Typography variant="body2">Examples:</Typography>
-                <List dense>
-                  <ListItem>
-                    <ListItemIcon>
-                      <FontAwesomeIcon icon={faHeartRegular} />
-                    </ListItemIcon>
-                    <ListItemText primary="Basic: {{heart}}" />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemIcon>
-                      <FontAwesomeIcon icon={faHeartSolid} />
-                    </ListItemIcon>
-                    <ListItemText primary="With style: {{solid heart}}" />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemIcon>
-                      <FontAwesomeIcon icon={faHeartSolid} size="lg" spin />
-                    </ListItemIcon>
-                    <ListItemText primary="With properties: {{heart lg spin}}" />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemIcon>
-                      <FontAwesomeIcon
-                        icon={faHeartSolid}
-                        style={{ color: 'red', fontSize: '20px' }}
-                      />
-                    </ListItemIcon>
-                    <ListItemText primary="With CSS: {{heart; color: red; font-size: 20px;}}" />
-                  </ListItem>
-                  <ListItem>
-                    <ListItemIcon>
-                      <FontAwesomeIcon
-                        icon={faHeartSolid}
-                        size="lg"
-                        spin
-                        style={{ color: 'red', fontSize: '20px' }}
-                      />
-                    </ListItemIcon>
-                    <ListItemText primary="Full example: {{solid heart lg spin; color: red; font-size: 20px;}}" />
-                  </ListItem>
-                </List>
-                <Typography variant="body2">
-                  Remember: Only the icon name is required. All other elements
-                  are optional.
-                </Typography>
-              </React.Fragment>
-            }
-          />
-        </ListItem>
-      </List>
+      <IconMarkupGuide />
       <Divider />
-      <Typography variant="h6" mt={2}>
-        Blog Post Markdown Syntax:
-      </Typography>
-      <List>
-        <ListItem>
-          <ListItemText
-            primary="Bold"
-            secondary="**bold text** or __bold text__"
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemText
-            primary="Italic"
-            secondary="*italic text* or _italic text_"
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemText
-            primary="Links"
-            secondary="[link text](https://example.com)"
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemText
-            primary="Lists"
-            secondary="- Item 1\n- Item 2\n- Item 3"
-          />
-        </ListItem>
-      </List>
+      <BlogPostGuide />
       <Divider />
-      <Typography variant="h6" mt={2}>
-        Character Counting:
-      </Typography>
-      <List>
-        <ListItem>
-          <ListItemText
-            primary="Emoji"
-            secondary="Each emoji counts as 1 character"
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemText
-            primary="Unicode Characters"
-            secondary="Each Unicode character counts as 1 character"
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemText
-            primary="Icon Markup"
-            secondary="Valid icon markup (e.g., {{heart}}) counts as 1 character"
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemText
-            primary="Newlines"
-            secondary="Each newline (CR/LF) counts as 1 character"
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemText
-            primary="Links"
-            secondary="Each link counts as 1 character, plus the visible text"
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemText
-            primary="Images"
-            secondary="Each image counts as 1 character, plus the alt text"
-          />
-        </ListItem>
-      </List>
+      <CharacterCountGuide />
       <Divider />
       <Typography variant="body2" mt={2}>
         Note: HTML tags are stripped for security reasons. Use Markdown and icon
         markup for formatting.
       </Typography>
-      <Typography variant="body2" mt={2}>
-        For more detailed styling options, refer to the{' '}
-        <a
-          href="https://docs.fontawesome.com/web/style/style-cheatsheet"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          FontAwesome Style Cheatsheet
-        </a>
-        . Our markup is a custom shorthand for this.
+      <Divider />
+      <Typography variant="h6" color="primary" sx={{ mt: 2 }}>
+        Formatting Playground:
       </Typography>
+      <Box
+        sx={{
+          border: '1px solid #ccc',
+          borderRadius: '4px',
+          padding: '8px',
+          marginBottom: 2,
+        }}
+      >
+        <TextField
+          multiline
+          fullWidth
+          rows={6}
+          placeholder="Type your post content here..."
+          value={content}
+          onChange={handleContentChange}
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              padding: 0,
+            },
+            '& .MuiInputBase-input': {
+              padding: '8px',
+            },
+          }}
+        />
+      </Box>
+      <Typography
+        variant="body2"
+        color={characterCount > maxCharacterCount ? 'error' : 'textSecondary'}
+      >
+        {characterCount}/{maxCharacterCount}
+      </Typography>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={isBlogPost}
+            onChange={(e) => setIsBlogPost(e.target.checked)}
+            color="primary"
+          />
+        }
+        label="Is this a blog post?"
+      />
+      <LivePostPreview content={content} isBlogPost={isBlogPost} />
     </Paper>
   );
 };

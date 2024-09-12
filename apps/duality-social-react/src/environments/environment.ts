@@ -4,4 +4,5 @@ import { IEnvironment } from '../interfaces/environment';
 export const environment: IEnvironment = {
   production: false,
   apiUrl: 'http://localhost:3000/api',
+  siteUrl: 'http://localhost:3000',
 };

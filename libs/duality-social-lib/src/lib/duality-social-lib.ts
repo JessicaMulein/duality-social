@@ -100,6 +100,9 @@ export function parsePostContent(content: string, isBlogPost: boolean): string {
   if (isBlogPost) {
     // Phase 2: Parse markdown
     content = parseMarkdown(content);
+  } else {
+    // Replace newlines with <br> tags for non-blog posts
+    content = content.replace(/\n/g, '<br />');
   }
 
   // Phase 3: Parse our custom icon syntax
@@ -158,11 +161,6 @@ export function prepareContentForCharacterCount(input: string, isBlogPost: boole
 
   // remove excess whitespace
   input = input.trim();
-
-  // debug, iterate through content and console.log all the ascii values
-  const debugAsciiValues = Array.from(input).map(c => c.charCodeAt(0)).join(', ');
-  console.log(`|${input}|`);
-  console.log('Content ASCII values:', debugAsciiValues);
 
   return input;
 }

@@ -11,7 +11,7 @@ import {
   Box,
 } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faComment } from '@awesome.me/kit-89ec609b07/icons/classic/regular';
+import { faUser, faComment, faQuestionCircle } from '@awesome.me/kit-89ec609b07/icons/classic/regular';
 import { AuthContext } from '../auth-provider';
 import { CommentMenuOption, useMenu } from '../menu-context';
 import dualitySocialSymbol from '../assets/DSImageOnlySmall.png';
@@ -24,6 +24,7 @@ const TopMenu: React.FC = () => {
   const [commentsAnchorEl, setCommentsAnchorEl] = useState<null | HTMLElement>(
     null
   );
+  const [helpAnchorEl, setHelpAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -33,9 +34,14 @@ const TopMenu: React.FC = () => {
     setCommentsAnchorEl(event.currentTarget);
   };
 
+  const handleHelpMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setHelpAnchorEl(event.currentTarget);
+  };
+
   const handleClose = () => {
     setAnchorEl(null);
     setCommentsAnchorEl(null);
+    setHelpAnchorEl(null);
   };
 
   return (
@@ -148,6 +154,41 @@ const TopMenu: React.FC = () => {
                   }}
                 >
                   Logout
+                </MenuItem>
+              </Menu>
+            </div>
+            <div>
+              <IconButton
+                size="large"
+                aria-label="help"
+                aria-controls="help-menu"
+                aria-haspopup="true"
+                onClick={handleHelpMenu}
+                color="inherit"
+              >
+                <FontAwesomeIcon icon={faQuestionCircle} />
+              </IconButton>
+              <Menu
+                id="help-menu"
+                anchorEl={helpAnchorEl}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: 'top',
+                  horizontal: 'right',
+                }}
+                open={Boolean(helpAnchorEl)}
+                onClose={handleClose}
+              >
+                <MenuItem
+                  component={Link}
+                  to="/help/post-format"
+                  onClick={handleClose}
+                >
+                  Post Formatting Guide
                 </MenuItem>
               </Menu>
             </div>
