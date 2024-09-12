@@ -17,7 +17,7 @@ import { CommentMenuOption, useMenu } from '../menu-context';
 import dualitySocialSymbol from '../assets/DSImageOnlySmall.png';
 
 const TopMenu: React.FC = () => {
-  const { isAuthenticated, logout } = useContext(AuthContext);
+  const { isAuthenticated, logout, user } = useContext(AuthContext);
   const { commentOptions } = useMenu();
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -141,7 +141,7 @@ const TopMenu: React.FC = () => {
               >
                 <MenuItem
                   onClick={() => {
-                    navigate('/profile');
+                    navigate(`/profile/${user?.username}`);
                     handleClose();
                   }}
                 >

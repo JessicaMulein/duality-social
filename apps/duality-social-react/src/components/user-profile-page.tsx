@@ -1,5 +1,5 @@
 // file: user-profile.tsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@awesome.me/kit-89ec609b07/icons/classic/regular';
 import {
@@ -18,27 +18,31 @@ import { IApiUserProfileResponse } from '@duality-social/duality-social-lib';
 import authenticatedApi from '../services/authenticated-api';
 import { useNavigate } from 'react-router-dom';
 import { getToken, verifyToken } from '../utils/auth';
+import { AuthContext } from '../auth-provider';
+import NewPost from './new-post';
 
 const UserProfilePage = () => {
+  const { user: authUser } = useContext(AuthContext);
   const [user, setUser] = useState<IApiUserProfileResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
-  const checkAuthentication = () => {
-    const token = getToken();
-    if (!token || !verifyToken(token)) {
-      navigate('/login');
-      return false;
-    }
-    return true;
-  };
+  const pageUsername = window.location.pathname.split('/').pop();
 
   useEffect(() => {
+    const checkAuthentication = () => {
+      const token = getToken();
+      if (!token || !verifyToken(token)) {
+        navigate('/login');
+        return false;
+      }
+      return true;
+    };
+
     const fetchData = async () => {
       if (checkAuthentication()) {
-        const username = window.location.pathname.split('/').pop();
-        if (username) {
-          await fetchUserProfile(username);
+        if (pageUsername) {
+          await fetchUserProfile(pageUsername);
         } else {
           setIsLoading(false);
         }
@@ -46,7 +50,7 @@ const UserProfilePage = () => {
     };
 
     fetchData();
-  }, []);
+  }, [navigate, pageUsername]);
 
   const fetchUserProfile = async (username: string) => {
     try {
@@ -58,6 +62,9 @@ const UserProfilePage = () => {
       setIsLoading(false);
     }
   };
+
+  const isOwnProfile =
+    pageUsername && authUser?.username && pageUsername === authUser?.username;
 
   if (isLoading) {
     return (
@@ -160,6 +167,11 @@ const UserProfilePage = () => {
           </Typography>
         )}
       </Paper>
+      {user && isOwnProfile && (
+        <Box sx={{ mt: 2 }}>
+          <NewPost isBlogPost={true} />
+        </Box>
+      )}
     </Container>
   );
 };

@@ -13,6 +13,7 @@ import {
   useTheme,
 } from '@mui/material';
 import Feed from './feed';
+import NewPost from './new-post';
 
 const DashboardPage: React.FC = () => {
   const theme = useTheme();
@@ -51,9 +52,15 @@ const DashboardPage: React.FC = () => {
           </Typography>
         </Paper>
 
+        <Box display="flex" flexDirection="column" gap={3}>
+          <Paper sx={{ p: 2 }}>
+            <NewPost isBlogPost={false} />
+          </Paper>
+        </Box>
+
         {/* Main content area */}
         <Box display="flex" gap={3} flexDirection={{ xs: 'column', md: 'row' }}>
-          <Paper sx={{ p: 2 }}>
+          <Paper sx={{ p: 2, flex: 1 }}>
             <Typography variant="h6" color="primary" gutterBottom>
               Your Feed
             </Typography>

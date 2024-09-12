@@ -120,6 +120,11 @@ const NewPost: React.FC<NewPostProps> = ({
 
   return (
     <Box component="form" onSubmit={formik.handleSubmit} sx={{ mt: 2 }}>
+      <Box sx={{ mt: 2 }}>
+        <Typography variant="h6" color="primary" gutterBottom>
+          {isBlogPost ? 'New Blog Post' : 'New Post'}:
+        </Typography>
+      </Box>
       <TextField
         fullWidth
         multiline
@@ -133,13 +138,6 @@ const NewPost: React.FC<NewPostProps> = ({
           (parentPostId ? 'Write a reply' : "What's on your mind?")
         }
       />
-      <Typography variant="body2" sx={{ mt: 1, mb: 2 }}>
-        Need help with formatting? Check out our{' '}
-        <Link to="/help/post-format" target="_blank" rel="noopener noreferrer">
-          post formatting guide
-        </Link>
-        .
-      </Typography>
       {images.map((img, index) => (
         <ImagePreview
           key={index}
@@ -181,12 +179,22 @@ const NewPost: React.FC<NewPostProps> = ({
         onClose={() => setCropDialogOpen(false)}
         onSave={handleCropSave}
       />
-      <LivePostPreview content={formik.values.content} isBlogPost={isBlogPost} />
+      <LivePostPreview
+        content={formik.values.content}
+        isBlogPost={isBlogPost}
+      />
       <Typography variant="body2" sx={{ mt: 1, textAlign: 'right' }}>
         {getCharacterCount(formik.values.content, isBlogPost)}/
         {isBlogPost
           ? AppConstants.MaxBlogPostLength
           : AppConstants.MaxPostLength}
+      </Typography>
+      <Typography variant="body2" sx={{ mt: 1, mb: 2 }}>
+        Need help with formatting? Check out our{' '}
+        <Link to="/help/post-format" target="_blank" rel="noopener noreferrer">
+          post formatting guide
+        </Link>
+        .
       </Typography>
     </Box>
   );

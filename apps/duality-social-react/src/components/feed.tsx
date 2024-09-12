@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import authenticatedApi from '../services/authenticated-api';
 import { Container, Typography, CircularProgress } from '@mui/material';
 import Post from './post';
-import NewPost from './new-post';
 import { getToken, verifyToken } from '../utils/auth';
 import { IFeedPost } from '@duality-social/duality-social-lib';
 
@@ -39,11 +38,10 @@ const Feed: React.FC = () => {
 
   return (
     <Container maxWidth="md">
-      <NewPost isBlogPost={true} />
       {posts && posts.length > 0 ? (
         posts.map((post) => <Post key={post.id?.toString()} post={post} />)
       ) : (
-        <Typography>No posts to display</Typography>
+        <Typography textAlign="center">No posts to display</Typography>
       )}
     </Container>
   );
