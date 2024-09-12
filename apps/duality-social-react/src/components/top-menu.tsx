@@ -54,7 +54,7 @@ const TopMenu: React.FC = () => {
             style={{ height: 40, marginRight: 10 }}
           />
           <Typography variant="h6" component="div">
-            <span style={{ fontFamily: 'Electric Shocker, Arial, sans-serif' }}>
+            <span style={{ fontFamily: 'Electric Shocker, Arial, sans-serif', fontSize: '2rem' }}>
               Duality
             </span>
             <span

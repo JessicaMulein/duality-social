@@ -12,6 +12,13 @@ $text-color: #fff;
 }
 
 @font-face {
+  font-family: 'Electric Shocker';
+  src: url('~/assets/ElectricShocker.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
   font-family: 'Eurostile Extended';
   src: url('~/assets/EurostileExtended-Roman.woff2') format('woff2');
   font-weight: normal;

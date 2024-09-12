@@ -133,6 +133,15 @@ describe('DualitySocialLib', () => {
             expect(result).toEqual(expected);
             expect(result).not.toContain('<p>');
         });
+
+        it('should handle a two-line post with one letter per line correctly when isBlogPost is true', () => {
+            const input = 'x\nx';
+            const isBlogPost = true;
+            const expected = '<p>x<br />\nx</p>';
+
+            const result = parsePostContent(input, isBlogPost);
+            expect(result).toEqual(expected);
+        });
     });
 
     describe('prepareContentForCharacterCount', () => {
