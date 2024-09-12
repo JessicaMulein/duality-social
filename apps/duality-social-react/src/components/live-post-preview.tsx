@@ -4,14 +4,15 @@ import { parsePostContent } from '@duality-social/duality-social-lib';
 
 interface LivePostPreviewProps {
   content: string;
+  isBlogPost: boolean;
 }
 
-const LivePostPreview: React.FC<LivePostPreviewProps> = ({ content }) => {
+const LivePostPreview: React.FC<LivePostPreviewProps> = ({ content, isBlogPost }) => {
   const [parsedContent, setParsedContent] = useState('');
 
   useEffect(() => {
-    setParsedContent(parsePostContent(content));
-  }, [content]);
+    setParsedContent(parsePostContent(content, isBlogPost));
+  }, [content, isBlogPost]);
 
   return (
     <Box mt={2}>

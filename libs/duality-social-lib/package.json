@@ -10,6 +10,9 @@
     "bson": "^6.8.0",
     "express-validator": "^7.2.0",
     "known-css-properties": "^0.34.0",
+    "markdown-it-mark": "^4.0.0",
+    "markdown-it-table-of-contents": "^0.8.0",
+    "markdown-it-todo-lists": "^0.1.7",
     "mongoose": "^8.5.1",
     "postcss": "^8.4.45",
     "sanitize-html": "^2.13.0"

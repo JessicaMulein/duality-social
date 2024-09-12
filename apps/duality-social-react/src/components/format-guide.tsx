@@ -20,8 +20,9 @@ const FormatGuide: React.FC = () => {
       </Typography>
       <Typography variant="body1" component="div" sx={{ marginBottom: 2 }}>
         <p>
-          You can use Markdown syntax and a special custom FontAwesome powered
-          icon markup in your posts.
+          Blog posts support Markdown syntax and all posts support a special
+          custom FontAwesome powered icon markup in your posts (explained
+          below).
         </p>
         <p>
           A complete list of icons available (we're using a complete Pro set)
@@ -36,36 +37,6 @@ const FormatGuide: React.FC = () => {
         </p>
         <p>Here's a quick guide:</p>
       </Typography>
-      <Divider />
-      <Typography variant="h6" mt={2}>
-        Markdown Syntax:
-      </Typography>
-      <List>
-        <ListItem>
-          <ListItemText
-            primary="Bold"
-            secondary="**bold text** or __bold text__"
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemText
-            primary="Italic"
-            secondary="*italic text* or _italic text_"
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemText
-            primary="Links"
-            secondary="[link text](https://example.com)"
-          />
-        </ListItem>
-        <ListItem>
-          <ListItemText
-            primary="Lists"
-            secondary="- Item 1\n- Item 2\n- Item 3"
-          />
-        </ListItem>
-      </List>
       <Divider />
       <Typography variant="h6" mt={2}>
         Icon Markup:
@@ -211,6 +182,79 @@ const FormatGuide: React.FC = () => {
           />
         </ListItem>
       </List>
+      <Divider />
+      <Typography variant="h6" mt={2}>
+        Blog Post Markdown Syntax:
+      </Typography>
+      <List>
+        <ListItem>
+          <ListItemText
+            primary="Bold"
+            secondary="**bold text** or __bold text__"
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary="Italic"
+            secondary="*italic text* or _italic text_"
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary="Links"
+            secondary="[link text](https://example.com)"
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary="Lists"
+            secondary="- Item 1\n- Item 2\n- Item 3"
+          />
+        </ListItem>
+      </List>
+      <Divider />
+      <Typography variant="h6" mt={2}>
+        Character Counting:
+      </Typography>
+      <List>
+        <ListItem>
+          <ListItemText
+            primary="Emoji"
+            secondary="Each emoji counts as 1 character"
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary="Unicode Characters"
+            secondary="Each Unicode character counts as 1 character"
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary="Icon Markup"
+            secondary="Valid icon markup (e.g., {{heart}}) counts as 1 character"
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary="Newlines"
+            secondary="Each newline (CR/LF) counts as 1 character"
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary="Links"
+            secondary="Each link counts as 1 character, plus the visible text"
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary="Images"
+            secondary="Each image counts as 1 character, plus the alt text"
+          />
+        </ListItem>
+      </List>
+      <Divider />
       <Typography variant="body2" mt={2}>
         Note: HTML tags are stripped for security reasons. Use Markdown and icon
         markup for formatting.

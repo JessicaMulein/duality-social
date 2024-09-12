@@ -39,7 +39,7 @@ const Feed: React.FC = () => {
 
   return (
     <Container maxWidth="md">
-      <NewPost isBlogPost={false} />
+      <NewPost isBlogPost={true} />
       {posts && posts.length > 0 ? (
         posts.map((post) => <Post key={post.id?.toString()} post={post} />)
       ) : (

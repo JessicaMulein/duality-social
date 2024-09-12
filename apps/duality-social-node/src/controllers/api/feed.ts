@@ -81,12 +81,6 @@ export class FeedController extends BaseController {
             },
             {
                 method: 'post',
-                path: '/preview',
-                handler: this.postPreview,
-                useAuthentication: true,
-            },
-            {
-                method: 'post',
                 path: '/react',
                 handler: this.reactToViewpoint,
                 useAuthentication: true,
@@ -196,7 +190,8 @@ export class FeedController extends BaseController {
 
     async postPreview(req: Request, res: Response) {
         const content = req.body.content ?? '';
-        const rendered = parsePostContent(content);
+        const isBlogPost = req.body.isBlogPost === 'true';
+        const rendered = parsePostContent(content, isBlogPost);
         res.status(200).json({ rendered });
     }
 }

@@ -40,6 +40,23 @@ Examples:
 
 Remember: Only the icon name is required. All other elements are optional.
 
+## Character Counting:
+
+- Emoji: Each emoji counts as 1 character
+- Unicode Characters: Each Unicode character counts as 1 character
+- Icon Markup: Valid icon markup (e.g., {{heart}}) counts as 1 character
+- Newlines: Each newline (CR/LF) counts as 1 character
+- Links: Each link counts as 1 character, plus the visible text
+
+## Blog Post Formatting:
+
+Blog posts support full Markdown syntax in addition to the custom icon markup. This includes:
+
+- Headers (# H1, ## H2, etc.)
+- Code blocks (``` code ```)
+- Tables
+- And more!
+
 Note: HTML tags are stripped for security reasons. Use Markdown and icon markup for formatting.
 
 For more detailed styling options, refer to the [FontAwesome Style Cheatsheet](https://docs.fontawesome.com/web/style/style-cheatsheet). Our markup is a custom shorthand for this.

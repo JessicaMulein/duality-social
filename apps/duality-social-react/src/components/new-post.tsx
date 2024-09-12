@@ -10,6 +10,7 @@ import authenticatedApi from '../services/authenticated-api';
 import {
   AppConstants,
   getCharacterCount,
+  parsePostContent,
 } from '@duality-social/duality-social-lib';
 import { isAxiosError } from 'axios';
 
@@ -180,9 +181,9 @@ const NewPost: React.FC<NewPostProps> = ({
         onClose={() => setCropDialogOpen(false)}
         onSave={handleCropSave}
       />
-      <LivePostPreview content={formik.values.content} />
+      <LivePostPreview content={formik.values.content} isBlogPost={isBlogPost} />
       <Typography variant="body2" sx={{ mt: 1, textAlign: 'right' }}>
-        {getCharacterCount(formik.values.content)}/
+        {getCharacterCount(formik.values.content, isBlogPost)}/
         {isBlogPost
           ? AppConstants.MaxBlogPostLength
           : AppConstants.MaxPostLength}

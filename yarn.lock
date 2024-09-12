@@ -11748,6 +11748,21 @@ map-visit@^1.0.0:
   dependencies:
     object-visit "^1.0.0"
 
+markdown-it-mark@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/markdown-it-mark/-/markdown-it-mark-4.0.0.tgz#c19cbc87d9cb9fd1a495e8fe31b740b6d9ebf8c8"
+  integrity sha512-YLhzaOsU9THO/cal0lUjfMjrqSMPjjyjChYM7oyj4DnyaXEzA8gnW6cVJeyCrCVeyesrY2PlEdUYJSPFYL4Nkg==
+
+markdown-it-table-of-contents@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/markdown-it-table-of-contents/-/markdown-it-table-of-contents-0.8.0.tgz#14437f4ad083ddaaeb1dfea70839766e27d3474f"
+  integrity sha512-ihgUROZLw4ZsojxXrNZJP+VxYL4yTino51TP7eVYccEwgsYGC6CNXxv5G5JI89NhUb52wiRaMhEtWpiMAeRirA==
+
+markdown-it-todo-lists@^0.1.7:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/markdown-it-todo-lists/-/markdown-it-todo-lists-0.1.7.tgz#9673ea680f477ec0490015c48680f5c088469cbe"
+  integrity sha512-RhUaWV5tB9lEQHTkJdaeGtmywxS55rra9EmuOzO7chm6+C50kMZ1C/2ggRaI2pdpXNijOvES0Ta2AgULE59Vpw==
+
 markdown-it@^13.0.1:
   version "13.0.2"
   resolved "https://registry.yarnpkg.com/markdown-it/-/markdown-it-13.0.2.tgz#1bc22e23379a6952e5d56217fbed881e0c94d536"

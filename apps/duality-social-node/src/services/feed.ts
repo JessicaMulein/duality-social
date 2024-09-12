@@ -282,7 +282,7 @@ export class FeedService {
     const isBlogPost = req.body.isBlogPost === 'true';
     const parentViewpointId = req.body.parentViewpointId;
     const parentPostId = req.body.parentPostId;
-    const rendered = parsePostContent(content);
+    const rendered = parsePostContent(content, isBlogPost);
     const currentDate = new Date();
     const createdById = new Schema.Types.ObjectId(ModelData.User.path);
     const language = await this.detectPostLanguage(content);

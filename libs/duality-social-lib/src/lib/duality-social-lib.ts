@@ -3,6 +3,12 @@ import { isValidIconMarkup, parseIconMarkup, stripIconMarkup } from './font-awes
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const MarkdownIt = require('markdown-it');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const markdownItTodoLists = require('markdown-it-todo-lists');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const markdownItMark = require('markdown-it-mark');
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const markdownItTableOfContents = require('markdown-it-table-of-contents');
 
 /**
  * Makes a data:// URL from a base64 encoded binary blob string containing a PNG image
@@ -58,22 +64,12 @@ export function imageDataUrlToFile(imageDataUrl: string, filename = 'image.png')
 }
 
 /**
- * Strips HTML tags/attributes, parses markdown, then parses our custom icon markup
- * @param content 
+ * Converts a markdown string to HTML
+ * @param markdown 
  * @returns 
  */
-export function parsePostContent(content: string): string {
-  // Phase 1: Strip HTML
-  // we strip the html first because we don't really support HTML in posts,
-  // but our syntax is too close to markdown so it gets parsed as HTML
-
-  content = sanitizeHtml(content, {
-    allowedTags: [], // Strip all tags
-    allowedAttributes: {}, // Strip all attributes
-  });
-
-  // Phase 2: Parse markdown
-  content = MarkdownIt('default')
+export function parseMarkdown(markdown: string): string {
+  return MarkdownIt('default')
     .set({
       breaks: true,
       html: true,
@@ -81,11 +77,94 @@ export function parsePostContent(content: string): string {
       typographer: true,
       xhtmlOut: true,
     })
-    .render(content);
+    .use(markdownItTodoLists, { enabled: true })
+    .use(markdownItMark)
+    .use(markdownItTableOfContents)
+    .render(markdown);
+}
+
+/**
+ * Strips HTML tags/attributes, parses markdown, then parses our custom icon markup
+ * @param content 
+ * @returns 
+ */
+export function parsePostContent(content: string, isBlogPost: boolean): string {
+  // Phase 1: Strip HTML
+  // we strip the html first because we don't support HTML in posts,
+  // but our syntax is too close to markdown so it gets parsed as HTML
+  content = sanitizeHtml(content, {
+    allowedTags: [], // Strip all tags
+    allowedAttributes: {}, // Strip all attributes
+  });
+
+  if (isBlogPost) {
+    // Phase 2: Parse markdown
+    content = parseMarkdown(content);
+  }
 
   // Phase 3: Parse our custom icon syntax
   content = parseIconMarkup(content);
+
+  // Trim leading/trailing whitespace
+  content = content.trim();
+
   return content;
+}
+
+/**
+ * Prepares content for character count by replacing or stripping HTML tags.
+ * - Replaces valid icon markup with a bullet character.
+ * - Replaces <br> tags with newline characters.
+ * - Replaces <a> tags with a bullet character for the URL and includes the text content.
+ * - Replaces <img> tags with their alt text or a bullet character if alt is not present.
+ * - Strips all other HTML tags and attributes.
+ * - Replaces CRLF pairs with a single newline character.
+ * @param input 
+ * @param isBlogPost 
+ * @returns 
+ */
+export function prepareContentForCharacterCount(input: string, isBlogPost: boolean): string {
+  // Replace valid icon markup with a bullet character for character counting
+  input = input.replace(/\{\{[^}]+\}\}/g, (match) => {
+    return isValidIconMarkup(match) ? '•' : match;
+  });
+
+  // process markdown if it's a blog post
+  if (isBlogPost) {
+    input = parseMarkdown(input);
+  }
+
+  // Replace <br> tags with newline characters for counting
+  input = input.replace(/<br\s*\/?>\s*\n*/gi, '\n');
+
+  // Replace <a> tags with their URLs and text content
+  input = input.replace(/<a\s+href="[^"]*">([^<]*)<\/a>/gi, (match, p1) => {
+    return '•' + p1;
+  });
+
+  // Replace <img> tags with their alt text or a bullet character
+  input = input.replace(/<img\s+[^>]*alt="([^"]*)"[^>]*>/gi, (match, p1) => {
+    return p1 || '•';
+  });
+
+  // strip HTML for character counting
+  input = sanitizeHtml(input, {
+    allowedTags: [], // Strip all tags
+    allowedAttributes: {}, // Strip all attributes
+  });
+
+  // Replace CRLF pairs with a single newline character
+  input = input.replace(/\r\n/g, '\n');
+
+  // remove excess whitespace
+  input = input.trim();
+
+  // debug, iterate through content and console.log all the ascii values
+  const debugAsciiValues = Array.from(input).map(c => c.charCodeAt(0)).join(', ');
+  console.log(`|${input}|`);
+  console.log('Content ASCII values:', debugAsciiValues);
+
+  return input;
 }
 
 /**
@@ -93,43 +172,18 @@ export function parsePostContent(content: string): string {
  * 1) emoji are 1 count
  * 2) unicode characters are 1 count each
  * 3) our special icon markup {{xxx}} is 1 count. But we only want to recognize valid {{ }} icon codes, and ignore any invalid ones. See parseIconMarkup.
- * @param input 
- * @returns 
+ * 4) CR/LF counts as 1 count
+ * 5) links are 1 count each
+ * @param {string} input - The input string to count characters from.
+ * @returns {number} - The total character count.
  */
-export function getCharacterCount(input: string): number {
-  let count = 0;
-  let i = 0;
+export function getCharacterCount(input: string, isBlogPost: boolean): number {
+  input = prepareContentForCharacterCount(input, isBlogPost);
 
-  while (i < input.length) {
-    if (input[i] === '{' && input[i + 1] === '{') {
-      // Potential icon markup
-      const endIndex = input.indexOf('}}', i);
-      if (endIndex !== -1) {
-        const potentialMarkup = input.slice(i, endIndex + 2);
-        if (isValidIconMarkup(potentialMarkup)) {
-          count += 1; // Count valid icon markup as one character
-          i = endIndex + 2;
-          continue;
-        } else {
-          // Count invalid icon markup as individual characters
-          count += 2; // For the opening braces {{
-          i += 2;
-          continue;
-        }
-      }
-    }
+  // Use Array.from to handle Unicode characters properly
+  const characters = Array.from(input);
 
-    // Handle emojis and other Unicode characters
-    const codePoint = input.codePointAt(i);
-    if (codePoint !== undefined) {
-      count += 1;
-      i += codePoint > 0xFFFF ? 2 : 1; // Surrogate pair check
-    } else {
-      i += 1;
-    }
-  }
-
-  return count;
+  return characters.length;
 }
 
 /**
