@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button, TextField, Box, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
+import { isAxiosError } from 'axios';
 import ImagePreview from './image-preview';
 import LivePostPreview from './live-post-preview';
 import ImageCropDialog from './image-crop-dialog';
@@ -10,20 +11,21 @@ import authenticatedApi from '../services/authenticated-api';
 import {
   AppConstants,
   getCharacterCount,
-  parsePostContent,
+  IApiNewPostResponse,
 } from '@duality-social/duality-social-lib';
-import { isAxiosError } from 'axios';
 
 interface NewPostProps {
   isBlogPost?: boolean;
   parentViewpointId?: string;
   parentPostId?: string;
+  onPostSuccess?: (post: IApiNewPostResponse) => void;
 }
 
 const NewPost: React.FC<NewPostProps> = ({
   isBlogPost = false,
   parentViewpointId,
   parentPostId,
+  onPostSuccess,
 }) => {
   const maxLength = isBlogPost
     ? AppConstants.MaxBlogPostLength
@@ -34,6 +36,7 @@ const NewPost: React.FC<NewPostProps> = ({
   const [currentEditingIndex, setCurrentEditingIndex] = useState<number | null>(
     null
   );
+  const [postError, setPostError] = useState<string | null>(null);
 
   const formik = useFormik({
     initialValues: {
@@ -42,7 +45,16 @@ const NewPost: React.FC<NewPostProps> = ({
     validationSchema: Yup.object({
       content: Yup.string()
         .required('Content is required')
-        .max(maxLength, `Content must be at most ${maxLength} characters`),
+        .test(
+          'character-count',
+          `Content must be at most ${maxLength} characters`,
+          (value) => {
+            if (value) {
+              return getCharacterCount(value, isBlogPost) <= maxLength;
+            }
+            return false;
+          }
+        ),
     }),
     onSubmit: async (values, { setSubmitting, setErrors, resetForm }) => {
       try {
@@ -64,13 +76,17 @@ const NewPost: React.FC<NewPostProps> = ({
         if (response.status === 200) {
           resetForm();
           setImages([]);
-          // Handle successful post creation (e.g., update feed, show success message)
+          if (onPostSuccess) {
+            onPostSuccess(response.data as IApiNewPostResponse);
+          }
         }
       } catch (err) {
         if (isAxiosError(err) && err.response && err.response.data) {
           setErrors({ content: err.response.data });
+          setPostError(err.response.data.message);
         } else {
           setErrors({ content: 'Failed to create post. Please try again.' });
+          setPostError('An error occurred. Please try again.');
         }
       } finally {
         setSubmitting(false);
@@ -173,6 +189,11 @@ const NewPost: React.FC<NewPostProps> = ({
           {parentPostId ? 'Reply' : 'Post'}
         </Button>
       </Box>
+      {postError && (
+        <Typography color="error" sx={{ mt: 2 }}>
+          {postError}
+        </Typography>
+      )}
       <ImageCropDialog
         open={cropDialogOpen}
         image={imageToEdit || ''}

@@ -3,12 +3,15 @@ import { isValidIconMarkup, parseIconMarkup, stripIconMarkup } from './font-awes
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const MarkdownIt = require('markdown-it');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const markdownItTodoLists = require('markdown-it-todo-lists');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const markdownItMark = require('markdown-it-mark');
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const markdownItTableOfContents = require('markdown-it-table-of-contents');
+
+const markdownItPlugins = [
+  { plugin: require('markdown-it-todo-lists'), options: { enabled: true } },
+  { plugin: require('markdown-it-mark') },
+  { plugin: require('markdown-it-table-of-contents') },
+  { plugin: require('markdown-it-deflist') },
+  { plugin: require('markdown-it-container'), options: 'info' },
+  { plugin: require('@linkedmd/markdown-it-abbr') },
+];
 
 /**
  * Makes a data:// URL from a base64 encoded binary blob string containing a PNG image
@@ -69,18 +72,24 @@ export function imageDataUrlToFile(imageDataUrl: string, filename = 'image.png')
  * @returns 
  */
 export function parseMarkdown(markdown: string): string {
-  return MarkdownIt('default')
+  const md = MarkdownIt('default')
     .set({
       breaks: true,
       html: true,
       linkify: true,
       typographer: true,
       xhtmlOut: true,
-    })
-    .use(markdownItTodoLists, { enabled: true })
-    .use(markdownItMark)
-    .use(markdownItTableOfContents)
-    .render(markdown);
+    });
+
+  markdownItPlugins.forEach(({ plugin, options }) => {
+    if (options !== undefined) {
+      md.use(plugin, options);
+    } else {
+      md.use(plugin);
+    }
+  });
+
+  return md.render(markdown);
 }
 
 /**
@@ -97,8 +106,8 @@ export function parsePostContent(content: string, isBlogPost: boolean): string {
     allowedAttributes: {}, // Strip all attributes
   });
 
+  // Phase 2: Parse markdown or add line breaks
   if (isBlogPost) {
-    // Phase 2: Parse markdown
     content = parseMarkdown(content);
   } else {
     // Replace newlines with <br> tags for non-blog posts

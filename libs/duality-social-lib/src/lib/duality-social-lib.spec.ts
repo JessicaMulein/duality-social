@@ -1,63 +1,52 @@
-import { getCharacterCount, parsePostContent, prepareContentForCharacterCount } from './duality-social-lib';
+import { getCharacterCount, parseMarkdown, parsePostContent, prepareContentForCharacterCount } from './duality-social-lib';
 
 describe('DualitySocialLib', () => {
-    describe('parsePostContent', () => {
-        it('should do markdown and our cool icons', () => {
-            const testMarkdown = '# Hello World\nThis is a test of our markdown parser.\n' +
-                'This should be a red heart with a zig-zag through it -> {{duotone heart-pulse; color: red;}}';
-            const expectedHtml = '<h1>Hello World</h1>\n<p>This is a test of our markdown parser.<br />\n' +
-                'This should be a red heart with a zig-zag through it -&gt; <i class="fa-duotone fa-heart-pulse" style="display: inline-block; color: red;"></i></p>';
+    describe('parseMarkdown', () => {
+        it('should process abbreviations correctly', () => {
+            const testMarkdown = `
+*[HTML]: Hyper Text Markup Language
+*[CSS]: Cascading Style Sheets
 
-            const result = parsePostContent(testMarkdown, true);
-            expect(result).toEqual(expectedHtml);
-        });
+This is an example of HTML and CSS abbreviations.
+            `;
+            const expectedHtml = `
+<p>This is an example of <a href="#HTML"><abbr title="Hyper Text Markup Language">HTML</abbr></a> and <a href="#CSS"><abbr title="Cascading Style Sheets">CSS</abbr></a> abbreviations.</p>
+            `.trim();
 
-        it('should support MD links', () => {
-            const testMarkdown = 'This should be a link -> [https://www.google.com](https://www.google.com)';
-            const expectedHtml = '<p>This should be a link -&gt; <a href="https://www.google.com">https://www.google.com</a></p>';
-
-            const result = parsePostContent(testMarkdown, true);
-            expect(result).toEqual(expectedHtml);
-        });
-
-        it('should linkify plaintext links', () => {
-            const testMarkdown = 'This should be a link -> https://www.google.com';
-            const expectedHtml = '<p>This should be a link -&gt; <a href="https://www.google.com">https://www.google.com</a></p>';
-
-            const result = parsePostContent(testMarkdown, true);
-            expect(result).toEqual(expectedHtml);
+            const result = parseMarkdown(testMarkdown).trim();
+            expect(result).toBe(expectedHtml);
         });
 
         it('should handle bold text', () => {
             const testMarkdown = '**Bold Text**';
             const expectedHtml = '<p><strong>Bold Text</strong></p>';
 
-            const result = parsePostContent(testMarkdown, true);
-            expect(result).toEqual(expectedHtml);
+            const result = parseMarkdown(testMarkdown).trim();
+            expect(result).toBe(expectedHtml);
         });
 
         it('should handle italic text', () => {
             const testMarkdown = '*Italic Text*';
             const expectedHtml = '<p><em>Italic Text</em></p>';
 
-            const result = parsePostContent(testMarkdown, true);
-            expect(result).toEqual(expectedHtml);
+            const result = parseMarkdown(testMarkdown).trim();
+            expect(result).toBe(expectedHtml);
         });
 
         it('should handle code blocks', () => {
             const testMarkdown = '```\nCode Block\n```';
             const expectedHtml = '<pre><code>Code Block\n</code></pre>';
 
-            const result = parsePostContent(testMarkdown, true);
-            expect(result).toEqual(expectedHtml);
+            const result = parseMarkdown(testMarkdown).trim();
+            expect(result).toBe(expectedHtml);
         });
 
         it('should handle ordered lists', () => {
             const testMarkdown = '1. First Item\n2. Second Item';
             const expectedHtml = '<ol>\n<li>First Item</li>\n<li>Second Item</li>\n</ol>';
 
-            const result = parsePostContent(testMarkdown, true);
-            expect(result).toEqual(expectedHtml);
+            const result = parseMarkdown(testMarkdown).trim();
+            expect(result).toBe(expectedHtml);
         });
 
         it('should handle GFM tables', () => {
@@ -69,8 +58,8 @@ describe('DualitySocialLib', () => {
             `;
             const expectedHtml = '<table>\n<thead>\n<tr>\n<th>Header 1</th>\n<th>Header 2</th>\n</tr>\n</thead>\n<tbody>\n<tr>\n<td>Cell 1</td>\n<td>Cell 2</td>\n</tr>\n<tr>\n<td>Cell 3</td>\n<td>Cell 4</td>\n</tr>\n</tbody>\n</table>';
 
-            const result = parsePostContent(testMarkdown.trim(), true);
-            expect(result).toEqual(expectedHtml);
+            const result = parseMarkdown(testMarkdown.trim()).trim();
+            expect(result).toBe(expectedHtml);
         });
 
         it('should handle GFM task lists', () => {
@@ -80,31 +69,59 @@ describe('DualitySocialLib', () => {
             `;
             const expectedHtml = '<ul class="todo-list-container">\n<li class="todo-list-item enabled"><input class="todo-list-item-checkbox" type="checkbox"  /> Task 1</li>\n<li class="todo-list-item enabled"><input class="todo-list-item-checkbox" type="checkbox" checked  /> Task 2</li>\n</ul>';
 
-            const result = parsePostContent(testMarkdown.trim(), true);
-            expect(result).toEqual(expectedHtml);
+            const result = parseMarkdown(testMarkdown.trim()).trim();
+            expect(result).toBe(expectedHtml);
         });
 
         it('should handle GFM strikethrough', () => {
             const testMarkdown = '~~Strikethrough~~';
             const expectedHtml = '<p><s>Strikethrough</s></p>';
 
-            const result = parsePostContent(testMarkdown, true);
-            expect(result).toEqual(expectedHtml);
+            const result = parseMarkdown(testMarkdown).trim();
+            expect(result).toBe(expectedHtml);
         });
 
         it('should handle unordered lists', () => {
             const testMarkdown = '- First Item\n- Second Item';
             const expectedHtml = '<ul>\n<li>First Item</li>\n<li>Second Item</li>\n</ul>';
 
-            const result = parsePostContent(testMarkdown, true);
-            expect(result).toEqual(expectedHtml);
+            const result = parseMarkdown(testMarkdown).trim();
+            expect(result).toBe(expectedHtml);
         });
 
         it('should handle mixed markdown features', () => {
             const testMarkdown = '# Title\n**Bold** and *Italic* text\n```\nCode Block\n```\n1. First Item\n2. Second Item\n- List Item';
             const expectedHtml = '<h1>Title</h1>\n<p><strong>Bold</strong> and <em>Italic</em> text</p>\n<pre><code>Code Block\n</code></pre>\n<ol>\n<li>First Item</li>\n<li>Second Item</li>\n</ol>\n<ul>\n<li>List Item</li>\n</ul>';
 
-            const result = parsePostContent(testMarkdown, true);
+            const result = parseMarkdown(testMarkdown).trim();
+            expect(result).toBe(expectedHtml);
+        });
+    });
+
+    describe('parsePostContent', () => {
+        it('should do markdown and our cool icons', () => {
+            const testMarkdown = '# Hello World\nThis is a test of our markdown parser.\n' +
+                'This should be a red heart with a zig-zag through it -> {{duotone heart-pulse; color: red;}}';
+            const expectedHtml = '<h1>Hello World</h1>\n<p>This is a test of our markdown parser.<br />\n' +
+                'This should be a red heart with a zig-zag through it -&gt; <i class="fa-duotone fa-heart-pulse" style="display: inline-block; color: red;"></i></p>';
+
+            const result = parsePostContent(testMarkdown, true).trim();
+            expect(result).toEqual(expectedHtml);
+        });
+
+        it('should support MD links', () => {
+            const testMarkdown = 'This should be a link -> [https://www.google.com](https://www.google.com)';
+            const expectedHtml = '<p>This should be a link -&gt; <a href="https://www.google.com">https://www.google.com</a></p>';
+
+            const result = parsePostContent(testMarkdown, true).trim();
+            expect(result).toEqual(expectedHtml);
+        });
+
+        it('should linkify plaintext links', () => {
+            const testMarkdown = 'This should be a link -> https://www.google.com';
+            const expectedHtml = '<p>This should be a link -&gt; <a href="https://www.google.com">https://www.google.com</a></p>';
+
+            const result = parsePostContent(testMarkdown, true).trim();
             expect(result).toEqual(expectedHtml);
         });
 
@@ -112,7 +129,7 @@ describe('DualitySocialLib', () => {
             const testMarkdown = '# Title\n**Bold** and *Italic* text\n```\nCode Block\n```\n1. First Item\n2. Second Item\n- List Item';
             const expectedHtml = '# Title<br />**Bold** and *Italic* text<br />```<br />Code Block<br />```<br />1. First Item<br />2. Second Item<br />- List Item';
 
-            const result = parsePostContent(testMarkdown, false);
+            const result = parsePostContent(testMarkdown, false).trim();
             expect(result).toEqual(expectedHtml);
         });
 
@@ -120,7 +137,7 @@ describe('DualitySocialLib', () => {
             const testMarkdown = 'Line 1\nLine 2\nLine 3';
             const expectedHtml = 'Line 1<br />Line 2<br />Line 3';
 
-            const result = parsePostContent(testMarkdown, false);
+            const result = parsePostContent(testMarkdown, false).trim();
             expect(result).toEqual(expectedHtml);
         });
 
@@ -129,7 +146,7 @@ describe('DualitySocialLib', () => {
             const isBlogPost = false;
             const expected = 'x<br />x';
 
-            const result = parsePostContent(input, isBlogPost);
+            const result = parsePostContent(input, isBlogPost).trim();
             expect(result).toEqual(expected);
             expect(result).not.toContain('<p>');
         });
@@ -139,7 +156,7 @@ describe('DualitySocialLib', () => {
             const isBlogPost = true;
             const expected = '<p>x<br />\nx</p>';
 
-            const result = parsePostContent(input, isBlogPost);
+            const result = parsePostContent(input, isBlogPost).trim();
             expect(result).toEqual(expected);
         });
     });

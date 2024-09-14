@@ -49,6 +49,7 @@ export * from './lib/interfaces/api-responses/api-message-response';
 export * from './lib/interfaces/api-responses/api-error-response';
 export * from './lib/interfaces/api-responses/api-express-validation-error-response';
 export * from './lib/interfaces/api-responses/api-mongo-validation-error-response';
+export * from './lib/interfaces/api-responses/api-new-post-response';
 export * from './lib/interfaces/api-responses/api-validation-response';
 export * from './lib/interfaces/api-responses/token-response';
 export * from './lib/interfaces/api-responses/user-response';

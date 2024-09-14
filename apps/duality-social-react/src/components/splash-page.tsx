@@ -56,7 +56,7 @@ const SplashPage: React.FC = () => {
           Embrace the power of perspective. Challenge your thoughts. Expand your mind.
         </Typography>
 
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 4, mb: 6 }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 4, mb: 6, justifyContent: 'center' }}>
           {[
             {
               title: 'AI-Powered Insights',

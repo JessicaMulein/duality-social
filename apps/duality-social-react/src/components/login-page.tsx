@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form, Field, FormikProps } from 'formik';
 import * as Yup from 'yup';
 import {
   Box,
@@ -18,17 +18,32 @@ import { useAuth } from '../auth-provider';
 import api from '../services/api';
 import { isAxiosError } from 'axios';
 
+interface FormValues {
+  email: string;
+  username: string;
+  password: string;
+  loginType: 'email' | 'username';
+}
+
 function LoginPage() {
   const theme = useTheme();
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { isAuthenticated, login } = useAuth();
   const [loginError, setLoginError] = useState<string | null>(null);
   const [resendStatus, setResendStatus] = useState<string | null>(null);
   const [loginType, setLoginType] = useState<'email' | 'username'>('email');
 
-  const initialValues = {
-    [loginType]: '',
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard'); // Redirect to dashboard if user is already logged in
+    }
+  }, [isAuthenticated, navigate]);
+
+  const initialValues: FormValues = {
+    email: '',
+    username: '',
     password: '',
+    loginType: 'email',
   };
 
   const validationSchema = Yup.object({
@@ -101,7 +116,7 @@ function LoginPage() {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ isSubmitting, values, errors, touched }) => (
+          {({ isSubmitting, values, errors, touched }: FormikProps<FormValues>) => (
             <Form>
               <Field
                 as={TextField}

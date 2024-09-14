@@ -5,7 +5,7 @@ import { Upload } from '@aws-sdk/lib-storage';
 import { S3 } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid';
 import sizeOf from 'image-size';
-import { sanitizeWhitespace, HumanityTypeEnum, parsePostContent, IFeedPost, IRequestUser, ModelData, PostModel, PostViewpointModel, PostViewpointReactionModel, PostViewpointHumanityModel, DefaultReactionsTypeEnum, PostImpressionModel, PostExpandModel, IFeedPostViewpoint, AppConstants } from '@duality-social/duality-social-lib';
+import { sanitizeWhitespace, HumanityTypeEnum, parsePostContent, IFeedPost, IRequestUser, ModelData, PostModel, PostViewpointModel, PostViewpointReactionModel, PostViewpointHumanityModel, DefaultReactionsTypeEnum, PostImpressionModel, PostExpandModel, IFeedPostViewpoint, AppConstants, getCharacterCount } from '@duality-social/duality-social-lib';
 import { environment } from '../environment';
 import { MulterRequest } from '../interfaces/multer-request';
 
@@ -23,6 +23,10 @@ export class FeedService {
     });
   }
 
+  /**
+   * For a given viewpoint, update its metadata to reflect the current state of the post.
+   * @param viewpointId 
+   */
   async recalculateViewpointMetadata(viewpointId: ObjectId): Promise<void> {
     const viewpoint = await PostViewpointModel.findById(viewpointId);
     if (viewpoint === null) {
@@ -60,23 +64,52 @@ export class FeedService {
     await viewpoint.save();
   }
 
-  async getFeed(req: Request): Promise<IFeedPost[]> {
+  /**
+   * Get the feed for the authenticated user.
+   * @param req 
+   * @param maxPosts 
+   * @returns 
+   */
+  async getFeed(req: Request, maxPosts = 10): Promise<IFeedPost[]> {
     if (req.user === undefined) {
       throw new Error('User not authenticated');
     }
     const currentUser: IRequestUser = req.user;
+    const mostRecentPostId: MongooseTypes.ObjectId | undefined = req.query.mostRecentPostId ? new MongooseTypes.ObjectId(req.query.mostRecentPostId as string) : undefined;
     const preferredLanguages = currentUser.languages;
-    const currentDate = new Date();
-    const maxPosts = 10; // Example top-level posts limit
+
+    const matchStage: PipelineStage = {
+      $match: {
+        active: true,
+        locked: { $ne: true },
+        hidden: { $ne: true },
+        deleted: { $ne: true }
+      }
+    };
+
+    if (mostRecentPostId) {
+      matchStage.$match._id = { $gt: mostRecentPostId };
+    }
 
     const aggregationPipeline: PipelineStage[] = [
+      matchStage,
+      {
+        $lookup: {
+          from: "users",
+          localField: "createdBy",
+          foreignField: "_id",
+          as: "user"
+        }
+      },
+      {
+        $unwind: "$user"
+      },
       {
         $match: {
-          active: true,
-          createdAt: { $lte: currentDate },
-          locked: { $ne: true },
-          hidden: { $ne: true },
-          deleted: { $ne: true }
+          $or: [
+            { "user.shadowBan": false },
+            { "user._id": currentUser.id }
+          ]
         }
       },
       {
@@ -178,101 +211,12 @@ export class FeedService {
     })));
   }
 
-  async getMoreFeed(req: Request): Promise<IFeedPost[]> {
-    if (req.user === undefined) {
-      throw new Error('User not authenticated');
-    }
-    const currentUser: IRequestUser = req.user;
-    const preferredLanguages = currentUser.languages;
-    // Validate query parameters
-    if (!req.query.lastPostDate || !req.query.lastActivityScore) {
-      throw new Error('Missing required query parameters: lastPostDate and lastActivityScore');
-    }
-
-    const lastPostDate = new Date(req.query.lastPostDate as string);
-    const lastActivityScore = parseInt(req.query.lastActivityScore as string, 10);
-    const maxPosts = 10; // Example top-level posts limit
-
-    const aggregationPipeline: PipelineStage[] = [
-      {
-        $match: {
-          active: true,
-          createdAt: { $lt: lastPostDate },
-          locked: { $ne: true },
-          hidden: { $ne: true },
-          deleted: { $ne: true }
-        }
-      },
-      {
-        $lookup: {
-          from: "profiles",
-          localField: "createdBy",
-          foreignField: "userId",
-          as: "userProfile"
-        }
-      },
-      {
-        $unwind: "$userProfile"
-      },
-      {
-        $lookup: {
-          from: "postviewpoints",
-          let: { postId: "$_id" },
-          pipeline: [
-            {
-              $match: {
-                $expr: {
-                  $and: [
-                    { $eq: ["$postId", "$$postId"] },
-                    { $in: ["$lang", preferredLanguages] }
-                  ]
-                }
-              }
-            }
-          ],
-          as: "viewpoints"
-        }
-      },
-      {
-        $addFields: {
-          activityScore: {
-            $add: [
-              { $size: "$viewpoints" },
-              { $sum: "$viewpoints.metadata.replies" },
-              { $sum: "$viewpoints.metadata.reactions" },
-              { $sum: "$viewpoints.metadata.humanityByType" }
-            ]
-          }
-        }
-      },
-      {
-        $match: {
-          activityScore: { $lte: lastActivityScore }
-        }
-      },
-      {
-        $sort: {
-          activityScore: -1,
-          createdAt: -1
-        }
-      },
-      {
-        $limit: maxPosts
-      }
-    ];
-
-    const posts = await PostModel.aggregate(aggregationPipeline).exec();
-
-    const moreFeed: IFeedPost[] = await Promise.all(posts.map(async post => ({
-      id: post._id,
-      createdAt: post.createdAt,
-      createdBy: post.createdBy,
-      viewpoints: await this.getViewpoints(post._id, preferredLanguages)
-    })));
-
-    return moreFeed;
-  }
-
+  /**
+   * Create a new post.
+   * @param req 
+   * @param res 
+   * @returns 
+   */
   async newPost(req: Request, res: Response) {
     if (req.user === undefined) {
       throw new Error('User not authenticated');
@@ -288,12 +232,13 @@ export class FeedService {
     const language = await this.detectPostLanguage(content);
   
     const maxLength = isBlogPost ? AppConstants.MaxBlogPostLength : AppConstants.MaxPostLength;
+    const characterCount = getCharacterCount(content, isBlogPost);
   
-    if (content.length > maxLength) {
+    if (characterCount > maxLength) {
       res.status(400).send('Post content is too long');
       return;
     }
-    if (content.length === 0) {
+    if (characterCount === 0) {
       res.status(400).send('Post content is empty');
       return;
     }
@@ -451,7 +396,12 @@ export class FeedService {
     }
   }
 
-  async rateViewpoint(req: Request, res: Response): Promise<void> {
+  /**
+   * Records a user's vote on the humanity of a viewpoint.
+   * @param req 
+   * @param res 
+   */
+  async voteViewpointHumanity(req: Request, res: Response): Promise<void> {
     if (req.user === undefined) {
       throw new Error('User not authenticated');
     }

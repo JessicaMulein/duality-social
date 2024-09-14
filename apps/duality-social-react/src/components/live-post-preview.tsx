@@ -12,7 +12,6 @@ const LivePostPreview: React.FC<LivePostPreviewProps> = ({ content, isBlogPost }
 
   useEffect(() => {
     setParsedContent(parsePostContent(content, isBlogPost));
-    console.log('Parsed content updated:', parsedContent); // for debugging purposes only, remove in production code.
   }, [content, isBlogPost, parsedContent]);
 
   return (

@@ -180,7 +180,7 @@ export class FeedController extends BaseController {
 
     async rateViewpoint(req: Request, res: Response) {
         try {
-            const viewpoint = await this.feedService.rateViewpoint(req, res);
+            const viewpoint = await this.feedService.voteViewpointHumanity(req, res);
             res.status(200).json(viewpoint);
         } catch (error) {
             console.error('Error rating viewpoint:', error);
