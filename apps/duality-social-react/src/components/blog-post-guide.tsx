@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
-  Box,
-} from '@mui/material';
+import { Typography, List, ListItem, ListItemText, Box } from '@mui/material';
 
 const BlogPostGuide: React.FC = () => {
   return (
@@ -52,8 +46,7 @@ const BlogPostGuide: React.FC = () => {
                 - Item 1
                 <br />
                 - Item 2
-                <br />
-                - Item 3
+                <br />- Item 3
               </Typography>
             }
           />
@@ -127,8 +120,7 @@ const BlogPostGuide: React.FC = () => {
                 | Header 1 | Header 2 |
                 <br />
                 | -------- | -------- |
-                <br />
-                | Cell 1   | Cell 2   |
+                <br />| Cell 1 | Cell 2 |
               </Typography>
             }
           />
@@ -137,9 +129,7 @@ const BlogPostGuide: React.FC = () => {
           <ListItemText
             primary="Strikethrough"
             secondary={
-              <Typography component="pre">
-                ~~strikethrough~~
-              </Typography>
+              <Typography component="pre">~~strikethrough~~</Typography>
             }
           />
         </ListItem>
@@ -149,8 +139,7 @@ const BlogPostGuide: React.FC = () => {
             secondary={
               <Typography component="pre">
                 - [x] Completed task
-                <br />
-                - [ ] Incomplete task
+                <br />- [ ] Incomplete task
               </Typography>
             }
           />
@@ -160,10 +149,30 @@ const BlogPostGuide: React.FC = () => {
             primary="Footnotes"
             secondary={
               <Typography component="pre">
-                Here is a footnote reference[^1]
+                Here is a footnote reference,[^1] and another.[^longnote]
                 <br />
                 <br />
                 [^1]: Here is the footnote.
+                <br />
+                <br />
+                [^longnote]: Here's one with multiple blocks.
+                <br />
+                <br />
+                &nbsp;&nbsp;&nbsp;&nbsp;Subsequent paragraphs are indented to show that they
+                <br />
+                belong to the previous footnote.
+              </Typography>
+            }
+          />
+        </ListItem>
+        <ListItem>
+          <ListItemText
+            primary="Inline Footnotes"
+            secondary={
+              <Typography component="pre">
+                Here is an inline note.^[Inlines notes are easier to write,
+                since you don't have to pick an identifier and move down to type
+                the note.]
               </Typography>
             }
           />
@@ -174,8 +183,7 @@ const BlogPostGuide: React.FC = () => {
             secondary={
               <Typography component="pre">
                 Term
-                <br />
-                : Definition
+                <br />: Definition
               </Typography>
             }
           />
@@ -186,6 +194,9 @@ const BlogPostGuide: React.FC = () => {
             secondary={
               <Typography component="pre">
                 *[HTML]: Hyper Text Markup Language
+                <br />
+                <br />
+                HTML
               </Typography>
             }
           />

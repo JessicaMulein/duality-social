@@ -1,5 +1,7 @@
 import sanitizeHtml from 'sanitize-html';
 import { isValidIconMarkup, parseIconMarkup, stripIconMarkup } from './font-awesome/font-awesome';
+import { v4 } from 'uuid';
+import customFootnote from './markdown-it-footnote-currenturl';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const MarkdownIt = require('markdown-it');
@@ -10,7 +12,9 @@ const markdownItPlugins = [
   { plugin: require('markdown-it-table-of-contents') },
   { plugin: require('markdown-it-deflist') },
   { plugin: require('markdown-it-container'), options: 'info' },
-  { plugin: require('@linkedmd/markdown-it-abbr') },
+  { plugin: require('markdown-it-abbr') },
+  { plugin: require('markdown-it-footnote') },
+  { plugin: customFootnote },
 ];
 
 /**
@@ -71,7 +75,7 @@ export function imageDataUrlToFile(imageDataUrl: string, filename = 'image.png')
  * @param markdown 
  * @returns 
  */
-export function parseMarkdown(markdown: string): string {
+export function parseMarkdown(markdown: string, docId?: string, currentUrl?: string): string {
   const md = MarkdownIt('default')
     .set({
       breaks: true,
@@ -89,7 +93,9 @@ export function parseMarkdown(markdown: string): string {
     }
   });
 
-  return md.render(markdown);
+  const env = { docId: docId ? docId : v4(), currentUrl: currentUrl ? currentUrl : '' };
+
+  return md.render(markdown, env);
 }
 
 /**
@@ -97,7 +103,7 @@ export function parseMarkdown(markdown: string): string {
  * @param content 
  * @returns 
  */
-export function parsePostContent(content: string, isBlogPost: boolean): string {
+export function parsePostContent(content: string, isBlogPost: boolean, docId?: string, currentUrl?: string): string {
   // Phase 1: Strip HTML
   // we strip the html first because we don't support HTML in posts,
   // but our syntax is too close to markdown so it gets parsed as HTML
@@ -108,7 +114,7 @@ export function parsePostContent(content: string, isBlogPost: boolean): string {
 
   // Phase 2: Parse markdown or add line breaks
   if (isBlogPost) {
-    content = parseMarkdown(content);
+    content = parseMarkdown(content, docId, currentUrl);
   } else {
     // Replace newlines with <br> tags for non-blog posts
     content = content.replace(/\n/g, '<br />');

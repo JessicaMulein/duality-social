@@ -10,7 +10,7 @@ describe('DualitySocialLib', () => {
 This is an example of HTML and CSS abbreviations.
             `;
             const expectedHtml = `
-<p>This is an example of <a href="#HTML"><abbr title="Hyper Text Markup Language">HTML</abbr></a> and <a href="#CSS"><abbr title="Cascading Style Sheets">CSS</abbr></a> abbreviations.</p>
+<p>This is an example of <abbr title="Hyper Text Markup Language">HTML</abbr> and <abbr title="Cascading Style Sheets">CSS</abbr> abbreviations.</p>
             `.trim();
 
             const result = parseMarkdown(testMarkdown).trim();
@@ -94,6 +94,74 @@ This is an example of HTML and CSS abbreviations.
             const expectedHtml = '<h1>Title</h1>\n<p><strong>Bold</strong> and <em>Italic</em> text</p>\n<pre><code>Code Block\n</code></pre>\n<ol>\n<li>First Item</li>\n<li>Second Item</li>\n</ol>\n<ul>\n<li>List Item</li>\n</ul>';
 
             const result = parseMarkdown(testMarkdown).trim();
+            expect(result).toBe(expectedHtml);
+        });
+
+        it('should handle footnotes', () => {
+            const testMarkdown = `
+Here is a footnote reference,[^1] and another one.[^longnote]
+
+[^1]: This is the first footnote.
+[^longnote]: Here's one with multiple blocks.
+
+Subsequent paragraphs are indented to show that they
+belong to the previous footnote.`;
+            const expectedHtml = `
+<p>Here is a footnote reference,<sup class="footnote-ref"><a href="#fn-doc-1" id="fnref-doc-1">[1]</a></sup> and another one.<sup class="footnote-ref"><a href="#fn-doc-2" id="fnref-doc-2">[2]</a></sup></p>
+<p>Subsequent paragraphs are indented to show that they<br />
+belong to the previous footnote.</p>
+<hr class="footnotes-sep" />
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn-doc-1" class="footnote-item"><p>This is the first footnote. <a href="#fnref-doc-1" class="footnote-backref">↩︎</a></p>
+</li>
+<li id="fn-doc-2" class="footnote-item"><p>Here’s one with multiple blocks. <a href="#fnref-doc-2" class="footnote-backref">↩︎</a></p>
+</li>
+</ol>
+</section>`.trim();
+
+            const result = parseMarkdown(testMarkdown, 'doc').trim();
+            expect(result).toBe(expectedHtml);
+        });
+
+        it('should handle inline footnotes', () => {
+            const testMarkdown = `
+Here is an inline note.^[Inlines notes are easier to write, since
+you don't have to pick an identifier and move down to type the
+note.]`;
+            const expectedHtml = `
+<p>Here is an inline note.<sup class="footnote-ref"><a href="#fn-doc-1" id="fnref-doc-1">[1]</a></sup></p>
+<hr class="footnotes-sep" />
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn-doc-1" class="footnote-item"><p>Inlines notes are easier to write, since<br />
+you don’t have to pick an identifier and move down to type the<br />
+note. <a href="#fnref-doc-1" class="footnote-backref">↩︎</a></p>
+</li>
+</ol>
+</section>`.trim();
+
+            const result = parseMarkdown(testMarkdown, 'doc').trim();
+            expect(result).toBe(expectedHtml);
+        });
+        it('should test the custom footnote currentUrl plugin', () => {
+            const currentUrl = 'https://localhost:3000/posts/123';
+            const testMarkdown = `
+Here is an inline note.^[Inlines notes are easier to write, since
+you don't have to pick an identifier and move down to type the
+note.]`;
+            const expectedHtml = `
+<p>Here is an inline note.<sup class="footnote-ref"><a href="${currentUrl}#fn-doc-1" id="fnref-doc-1">[1]</a></sup></p>
+<hr class="footnotes-sep" />
+<section class="footnotes">
+<ol class="footnotes-list">
+<li id="fn-doc-1" class="footnote-item"><p>Inlines notes are easier to write, since<br />
+you don’t have to pick an identifier and move down to type the<br />
+note. <a href="${currentUrl}#fnref-doc-1" class="footnote-backref">↩︎</a></p>
+</li>
+</ol>
+</section>`.trim();
+            const result = parseMarkdown(testMarkdown, 'doc', currentUrl).trim();
             expect(result).toBe(expectedHtml);
         });
     });

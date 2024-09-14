@@ -7,6 +7,7 @@ import '@fortawesome/fontawesome-svg-core/styles.css';
 
 import App from './app/app';
 import { AuthProvider } from './auth-provider';
+import './scroll-footnotes';
 
 // fontawesome
 library.add(...all);

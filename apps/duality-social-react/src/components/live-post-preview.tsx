@@ -1,22 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import { parsePostContent } from '@duality-social/duality-social-lib';
+import { useLocation } from 'react-router-dom';
 
 interface LivePostPreviewProps {
   content: string;
   isBlogPost: boolean;
 }
 
-const LivePostPreview: React.FC<LivePostPreviewProps> = ({ content, isBlogPost }) => {
+const LivePostPreview: React.FC<LivePostPreviewProps> = ({
+  content,
+  isBlogPost,
+}) => {
   const [parsedContent, setParsedContent] = useState('');
+  const location = useLocation();
+  const currentUrl = `${window.location.origin}${location.pathname}`;
 
   useEffect(() => {
-    setParsedContent(parsePostContent(content, isBlogPost));
-  }, [content, isBlogPost, parsedContent]);
+    setParsedContent(parsePostContent(content, isBlogPost, 'preview', currentUrl));
+  }, [content, isBlogPost, parsedContent, currentUrl]);
 
   return (
     <Box mt={2}>
-      <Typography variant="h6" color="primary" gutterBottom>Preview:</Typography>
+      <Typography variant="h6" color="primary" gutterBottom>
+        Preview:
+      </Typography>
       <Box
         sx={{
           border: '1px solid #ccc',
