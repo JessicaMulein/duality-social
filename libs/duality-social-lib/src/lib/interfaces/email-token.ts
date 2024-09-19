@@ -1,6 +1,6 @@
-import { ObjectId } from 'mongoose';
-import { EmailTokenType } from '../enumerations/email-token-type';
-import { IHasCreation } from './has-creation';
+import { Types } from 'mongoose';
+import { EmailTokenType } from '../enumerations/email-token-type.ts';
+import { IHasCreation } from './has-creation.ts';
 
 /**
  * Base interface for email token collection documents
@@ -9,7 +9,7 @@ export interface IEmailToken extends IHasCreation {
     /**
      * The user ID associated with the token
      */
-    userId: ObjectId;
+    userId: Types.ObjectId;
     /**
      * The type of token
      */

@@ -1,8 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import { IncomingHttpHeaders } from "http";
 import { AccountStatusTypeEnum, IRoleDocument, RoleModel, UserModel, ITokenUser } from "@duality-social/duality-social-lib";
-import { JwtService } from "../services/jwt";
-import { UserService } from "../services/user";
+import { JwtService } from "../services/jwt.ts";
+import { UserService } from "../services/user.ts";
+import { RequestUserService } from "../services/request-user.ts";
 
 export function findAuthToken(headers: IncomingHttpHeaders): string | null {
   const authHeader = headers['Authorization'] || headers['authorization'];
@@ -22,14 +23,13 @@ export function authenticateToken(req: Request, res: Response, next: NextFunctio
   }
 
   const jwtService: JwtService = new JwtService();
-  const userService: UserService = new UserService();
   jwtService.verifyToken(token).then((user: ITokenUser) => {
     UserModel.findById(user.userId, { password: 0 }).then((userDoc) => {
       if (!userDoc || userDoc.accountStatusType !== AccountStatusTypeEnum.Active) {
         return res.status(403).send('User not found or inactive');
       }
       RoleModel.find({ users: userDoc._id }).then((roles: IRoleDocument[]) => {
-        req.user = userService.makeRequestUser(userDoc, roles);
+        req.user = RequestUserService.makeRequestUser(userDoc, roles);
         next();
       }).catch((err) => {
         console.error('Error finding roles:', err);

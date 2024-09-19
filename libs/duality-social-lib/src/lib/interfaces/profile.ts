@@ -1,12 +1,12 @@
-import { IHasTimestamps } from "./has-timestamps";
-import { IHasSoftDelete } from "./has-soft-delete";
-import { ObjectId } from "mongoose";
+import { Types } from "mongoose";
+import { IHasTimestamps } from "./has-timestamps.ts";
+import { IHasSoftDelete } from "./has-soft-delete.ts";
 
 /**
  * Authentication object based profile
  */
 export interface IProfile extends IHasTimestamps, IHasSoftDelete {
-    userId: ObjectId;
+    userId: Types.ObjectId;
     givenName?: string;
     surname?: string;
     /**
@@ -24,5 +24,5 @@ export interface IProfile extends IHasTimestamps, IHasSoftDelete {
     socialUrls: string[];
     website?: string;
     verified: boolean;
-    verifiedBy?: ObjectId;
+    verifiedBy?: Types.ObjectId;
   };

@@ -1,4 +1,4 @@
-import { Document, ObjectId } from "mongoose";
-import { IReport } from "../interfaces/report";
+import { Document, Types } from "mongoose";
+import { IReport } from "../interfaces/report.ts";
 
-export interface IReportDocument extends IReport, Document<ObjectId, any, any> {};
+export interface IReportDocument extends IReport, Document<Types.ObjectId, any, any> {};

@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import { Types } from "mongoose";
 
 /**
  * Base interface for role collection documents
@@ -11,7 +11,7 @@ export interface IRole {
     /**
      * The IDs of the users associated with the role
      */
-    users: Schema.Types.ObjectId[];
+    users: Types.ObjectId[];
     /**
      * Whether the role is a globalAdmin
      * Must not specify member, fund, fundMember, or fundAdmin

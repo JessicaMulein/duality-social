@@ -7,9 +7,9 @@ import {
     useState,
   } from 'react';
   import { useNavigate } from 'react-router-dom';
-  import authService from './services/auth-service';
   import { isAxiosError } from 'axios';
   import { IRequestUser } from '@duality-social/duality-social-lib';
+  import authService from './services/auth-service.ts';
   
   export interface AuthContextData {
     user: IRequestUser | null;

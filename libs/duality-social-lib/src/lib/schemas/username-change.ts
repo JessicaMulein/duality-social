@@ -1,6 +1,7 @@
 import { Schema } from 'mongoose';
-import ModelName from '../enumerations/model-name';
-import { IUsernameChangeDocument } from '../documents/username-change';
+import ModelName from '../enumerations/model-name.ts';
+import { IUsernameChangeDocument } from '../documents/username-change.ts';
+
 export const UsernameChangeSchema = new Schema<IUsernameChangeDocument>({
   userId: {
     type: Schema.Types.ObjectId,

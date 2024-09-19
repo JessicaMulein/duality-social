@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import authenticatedApi from '../services/authenticated-api';
 import { Container, Typography, CircularProgress } from '@mui/material';
 import Post from './post';
-import { getToken, verifyToken } from '../utils/auth';
+import { getToken, verifyToken } from '../utils/auth.ts';
 import { IFeedPost } from '@duality-social/duality-social-lib';
 
 const Feed: React.FC = () => {

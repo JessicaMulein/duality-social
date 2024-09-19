@@ -3,7 +3,7 @@ import { library } from '@fortawesome/fontawesome-svg-core';
 import cssProperties from 'known-css-properties';
 import postcss, { Root, Declaration } from 'postcss';
 
-import { FontAwesomeTextStyleTypeEnum } from '../enumerations/font-awesome-text-class';
+import { FontAwesomeTextStyleTypeEnum } from '../enumerations/font-awesome-text-class.ts';
 
 // add all the kit icons to the library
 library.add(...all);

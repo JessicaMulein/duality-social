@@ -1,7 +1,7 @@
 import { Schema } from 'mongoose';
-import ModelName from '../enumerations/model-name';
-import { IPostDocument } from '../documents/post';
-import { DefaultReactionsTypeEnum } from '../enumerations/default-reactions-type';
+import ModelName from '../enumerations/model-name.ts';
+import { IPostDocument } from '../documents/post.ts';
+import { DefaultReactionsTypeEnum } from '../enumerations/default-reactions-type.ts';
 
 /**
  * Toplevel object represents a post with its two viewpoints

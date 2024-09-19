@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Formik, Form, Field, FormikProps } from 'formik';
 import * as Yup from 'yup';
+import { isAxiosError } from 'axios';
 import {
   Box,
   Button,
@@ -14,9 +15,8 @@ import {
   Link as MuiLink,
 } from '@mui/material';
 import { AppConstants } from '@duality-social/duality-social-lib';
-import { useAuth } from '../auth-provider';
-import api from '../services/api';
-import { isAxiosError } from 'axios';
+import { useAuth } from '../auth-provider.tsx';
+import api from '../services/api.ts';
 
 interface FormValues {
   email: string;

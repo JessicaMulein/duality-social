@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
-import { Schema, Types as MongooseTypes, PipelineStage } from 'mongoose';
-import { ObjectId } from 'bson';
+import { Types as MongooseTypes, PipelineStage, ObjectId, Types } from 'mongoose';
+import { ObjectId as BsonObjectId } from 'bson';
 import { Upload } from '@aws-sdk/lib-storage';
 import { S3 } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid';
 import sizeOf from 'image-size';
-import { sanitizeWhitespace, HumanityTypeEnum, parsePostContent, IFeedPost, IRequestUser, ModelData, PostModel, PostViewpointModel, PostViewpointReactionModel, PostViewpointHumanityModel, DefaultReactionsTypeEnum, PostImpressionModel, PostExpandModel, IFeedPostViewpoint, AppConstants, getCharacterCount } from '@duality-social/duality-social-lib';
-import { environment } from '../environment';
-import { MulterRequest } from '../interfaces/multer-request';
+import { sanitizeWhitespace, HumanityTypeEnum, parsePostContent, IFeedPost, IRequestUser, PostModel, PostViewpointModel, PostViewpointReactionModel, PostViewpointHumanityModel, DefaultReactionsTypeEnum, PostImpressionModel, PostExpandModel, IFeedPostViewpoint, AppConstants, getCharacterCount, MaxImageSizeError, InvalidImageDimensionError, ImageUploadError } from '@duality-social/duality-social-lib';
+import { environment } from '../environment.ts';
+import { MulterRequest } from '../interfaces/multer-request.ts';
 
 export class FeedService {
   private s3: S3;
@@ -177,7 +177,7 @@ export class FeedService {
     return feedPosts;
   }
 
-  private async getViewpoints(postId: ObjectId, preferredLanguages: string[]): Promise<IFeedPostViewpoint[]> {
+  private async getViewpoints(postId: Types.ObjectId, preferredLanguages: string[]): Promise<IFeedPostViewpoint[]> {
     const viewpoints = await PostViewpointModel.find({ postId, lang: { $in: preferredLanguages } }).exec();
     return Promise.all(viewpoints.map(async viewpoint => ({
       id: viewpoint._id,
@@ -201,7 +201,7 @@ export class FeedService {
     })));
   }
 
-  private async getReplies(viewpointId: ObjectId, preferredLanguages: string[]): Promise<IFeedPost[]> {
+  private async getReplies(viewpointId: Types.ObjectId, preferredLanguages: string[]): Promise<IFeedPost[]> {
     const replies = await PostModel.find({ $or: [{ inVpId: viewpointId }, { aiVpId: viewpointId }] }).exec();
     return Promise.all(replies.map(async reply => ({
       id: reply._id,
@@ -221,19 +221,19 @@ export class FeedService {
     if (req.user === undefined) {
       throw new Error('User not authenticated');
     }
-  
+
     const content = sanitizeWhitespace(req.body.content);
     const isBlogPost = req.body.isBlogPost === 'true';
     const parentViewpointId = req.body.parentViewpointId;
     const parentPostId = req.body.parentPostId;
     const rendered = parsePostContent(content, isBlogPost);
     const currentDate = new Date();
-    const createdById = new Schema.Types.ObjectId(ModelData.User.path);
+    const createdById = new Types.ObjectId();
     const language = await this.detectPostLanguage(content);
-  
+
     const maxLength = isBlogPost ? AppConstants.MaxBlogPostLength : AppConstants.MaxPostLength;
     const characterCount = getCharacterCount(content, isBlogPost);
-  
+
     if (characterCount > maxLength) {
       res.status(400).send('Post content is too long');
       return;
@@ -242,7 +242,7 @@ export class FeedService {
       res.status(400).send('Post content is empty');
       return;
     }
-  
+
     // Handle image uploads
     const imageUrls: string[] = [];
     const multerReq = req as MulterRequest;
@@ -250,17 +250,15 @@ export class FeedService {
       for (const image of multerReq.files.images as Express.Multer.File[]) {
         // Validate image size
         if (image.size > AppConstants.MaxImageSize) {
-          res.status(400).send(`Image size should not exceed ${AppConstants.MaxImageSize} bytes`);
-          return;
+          throw new MaxImageSizeError(image.size);
         }
 
         // Validate image dimensions
         const dimensions = sizeOf(image.buffer);
         if (dimensions.width && dimensions.height &&
-            (dimensions.width > AppConstants.MaxImageDimensions.width ||
-             dimensions.height > AppConstants.MaxImageDimensions.height)) {
-          res.status(400).send(`Image dimensions should not exceed ${AppConstants.MaxImageDimensions.width}x${AppConstants.MaxImageDimensions.height}`);
-          return;
+          (dimensions.width > AppConstants.MaxImageDimensions.width ||
+            dimensions.height > AppConstants.MaxImageDimensions.height)) {
+          throw new InvalidImageDimensionError(dimensions.width, dimensions.height);
         }
 
         // Upload to S3
@@ -282,21 +280,20 @@ export class FeedService {
           imageUrls.push(uploadResult.Location);
         } catch (error) {
           console.error('Error uploading image to S3:', error);
-          res.status(500).send('Error uploading image');
-          return;
+          throw new ImageUploadError(error);
         }
       }
     }
 
-    const postId = new MongooseTypes.ObjectId(new ObjectId().toString());
-    const inputViewpointId = new MongooseTypes.ObjectId(new ObjectId().toString());
+    const postId = new BsonObjectId();
+    const inputViewpointId = new BsonObjectId();
     const requestedLanguages = language !== 'en' ? ['en'] : [];
     const post = new PostModel({
       _id: postId,
       createdAt: currentDate,
-      createdById: createdById,
+      createdBy: createdById,
       updatedAt: currentDate,
-      updatedById: createdById,
+      updatedBy: createdById,
       pId: parentPostId,
       vpId: parentViewpointId,
       inVpId: inputViewpointId,
@@ -307,7 +304,8 @@ export class FeedService {
         impressions: 0,
         reactions: 0,
         reactionsByType: {},
-        updatedAt: currentDate,
+        replies: 0,
+        votes: 0,
       },
     });
 

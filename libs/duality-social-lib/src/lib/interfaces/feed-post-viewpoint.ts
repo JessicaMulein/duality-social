@@ -1,11 +1,13 @@
-import { ObjectId } from "mongoose";
-import { DefaultReactionsTypeEnum } from "../enumerations/default-reactions-type";
-import { HumanityTypeEnum } from "../enumerations/humanity-type";
-import { ViewpointTypeEnum } from "../enumerations/viewpoint-type";
-import { IFeedPost } from "./feed-post";
+import { Types } from "mongoose";
+import { DefaultReactionsTypeEnum } from "../enumerations/default-reactions-type.ts";
+import { HumanityTypeEnum } from "../enumerations/humanity-type.ts";
+import { ViewpointTypeEnum } from "../enumerations/viewpoint-type.ts";
+import { IFeedPost } from "./feed-post.ts";
+import { IHasCreation } from "./has-creation.ts";
+import { IHasCreator } from "./has-creator.ts";
 
-export interface IFeedPostViewpoint {
-    id: ObjectId;
+export interface IFeedPostViewpoint extends IHasCreation, IHasCreator {
+    id: Types.ObjectId;
     content: string;
     rendered: string;
     translated: boolean;
@@ -21,6 +23,6 @@ export interface IFeedPostViewpoint {
     };
     type: ViewpointTypeEnum;
     createdAt: Date;
-    createdBy: ObjectId;
+    createdBy: Types.ObjectId;
     replies: IFeedPost[];
   }

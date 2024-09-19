@@ -1,9 +1,9 @@
-import { IHasTimestamps } from "./has-timestamps"
-import { IHasTimestampOwners } from "./has-timestamp-owners"
-import { ObjectId } from "mongoose";
+import { Types } from "mongoose";
+import { IHasTimestamps } from "./has-timestamps.ts"
+import { IHasTimestampOwners } from "./has-timestamp-owners.ts"
 
 export interface IUsernameChange extends IHasTimestamps, IHasTimestampOwners {
-    userId: ObjectId;
+    userId: Types.ObjectId;
     oldName: string;
     newName: string;
 }

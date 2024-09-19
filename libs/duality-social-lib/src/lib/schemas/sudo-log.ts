@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
-import ModelName from '../enumerations/model-name';
-import { ISudoLogDocument } from '../documents/sudo-log';
+import ModelName from '../enumerations/model-name.ts';
+import { ISudoLogDocument } from '../documents/sudo-log.ts';
 
 export const SudoLogSchema = new Schema<ISudoLogDocument>({
   /**

@@ -2,7 +2,7 @@ import { NextFunction, Request, Response, Router } from "express";
 import { RouteConfig } from "../interfaces/route-config";
 import { IApiErrorResponse, IApiExpressValidationErrorResponse, IApiMessageResponse, IApiMongoValidationErrorResponse, IMongoErrors } from "@duality-social/duality-social-lib";
 import { ValidationError, validationResult } from "express-validator";
-import { authenticateToken } from '../middlewares/authenticate-token';
+import { authenticateToken } from '../middlewares/authenticate-token.ts';
 
 export abstract class BaseController {
     public readonly router: Router;
@@ -25,9 +25,9 @@ export abstract class BaseController {
         routes.forEach((route) => {
             const { method, path, handler, useAuthentication, middleware = [], validation = [] } = route;
             const routeHandlers = [
+                ...middleware,
                 ...(useAuthentication ? [(req: Request, res: Response, next: NextFunction) => this.authenticateRequest(req, res, next)] : []),
                 ...(validation.length > 0 ? [...validation, (req: Request, res: Response, next: NextFunction) => this.validateRequest(req, res, next)] : []),
-                ...middleware,
                 (req: Request, res: Response, next: NextFunction) => {
                     handler.call(this, req, res, next);
                 }

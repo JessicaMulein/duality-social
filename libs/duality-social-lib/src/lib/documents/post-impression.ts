@@ -1,4 +1,4 @@
-import { Document, ObjectId } from "mongoose";
-import { IPostImpression } from "../interfaces/post-impression";
+import { Document, Types } from "mongoose";
+import { IPostImpression } from "../interfaces/post-impression.ts";
 
-export interface IPostImpressionDocument extends IPostImpression, Document<ObjectId, any, any> {};
+export interface IPostImpressionDocument extends IPostImpression, Document<Types.ObjectId, any, any> {};

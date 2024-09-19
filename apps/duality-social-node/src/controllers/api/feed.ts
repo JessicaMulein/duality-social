@@ -1,12 +1,12 @@
-import { Request, Response } from 'express';
-import { FeedService } from '../../services/feed';
-import { BaseController } from '../base';
-import { RouteConfig } from '../../interfaces/route-config';
+import { NextFunction, Request, Response } from 'express';
 import { body } from 'express-validator';
 import sizeOf from 'image-size';
+import { FeedService } from '../../services/feed.ts';
+import { BaseController } from '../base.ts';
+import { RouteConfig } from '../../interfaces/route-config.ts';
+import { MulterRequest } from '../../interfaces/multer-request.ts';
+import { upload } from '../../multer-config.ts';
 import { AppConstants, parsePostContent } from '@duality-social/duality-social-lib';
-import { MulterRequest } from '../../interfaces/multer-request';
-import { upload } from '../../multer-config';
 
 export class FeedController extends BaseController {
     private feedService: FeedService;
@@ -158,10 +158,29 @@ export class FeedController extends BaseController {
         }
     }
 
-    async newPost(req: Request, res: Response) {
+    async newPost(req: Request, res: Response, next: NextFunction) {
+        const multerReq = req as MulterRequest;
+        // Check number of images
+        if (multerReq.files && multerReq.files.images.length > AppConstants.MaxPostImages) {
+            return this.sendApiErrorResponse(400, `Maximum ${AppConstants.MaxPostImages} images allowed`, null, res);
+        }
+        // Check image size and dimensions
+        if (multerReq.files) {
+            for (const image of multerReq.files.images) {
+                if (image.size > AppConstants.MaxImageSize) {
+                    return this.sendApiErrorResponse(400, `Image size should not exceed ${AppConstants.MaxImageSize} bytes`, null, res);
+                }
+                const dimensions = sizeOf(image.buffer);
+                if (dimensions.width && dimensions.height &&
+                    (dimensions.width > AppConstants.MaxImageDimensions.width ||
+                        dimensions.height > AppConstants.MaxImageDimensions.height)) {
+                    return this.sendApiErrorResponse(400, `Image dimensions should not exceed ${AppConstants.MaxImageDimensions.width}x${AppConstants.MaxImageDimensions.height}`, null, res);
+                }
+            }
+        }
         try {
             const post = await this.feedService.newPost(req as MulterRequest, res);
-            res.status(200).json(post);
+            res.status(201).json(post);
         } catch (error) {
             console.error('Error creating new post:', error);
             this.sendApiErrorResponse(500, 'An error occurred while creating the post', error, res);
@@ -196,4 +215,5 @@ export class FeedController extends BaseController {
     }
 }
 
-export default new FeedController().router;
+export const FeedControllerInstance = new FeedController();
+export default FeedControllerInstance.router;

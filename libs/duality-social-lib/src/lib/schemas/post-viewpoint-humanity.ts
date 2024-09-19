@@ -1,7 +1,7 @@
 import { Schema } from "mongoose";
-import ModelName from "../enumerations/model-name";
-import { HumanityTypeEnum } from "../enumerations/humanity-type";
-import { IPostViewpointHumanityDocument } from "../documents/post-viewpoint-humanity";
+import ModelName from "../enumerations/model-name.ts";
+import { HumanityTypeEnum } from "../enumerations/humanity-type.ts";
+import { IPostViewpointHumanityDocument } from "../documents/post-viewpoint-humanity.ts";
 
 export const PostViewpointHumanitySchema = new Schema<IPostViewpointHumanityDocument>({
     viewpointId: { type: Schema.Types.ObjectId, ref: ModelName.PostViewpoint, required: true, immutable: true },

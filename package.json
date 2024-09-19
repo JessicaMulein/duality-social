@@ -15,9 +15,11 @@
     "build:node:dev": "npx nx build duality-social-node --configuration development",
     "build:react": "npx nx build duality-social-react",
     "build:react:dev": "npx nx build duality-social-react --configuration development",
-    "test:all": "npx nx test duality-social-lib && npx nx test duality-social-react && npx nx test duality-social-node",
-    "test:fontawesome": "npx nx test duality-social-lib --testFile=libs/duality-social-lib/src/lib/font-awesome/font-awesome.spec.ts",
-    "test:lib": "npx nx test duality-social-lib --testFile=libs/duality-social-lib/src/lib/duality-social-lib.spec.ts",
+    "test:lib:libonly": "npx nx test duality-social-lib --testFile=libs/duality-social-lib/src/lib/duality-social-lib.spec.ts",
+    "test:lib:fontawesome": "npx nx test duality-social-lib --testFile=libs/duality-social-lib/src/lib/font-awesome/font-awesome.spec.ts",
+    "test:lib:all": "npx nx test duality-social-lib",
+    "test:node": "npx nx test duality-social-node",
+    "test:all": "yarn test:lib:all && yarn test:lib:fontawesome && yarn test:node",
     "build": "yarn build:all",
     "build:serve": "NODE_ENV=production npx nx run-many --target=build --all --configuration=production && npx nx serve duality-social-node --configuration production",
     "build-serve:dev": "NODE_ENV=development npx nx run-many --target=build --all --configuration=development && npx nx serve duality-social-node --configuration development",
@@ -83,6 +85,7 @@
   "devDependencies": {
     "@babel/core": "^7.14.5",
     "@babel/preset-react": "^7.14.5",
+    "@faker-js/faker": "^9.0.1",
     "@nrwl/cypress": "19.6.4",
     "@nrwl/esbuild": "19.6.4",
     "@nrwl/eslint-plugin-nx": "19.6.4",
@@ -137,7 +140,7 @@
     "react-refresh": "^0.10.0",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
-    "typescript": "~4.9.5",
+    "typescript": "^5.6.2",
     "url-loader": "^4.1.1",
     "webpack": "^5.94.0"
   }

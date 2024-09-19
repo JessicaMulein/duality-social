@@ -1,4 +1,4 @@
-import { Document, ObjectId } from "mongoose";
-import { ILogin } from "../interfaces/login";
+import { Document, Types } from "mongoose";
+import { ILogin } from "../interfaces/login.ts";
 
-export interface ILoginDocument extends ILogin, Document<ObjectId, any, any> {};
+export interface ILoginDocument extends ILogin, Document<Types.ObjectId, any, any> {};

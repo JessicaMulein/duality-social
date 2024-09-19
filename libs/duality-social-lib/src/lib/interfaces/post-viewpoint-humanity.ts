@@ -1,9 +1,9 @@
-import { ObjectId } from 'mongoose';
-import { HumanityTypeEnum } from '../enumerations/humanity-type';
-import { IHasCreator } from './has-creator';
-import { IHasTimestamps } from './has-timestamps';
+import { Types } from 'mongoose';
+import { HumanityTypeEnum } from '../enumerations/humanity-type.ts';
+import { IHasCreator } from './has-creator.ts';
+import { IHasTimestamps } from './has-timestamps.ts';
 
 export interface IPostViewpointHumanity extends IHasTimestamps, IHasCreator {
-    viewpointId: ObjectId;
+    viewpointId: Types.ObjectId;
     humanity: HumanityTypeEnum;
 }

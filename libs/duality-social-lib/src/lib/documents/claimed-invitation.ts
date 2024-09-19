@@ -1,4 +1,4 @@
-import { Document, ObjectId } from "mongoose";
-import { IClaimedInvitation } from "../interfaces/claimed-invitation";
+import { Document, Types } from "mongoose";
+import { IClaimedInvitation } from "../interfaces/claimed-invitation.ts";
 
-export interface IClaimedInvitationDocument extends IClaimedInvitation, Document<ObjectId, any, any> {};
+export interface IClaimedInvitationDocument extends IClaimedInvitation, Document<Types.ObjectId, any, any> {};

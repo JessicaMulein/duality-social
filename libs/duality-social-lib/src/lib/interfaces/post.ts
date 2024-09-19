@@ -1,9 +1,8 @@
-import { ObjectId } from 'mongoose';
-import { IHasDeleter } from './has-deleter';
-import { IHasSoftDelete } from './has-soft-delete';
-import { IHasTimestampOwners } from './has-timestamp-owners';
-import { IHasTimestamps } from './has-timestamps';
-import { DefaultReactionsTypeEnum } from '../enumerations/default-reactions-type';
+import { Types } from 'mongoose';
+import { IHasDeleter } from './has-deleter.ts';
+import { IHasSoftDelete } from './has-soft-delete.ts';
+import { IHasTimestampOwners } from './has-timestamp-owners.ts';
+import { IHasTimestamps } from './has-timestamps.ts';
 
 /**
  * This interface represents a post, which is a piece of content that a user can create.
@@ -27,35 +26,35 @@ export interface IPost extends IHasTimestamps, IHasSoftDelete, IHasTimestampOwne
      */
     depth: number;
     lastReplyAt?: Date;
-    lastReplyBy?: ObjectId;
+    lastReplyBy?: Types.ObjectId;
     /**
      * The id of the parent post if this is a reply.
      */
-    pId?: ObjectId;
+    pId?: Types.ObjectId;
     /**
      * Tree of parentIDs
      */
-    pIds: ObjectId[];
+    pIds: Types.ObjectId[];
     /**
      * The id of the viewpoint that this viewpoint is a reply to.
      */
-    rVpId?: ObjectId;
+    rVpId?: Types.ObjectId;
     /**
      * The id of the parent viewpoint if this is a reply
      */
-    vpId?: ObjectId;
+    vpId?: Types.ObjectId;
     /**
      * Tree of viewpoint parents
      */
-    vpPIds: ObjectId[];
+    vpPIds: Types.ObjectId[];
     /**
      * The id of the viewpoint that the user inputted.
      */
-    inVpId?: ObjectId;
+    inVpId?: Types.ObjectId;
     /**
      * The ids of translations of the user viewpoint
      */
-    inVpTransIds: ObjectId[];
+    inVpTransIds: Types.ObjectId[];
     /**
      * The languages that users have requested translations for.
      */
@@ -63,11 +62,11 @@ export interface IPost extends IHasTimestamps, IHasSoftDelete, IHasTimestampOwne
     /**
      * The id of the viewpoint that the AI generated.
      */
-    aiVpId?: ObjectId;
+    aiVpId?: Types.ObjectId;
     /**
      * The ids of translations of the ai viewpoint
      */
-    aiVpTransIds: ObjectId[];
+    aiVpTransIds: Types.ObjectId[];
     /**
      * The languages that the AI has requested translations for.
      */

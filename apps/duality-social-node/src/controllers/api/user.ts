@@ -14,14 +14,14 @@ import {
   UserModel,
   HumanityTypeEnum,
   UserNotFoundError,
-  IApiUserProfileResponse,
 } from '@duality-social/duality-social-lib';
-import { findAuthToken } from '../../middlewares/authenticate-token';
-import { UserService } from '../../services/user';
-import { JwtService } from '../../services/jwt';
-import { MongooseValidationError } from '../../errors/mongoose-validation-error';
-import { BaseController } from '../base';
-import { RouteConfig } from '../../interfaces/route-config';
+import { findAuthToken } from '../../middlewares/authenticate-token.ts';
+import { UserService } from '../../services/user.ts';
+import { JwtService } from '../../services/jwt.ts';
+import { MongooseValidationError } from '../../errors/mongoose-validation-error.ts';
+import { BaseController } from '../base.ts';
+import { RouteConfig } from '../../interfaces/route-config.ts';
+import { RequestUserService } from '../../services/request-user.ts';
 
 /**
  * Controller for user-related routes
@@ -228,7 +228,7 @@ export class UserController extends BaseController {
       const { token: newToken, roles } = await this.jwtService.signToken(userDoc);
 
       res.header('Authorization', `Bearer ${newToken}`);
-      res.status(200).json({ message: 'Token refreshed', user: this.userService.makeRequestUser(userDoc, roles) } as IUserResponse);
+      res.status(200).json({ message: 'Token refreshed', user: RequestUserService.makeRequestUser(userDoc, roles) } as IUserResponse);
     } catch (error) {
       console.error('Token refresh error:', error);
       this.sendApiErrorResponse(500, 'Internal server error', error, res);
@@ -389,7 +389,7 @@ export class UserController extends BaseController {
 
       // Generate a new JWT token for the user
       const { token: newToken, roles } = await this.jwtService.signToken(user);
-      const requestUser: IRequestUser = this.userService.makeRequestUser(user, roles);
+      const requestUser: IRequestUser = RequestUserService.makeRequestUser(user, roles);
       res.header('Authorization', `Bearer ${newToken}`);
       res.status(200).json({ message: 'Password reset successfully', user: requestUser } as IUserResponse);
     } catch (error) {

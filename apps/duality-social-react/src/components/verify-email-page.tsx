@@ -1,6 +1,5 @@
 import React, { useState, useEffect, memo, useRef } from 'react';
 import { useLocation, Link as RouterLink } from 'react-router-dom';
-import api from '../services/api';
 import {
   Container,
   Paper,
@@ -10,6 +9,7 @@ import {
   Box,
   Alert,
 } from '@mui/material';
+import api from '../services/api.ts';
 
 const VerifyEmailPage: React.FC = () => {
   const [message, setMessage] = useState('');

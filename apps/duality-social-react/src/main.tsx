@@ -5,9 +5,9 @@ import { config, library } from '@fortawesome/fontawesome-svg-core';
 import { all } from '@awesome.me/kit-89ec609b07/icons';
 import '@fortawesome/fontawesome-svg-core/styles.css';
 
-import App from './app/app';
-import { AuthProvider } from './auth-provider';
-import './scroll-footnotes';
+import App from './app/app.tsx';
+import { AuthProvider } from './auth-provider.tsx';
+import './scroll-footnotes.ts';
 
 // fontawesome
 library.add(...all);

@@ -1,4 +1,4 @@
-import { Document, ObjectId } from "mongoose";
-import { ISudoLog } from "../interfaces/sudo-log";
+import { Document, Types } from "mongoose";
+import { ISudoLog } from "../interfaces/sudo-log.ts";
 
-export interface ISudoLogDocument extends ISudoLog, Document<ObjectId, any, any> {};
+export interface ISudoLogDocument extends ISudoLog, Document<Types.ObjectId, any, any> {};

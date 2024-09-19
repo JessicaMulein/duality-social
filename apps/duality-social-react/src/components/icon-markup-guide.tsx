@@ -11,6 +11,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as faHeartSolid } from '@awesome.me/kit-89ec609b07/icons/classic/solid';
 import { faHeart as faHeartRegular } from '@awesome.me/kit-89ec609b07/icons/classic/regular';
 
+interface ListItemProps {
+  component: string;
+  disableTypography: boolean;
+  primary: React.ReactNode;
+  secondary: React.ReactNode;
+}
+
 const IconMarkupGuide: React.FC = () => {
   return (
     <Box>
@@ -196,7 +203,7 @@ const IconMarkupGuide: React.FC = () => {
                   </Typography>
                 </React.Fragment>
               ),
-            } as any)}
+            } as ListItemProps)}
           />
         </ListItem>
       </List>

@@ -1,5 +1,6 @@
 // file: user-profile.tsx
 import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@awesome.me/kit-89ec609b07/icons/classic/regular';
 import {
@@ -15,11 +16,10 @@ import {
 } from '@mui/material';
 import Link from '@mui/material/Link';
 import { IApiUserProfileResponse } from '@duality-social/duality-social-lib';
-import authenticatedApi from '../services/authenticated-api';
-import { useNavigate } from 'react-router-dom';
-import { getToken, verifyToken } from '../utils/auth';
-import { AuthContext } from '../auth-provider';
-import NewPost from './new-post';
+import authenticatedApi from '../services/authenticated-api.ts';
+import { getToken, verifyToken } from '../utils/auth.ts';
+import { AuthContext } from '../auth-provider.tsx';
+import NewPost from './new-post.tsx';
 
 const UserProfilePage = () => {
   const { user: authUser } = useContext(AuthContext);

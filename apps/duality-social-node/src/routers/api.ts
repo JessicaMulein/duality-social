@@ -1,6 +1,6 @@
-import { UserController } from '../controllers/api/user';
-import { FeedController } from '../controllers/api/feed';
-import { BaseRouter } from './base';
+import { UserController } from '../controllers/api/user.ts';
+import { FeedController } from '../controllers/api/feed.ts';
+import { BaseRouter } from './base.ts';
 
 /**
  * Router for the API

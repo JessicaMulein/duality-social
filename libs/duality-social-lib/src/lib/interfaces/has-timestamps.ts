@@ -1,4 +1,4 @@
-import { IHasCreation } from "./has-creation";
+import { IHasCreation } from "./has-creation.ts";
 
 export interface IHasTimestamps extends IHasCreation
 {

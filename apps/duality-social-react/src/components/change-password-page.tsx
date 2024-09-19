@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { Navigate } from 'react-router-dom';
-import { AuthContext } from '../auth-provider';
+import { AuthContext } from '../auth-provider.tsx';
 import { AppConstants } from '@duality-social/duality-social-lib';
 import {
   Box,

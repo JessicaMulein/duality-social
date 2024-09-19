@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
-import ModelName from '../enumerations/model-name';
-import { IPostImpressionDocument } from '../documents/post-impression';
+import ModelName from '../enumerations/model-name.ts';
+import { IPostImpressionDocument } from '../documents/post-impression.ts';
 
 /**
  * Represents a post being viewed.

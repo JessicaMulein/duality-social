@@ -1,4 +1,4 @@
-import { Document, ObjectId } from "mongoose";
-import { IUsernameChange } from "../interfaces/username-change";
+import { Document, Types } from "mongoose";
+import { IUsernameChange } from "../interfaces/username-change.ts";
 
-export interface IUsernameChangeDocument extends IUsernameChange, Document<ObjectId, any, any> {};
+export interface IUsernameChangeDocument extends IUsernameChange, Document<Types.ObjectId, any, any> {};

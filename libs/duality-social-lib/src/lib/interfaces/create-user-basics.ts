@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 /* eslint-disable @typescript-eslint/no-namespace */
-import { HumanityTypeEnum } from '../enumerations/humanity-type';
+import { HumanityTypeEnum } from '../enumerations/humanity-type.ts';
 
 export interface ICreateUserBasics {
   username: string;

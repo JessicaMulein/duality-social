@@ -4,7 +4,7 @@ export enum DefaultReactionsTypeEnum {
   Care = 'Care',
   Celebrate = 'Celebrate',
   Hug = 'Hug',
-  Huh = 'Huh?',
+  'Huh?' = 'Huh?',
   Laugh = 'Laugh',
   Like = 'Like',
   Love = 'Love',

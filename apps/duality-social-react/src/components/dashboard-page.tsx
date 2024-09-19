@@ -12,8 +12,8 @@ import {
   CircularProgress,
   useTheme,
 } from '@mui/material';
-import Feed from './feed';
-import NewPost from './new-post';
+import Feed from './feed.tsx';
+import NewPost from './new-post.tsx';
 
 const DashboardPage: React.FC = () => {
   const theme = useTheme();

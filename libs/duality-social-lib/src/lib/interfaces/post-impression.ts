@@ -1,10 +1,10 @@
-import { IHasTimestamps } from "./has-timestamps";
-import { IHasCreator } from "./has-creator";
-import { ObjectId } from "mongoose";
+import { Types } from "mongoose";
+import { IHasTimestamps } from "./has-timestamps.ts";
+import { IHasCreator } from "./has-creator.ts";
 
 export interface IPostImpression extends IHasTimestamps, IHasCreator {
-    postId: ObjectId;
-    viewpointId?: ObjectId;
+    postId: Types.ObjectId;
+    viewpointId?: Types.ObjectId;
     ip: string;
     botExclude: boolean;
 }

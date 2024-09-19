@@ -1,8 +1,8 @@
-import { ObjectId } from "mongoose";
-import { IHasTimestamps } from "./has-timestamps";
+import { Types } from "mongoose";
+import { IHasTimestamps } from "./has-timestamps.ts";
 
 export interface IAdminUser extends IHasTimestamps {
-    userId: ObjectId
+    userId: Types.ObjectId
     lastSudo?: Date;
     lastFailedSudo?: Date;
     sudoHash: string;

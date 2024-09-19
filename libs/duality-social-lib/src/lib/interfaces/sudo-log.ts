@@ -1,9 +1,9 @@
-import { IHasCreator } from "./has-creator";
-import { IHasTimestamps } from "./has-timestamps";
-import { ObjectId } from "mongoose";
+import { Types } from "mongoose";
+import { IHasCreator } from "./has-creator.ts";
+import { IHasTimestamps } from "./has-timestamps.ts";
 
 export interface ISudoLog extends IHasCreator, IHasTimestamps {
-    userId: ObjectId;
-    adminUserId: ObjectId;
+    userId: Types.ObjectId;
+    adminUserId: Types.ObjectId;
     success: boolean;
 }

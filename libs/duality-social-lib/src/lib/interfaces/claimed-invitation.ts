@@ -1,7 +1,7 @@
-import { ObjectId } from "mongoose";
+import { Types } from "mongoose";
 
 export interface IClaimedInvitation {
-    invitationId: ObjectId;
+    invitationId: Types.ObjectId;
     ip: string;
     email?: string;
     code?: string;

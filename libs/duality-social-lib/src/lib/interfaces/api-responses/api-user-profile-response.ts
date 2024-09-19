@@ -1,4 +1,4 @@
-import { IApiMessageResponse } from "./api-message-response";
+import { IApiMessageResponse } from "./api-message-response.ts";
 
 export interface IApiUserProfileResponse extends IApiMessageResponse {
     profile: {

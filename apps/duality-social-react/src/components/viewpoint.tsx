@@ -12,9 +12,9 @@ import {
   DefaultReactionsTypeEnum,
   HumanityTypeEnum,
 } from '@duality-social/duality-social-lib';
-import Reply from './reply';
-import ReactionIcon from './reaction-icon';
-import HumanityTypeIcon from './humanity-type-icon';
+import Reply from './reply.tsx';
+import ReactionIcon from './reaction-icon.tsx';
+import HumanityTypeIcon from './humanity-type-icon.tsx';
 
 interface ViewpointProps {
   viewpoint: IFeedPostViewpoint;

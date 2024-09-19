@@ -1,5 +1,5 @@
-import { IRoleDocument } from "../documents/role";
-import { HumanityTypeEnum } from "../enumerations/humanity-type";
+import { IRoleDocument } from "../documents/role.ts";
+import { HumanityTypeEnum } from "../enumerations/humanity-type.ts";
 
 /**
  * Interface for the user object stored in the request object

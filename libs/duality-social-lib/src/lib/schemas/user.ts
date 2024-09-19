@@ -1,12 +1,12 @@
 import { Schema } from 'mongoose';
 import validator from 'validator';
-import { AccountStatusTypeEnum } from '../enumerations/account-status-type';
-import { LockTypeEnum } from '../enumerations/lock-type';
-import ModelName from '../enumerations/model-name';
-import { HumanityTypeEnum } from '../enumerations/humanity-type';
-import { AppConstants } from '../constants';
-import { IUserDocument } from '../documents/user';
-import { isValidTimezone } from '../duality-social-lib';
+import { AccountStatusTypeEnum } from '../enumerations/account-status-type.ts';
+import { LockTypeEnum } from '../enumerations/lock-type.ts';
+import ModelName from '../enumerations/model-name.ts';
+import { HumanityTypeEnum } from '../enumerations/humanity-type.ts';
+import { AppConstants } from '../constants.ts';
+import { IUserDocument } from '../documents/user.ts';
+import { isValidTimezone } from '../duality-social-lib.ts';
 
 /**
  * A user in the system.

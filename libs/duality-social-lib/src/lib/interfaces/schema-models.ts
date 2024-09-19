@@ -1,20 +1,20 @@
 import { Model } from 'mongoose';
-import { IAdminUserDocument } from '../documents/admin-user';
-import { IUserDocument } from '../documents/user';
-import { IInvitationDocument } from '../documents/invitation';
-import { ILoginDocument } from '../documents/login';
-import { IPostDocument } from '../documents/post';
-import { IPostExpandDocument } from '../documents/post-expand';
-import { IPostImpressionDocument } from '../documents/post-impression';
-import { IPostViewpointDocument } from '../documents/post-viewpoint';
-import { IPostViewpointReactionDocument } from '../documents/post-viewpoint-reaction';
-import { IProfileDocument } from '../documents/profile';
-import { IReportDocument } from '../documents/report';
-import { ISudoLogDocument } from '../documents/sudo-log';
-import { IUsernameChangeDocument } from '../documents/username-change';
-import { IPostViewpointHumanityDocument } from '../documents/post-viewpoint-humanity';
-import { IRoleDocument } from '../documents/role';
-import { IEmailTokenDocument } from '../documents/email-token';
+import { IAdminUserDocument } from '../documents/admin-user.ts';
+import { IUserDocument } from '../documents/user.ts';
+import { IInvitationDocument } from '../documents/invitation.ts';
+import { ILoginDocument } from '../documents/login.ts';
+import { IPostDocument } from '../documents/post.ts';
+import { IPostExpandDocument } from '../documents/post-expand.ts';
+import { IPostImpressionDocument } from '../documents/post-impression.ts';
+import { IPostViewpointDocument } from '../documents/post-viewpoint.ts';
+import { IPostViewpointReactionDocument } from '../documents/post-viewpoint-reaction.ts';
+import { IProfileDocument } from '../documents/profile.ts';
+import { IReportDocument } from '../documents/report.ts';
+import { ISudoLogDocument } from '../documents/sudo-log.ts';
+import { IUsernameChangeDocument } from '../documents/username-change.ts';
+import { IPostViewpointHumanityDocument } from '../documents/post-viewpoint-humanity.ts';
+import { IRoleDocument } from '../documents/role.ts';
+import { IEmailTokenDocument } from '../documents/email-token.ts';
 
 export interface ISchemaModels {
     AdminUser: Model<IAdminUserDocument>;
