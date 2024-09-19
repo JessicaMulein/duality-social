@@ -13,5 +13,6 @@ export class EmailTokenSentTooRecentlyError extends Error {
         this.name = 'EmailTokenSentTooRecentlyError';
         this.lastSent = lastSent;
         this.nextAvailableTime = nextAvailableTime;
+        Object.setPrototypeOf(this, EmailTokenSentTooRecentlyError.prototype);
     }
 }

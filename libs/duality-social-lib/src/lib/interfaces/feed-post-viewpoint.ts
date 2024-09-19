@@ -3,8 +3,10 @@ import { DefaultReactionsTypeEnum } from "../enumerations/default-reactions-type
 import { HumanityTypeEnum } from "../enumerations/humanity-type";
 import { ViewpointTypeEnum } from "../enumerations/viewpoint-type";
 import { IFeedPost } from "./feed-post";
+import { IHasCreation } from "./has-creation";
+import { IHasCreator } from "./has-creator";
 
-export interface IFeedPostViewpoint {
+export interface IFeedPostViewpoint extends IHasCreation, IHasCreator {
     id: ObjectId;
     content: string;
     rendered: string;

@@ -25,9 +25,9 @@ export abstract class BaseController {
         routes.forEach((route) => {
             const { method, path, handler, useAuthentication, middleware = [], validation = [] } = route;
             const routeHandlers = [
+                ...middleware,
                 ...(useAuthentication ? [(req: Request, res: Response, next: NextFunction) => this.authenticateRequest(req, res, next)] : []),
                 ...(validation.length > 0 ? [...validation, (req: Request, res: Response, next: NextFunction) => this.validateRequest(req, res, next)] : []),
-                ...middleware,
                 (req: Request, res: Response, next: NextFunction) => {
                     handler.call(this, req, res, next);
                 }

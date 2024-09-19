@@ -1,7 +1,8 @@
-import { AppConstants, InvalidTokenError, IRoleDocument, IUserDocument, RoleModel, ITokenUser } from "@duality-social/duality-social-lib";
+import { AppConstants, InvalidTokenError, IUserDocument, RoleModel, ITokenUser } from "@duality-social/duality-social-lib";
 import { sign, verify, JwtPayload, VerifyOptions } from "jsonwebtoken";
 import { promisify } from 'util';
 import { environment } from "../environment";
+import { ISignedToken } from "../interfaces/signed-token";
 
 const verifyAsync = promisify<string, string | Buffer, VerifyOptions, JwtPayload | string>(verify);
 
@@ -11,7 +12,7 @@ export class JwtService {
    * @param userDoc 
    * @returns 
    */
-  public async signToken(userDoc: IUserDocument): Promise<{ token: string, tokenUser: ITokenUser, roleNames: string[], roles: IRoleDocument[] }> {
+  public async signToken(userDoc: IUserDocument): Promise<ISignedToken> {
     if (!userDoc._id) {
       throw new Error("User ID is required to sign JWT token");
     }
