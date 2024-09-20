@@ -7,6 +7,7 @@ The icon markup syntax provides a flexible way to insert Font Awesome icons into
 ```
 {{iconName}}
 ```
+
 - Renders as `fa-regular fa-iconName`
 - Example: `{{heart}}` becomes `<i class="fa-regular fa-heart" style="display: inline-block;"></i>`
 
@@ -15,6 +16,7 @@ The icon markup syntax provides a flexible way to insert Font Awesome icons into
 ```
 {{class iconName}}
 ```
+
 - `class` can be one of: 
   - classic
   - duotone
@@ -31,6 +33,7 @@ The icon markup syntax provides a flexible way to insert Font Awesome icons into
 ```
 {{class iconName additionalClass1 additionalClass2 ...}}
 ```
+
 - Additional classes can include:
   - Sizes: xs, sm, lg, xl, 2xl, 1x, 2x, 3x, 4x, 5x, 6x, 7x, 8x, 9x, 10x
   - Animations: spin, pulse, beat, fade, flip
@@ -41,6 +44,7 @@ The icon markup syntax provides a flexible way to insert Font Awesome icons into
 ```
 {{class iconName additionalClasses; style1; style2; ...}}
 ```
+
 - CSS styles can be added after a semicolon
 - Example: `{{solid heart; color: red; font-size: 20px;}}` becomes `<i class="fa-solid fa-heart" style="display: inline-block; color: red; font-size: 20px;"></i>`
 

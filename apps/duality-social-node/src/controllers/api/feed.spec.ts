@@ -313,7 +313,7 @@ describe('FeedController - newPost', () => {
                 filename: 'test-1234567890.jpg',
                 path: '/tmp/test-1234567890.jpg',
                 buffer: Buffer.from('mock image data'),
-                stream: {} as any,
+                stream: {} as Readable,
             };
 
             (sizeOf as jest.Mock).mockReturnValue({ width: AppConstants.MaxImageDimensions.width, height: AppConstants.MaxImageDimensions.height });
@@ -358,7 +358,7 @@ describe('FeedController - newPost', () => {
                 filename: 'test-1234567890.jpg',
                 path: '/tmp/test-1234567890.jpg',
                 buffer: Buffer.from('mock image data'),
-                stream: {} as any,
+                stream: {} as Readable,
             };
 
             const mockFiles = Array(AppConstants.MaxPostImages + 1).fill(mockFile);
@@ -392,7 +392,7 @@ describe('FeedController - newPost', () => {
                 filename: 'test-1234567890.jpg',
                 path: '/tmp/test-1234567890.jpg',
                 buffer: Buffer.from('mock image data'),
-                stream: {} as any,
+                stream: {} as Readable,
             };
 
             mockRequest.files = {
@@ -423,7 +423,7 @@ describe('FeedController - newPost', () => {
                 filename: 'test-1234567890.jpg',
                 path: '/tmp/test-1234567890.jpg',
                 buffer: Buffer.from('mock image data'),
-                stream: {} as any,
+                stream: {} as Readable,
             };
 
             (sizeOf as jest.Mock).mockReturnValue({ width: AppConstants.MaxImageDimensions.width + 1, height: AppConstants.MaxImageDimensions.height });
@@ -457,7 +457,7 @@ describe('FeedController - newPost', () => {
                 filename: 'test-1234567890.jpg',
                 path: '/tmp/test-1234567890.jpg',
                 buffer: Buffer.from('mock image data'),
-                stream: {} as any,
+                stream: {} as Readable,
             };
 
             (sizeOf as jest.Mock).mockReturnValue({ width: AppConstants.MaxImageDimensions.width, height: AppConstants.MaxImageDimensions.height + 1 });
