@@ -14,6 +14,7 @@ import { AppConstants, HumanityTypeEnum, IPost, IPostViewpoint, IRole, IRoleDocu
 
 import { Types } from 'mongoose';
 import { RequestUserService } from '../../services/request-user.ts';
+import { Readable } from 'stream';
 
 jest.mock('image-size');
 
@@ -517,7 +518,7 @@ describe('FeedController - newPost', () => {
                 filename: 'test-1234567890.jpg',
                 path: '/tmp/test-1234567890.jpg',
                 buffer: Buffer.from('mock image data'),
-                stream: {} as any,
+                stream: {} as Readable,
             };
 
             (sizeOf as jest.Mock).mockReturnValue({ width: AppConstants.MaxImageDimensions.width, height: AppConstants.MaxImageDimensions.height });

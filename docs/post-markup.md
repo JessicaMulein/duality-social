@@ -1,30 +1,31 @@
 
-## Icon Markup:
+## Icon Markup
 
 - Basic Icon: `{{heart}}` renders as a regular heart icon
 - Styled Icon: `{{solid heart}}` renders as a solid heart icon
 
-### Available Styles:
+### Available Styles
 classic, duotone, light, regular, solid, thin, brands, sharp solid
 
-### Sizes:
+### Sizes
 xs, sm, lg, xl, 2xl, 1x, 2x, 3x, 4x, 5x, 6x, 7x, 8x, 9x, 10x
 
 Size Example: `{{solid heart lg}}` renders a large solid heart icon
 
-### Animations:
+### Animations
 spin, spin-pulse, spin-reverse, pulse, beat, fade, beat-fade, flip, flip-both, flip-horizontal, flip-vertical, rotate-90, rotate-180, rotate-270, rotate-by
 
 Animation Example: `{{solid heart spin}}` renders a spinning solid heart icon
 
-### Combined Usage:
+### Combined Usage
 `{{solid heart lg spin}}` renders a large, spinning, solid heart icon
 
-### Custom Styled Icon:
+### Custom Styled Icon
 `{{solid heart; color: red; font-size: 20px;}}` renders as a red, 20px solid heart icon. CSS styles are added after a semicolon.
 
-### Custom Style Order:
+### Custom Style Order
 When using icons, follow this order:
+
 1. Icon style (optional, e.g., solid, regular)
 2. Icon name (required, e.g., heart)
 3. Additional properties (optional, e.g., lg, spin)
@@ -40,7 +41,7 @@ Examples:
 
 Remember: Only the icon name is required. All other elements are optional.
 
-## Character Counting:
+## Character Counting
 
 - Emoji: Each emoji counts as 1 character
 - Unicode Characters: Each Unicode character counts as 1 character
@@ -48,7 +49,7 @@ Remember: Only the icon name is required. All other elements are optional.
 - Newlines: Each newline (CR/LF) counts as 1 character
 - Links: Each link counts as 1 character, plus the visible text
 
-## Blog Post Formatting:
+## Blog Post Formatting
 
 Blog posts support full Markdown syntax in addition to the custom icon markup. This includes:
 
