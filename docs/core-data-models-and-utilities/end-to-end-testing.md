@@ -1,4 +1,5 @@
 ### End-to-End Testing
+
 References: `/apps/duality-social-react-e2e`
 
 The end-to-end (E2E) tests for the Duality Social React application are located in the `/apps/duality-social-react-e2e` directory. These tests are written using the Cypress testing framework and focus on verifying the application's welcome message functionality.

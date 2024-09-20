@@ -1,4 +1,5 @@
 ## Backend API
+
 References: `/apps/duality-social-node`, `/apps/duality-social-node-e2e`
 
 The backend Node.js API for the Duality Social application is responsible for handling user authentication, managing the social feed, and integrating with external services. The key functionality is provided by the following components:
@@ -7,10 +8,12 @@ The backend Node.js API for the Duality Social application is responsible for ha
 The main API routes are set up in the `/apps/duality-social-node/src/routes/api.route.ts` file. This file defines two sub-routers: `/feed` and `/user`, which are handled by the [`FeedController`](/apps/duality-social-node/src/controllers/api/feed.ts#L5) and [`UserController`](/apps/duality-social-node/src/controllers/api/user.ts#L4) classes, respectively.
 
 **Controllers**:
+
 - The [`FeedController`](/apps/duality-social-node/src/controllers/api/feed.ts#L5) class in `/apps/duality-social-node/src/controllers/api/feed.ts` handles the API endpoints related to the feed functionality, such as retrieving the user's feed, creating new posts and replies, and managing reactions and ratings.
 - The [`UserController`](/apps/duality-social-node/src/controllers/api/user.ts#L4) class in `/apps/duality-social-node/src/controllers/api/user.ts` handles the API endpoints for user registration and login.
 
 **Services**:
+
 - The [`FeedService`](/apps/duality-social-node/src/services/feed.ts#L14) class in `/apps/duality-social-node/src/services/feed.ts` provides the core functionality for managing the social feed, including retrieving the user's feed, fetching more feed items, getting replies to a specific post, and creating new posts and replies.
 - The [`UserService`](/apps/duality-social-node/src/services/user.ts#L16) class in `/apps/duality-social-node/src/services/user.ts` handles user registration, login, and token management.
 
@@ -19,6 +22,7 @@ The `/apps/duality-social-node/src/services/openai.ts` file contains utility fun
 
 **Middleware**:
 The `/apps/duality-social-node/src/middlewares` directory contains two important middleware functions:
+
 - [`authenticateJWT`](/apps/duality-social-node/src/middlewares/authenticateJwt.ts#L4): Verifies the validity of the JWT (JSON Web Token) included in the [`Authorization`](/apps/duality-social-node/src/fetch.ts#L17) header of incoming requests.
 - [`requireAuth`](/apps/duality-social-node/src/middlewares/requireAuth.ts#L3): Ensures that only authenticated users can access certain routes or functionality.
 

@@ -17,7 +17,7 @@ The icon markup syntax provides a flexible way to insert Font Awesome icons into
 {{class iconName}}
 ```
 
-- `class` can be one of: 
+- `class` can be one of:
   - classic
   - duotone
   - light

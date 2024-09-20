@@ -1,4 +1,5 @@
 ### Data Models
+
 References: `/libs/duality-social-lib/src/lib/documents`, `/libs/duality-social-lib/src/lib/interfaces`
 
 The `/libs/duality-social-lib/src/lib/documents` directory contains a set of TypeScript interfaces that define the structure of various documents used in the Duality Social application's data model. These interfaces extend the [`Document`](/apps/duality-social-node/src/services/user.ts#L2) interface from the [`mongoose`](/package.json#L65) library, which provides the necessary functionality for interacting with MongoDB documents.

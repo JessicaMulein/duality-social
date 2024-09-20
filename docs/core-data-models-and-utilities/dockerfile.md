@@ -1,4 +1,5 @@
 ### Dockerfile
+
 References: `/Dockerfile`
 
 The `/Dockerfile` is responsible for setting up the development environment for the Duality Social application. It performs the following key tasks:

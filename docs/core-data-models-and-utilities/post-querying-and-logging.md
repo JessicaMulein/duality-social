@@ -1,4 +1,5 @@
 ### Post Querying and Logging
+
 References: `/apps/duality-social-queue-worker/src/main.ts`
 
 The main functionality of the [`duality-social-queue-worker`](/apps/duality-social-queue-worker/project.json#L2) application is to query the "Post" collection in the MongoDB database and log all posts where the "aiVpId" field is null.

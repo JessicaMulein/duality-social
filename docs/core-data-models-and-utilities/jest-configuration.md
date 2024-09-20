@@ -1,4 +1,5 @@
 ### Jest Configuration
+
 References: `/jest.config.ts`, `/jest.preset.js`
 
 The [`jest.config.ts`](/jest.config.ts#L0) file in the `/duality-social` project is a configuration file for the Jest testing framework. It uses the [`getJestProjects()`](/jest.config.ts#L1) function from the `@nrwl/jest` package to set up multiple Jest projects for the application.

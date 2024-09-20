@@ -1,4 +1,5 @@
 ### User Authentication
+
 References: `/apps/duality-social-node/src/controllers/api/user.ts`, `/apps/duality-social-node/src/models/tokenPayload.interface.ts`, `/apps/duality-social-node/src/services/user.ts`
 
 The [`UserController`](/apps/duality-social-node/src/controllers/api/user.ts#L4) class is responsible for handling user-related API endpoints in the [`duality-social-node`](/apps/duality-social-node-e2e/src/duality-social-node/duality-social-node.spec.ts#L0) application. It defines routes for user registration and login, and delegates the implementation of these functionalities to the [`UserService`](/apps/duality-social-node/src/services/user.ts#L16) class.

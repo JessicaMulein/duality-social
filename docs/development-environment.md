@@ -1,4 +1,5 @@
 ## Development Environment
+
 References: `/jest.config.ts`, `/jest.preset.js`
 
 The `/duality-social` directory is a monorepo workspace generated using Nx, a smart, fast, and extensible build system. It contains the main applications and libraries that make up the Duality Social platform.

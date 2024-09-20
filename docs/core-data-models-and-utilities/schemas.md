@@ -1,4 +1,5 @@
 ### Schemas
+
 References: `/libs/duality-social-lib/src/lib/schemas`
 
 The Mongoose schemas defined in the `/libs/duality-social-lib/src/lib/schemas` directory provide the structure and validation rules for the various data models used in the Duality Social application.

@@ -1,4 +1,5 @@
 ### Type Definitions
+
 References: `/apps/duality-social-react/src/interfaces`
 
 The `/apps/duality-social-react/src/interfaces` directory contains a set of TypeScript interface definitions that provide a consistent and type-safe way to work with the various data structures and configurations used throughout the Duality Social React application.

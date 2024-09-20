@@ -1,4 +1,5 @@
 ### Model Management
+
 References: `/libs/duality-social-lib/src/lib/models`
 
 The [`BaseModel`](/libs/duality-social-lib/src/lib/models/baseModel.ts#L32) class and its associated functionality provide a centralized way to create, retrieve, and interact with Mongoose models used throughout the Duality Social application.

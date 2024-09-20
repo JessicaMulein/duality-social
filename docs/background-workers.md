@@ -1,4 +1,5 @@
 ## Background Workers
+
 References: `/apps/duality-social-queue-worker`, `/apps/duality-social-queue-worker-e2e`
 
 The background worker processes in the Duality Social application are responsible for performing various tasks, such as querying the database and logging posts with missing AI-generated viewpoints.

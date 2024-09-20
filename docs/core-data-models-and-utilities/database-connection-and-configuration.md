@@ -1,4 +1,5 @@
 ### Database Connection and Configuration
+
 References: `/apps/duality-social-queue-worker/src/environments`, `/apps/duality-social-queue-worker/src/setupDatabase.ts`
 
 The [`setupDatabase()`](/apps/duality-social-node/src/setupDatabase.ts#L6) function in `/apps/duality-social-queue-worker/src/setupDatabase.ts` is responsible for setting up the database connection for the Duality Social Queue Worker application. This function performs the following key tasks:

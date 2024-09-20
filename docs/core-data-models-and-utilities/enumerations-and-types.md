@@ -1,4 +1,5 @@
 ### Enumerations and Types
+
 References: `/libs/duality-social-lib/src/lib/enumerations`
 
 The Enumerations and Types subsection covers the various enumerations and types used throughout the Duality Social application to provide a consistent and type-safe way of working with different concepts.

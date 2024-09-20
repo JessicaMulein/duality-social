@@ -1,4 +1,5 @@
 ### Environment Setup
+
 References: `/apps/duality-social-node/src/interfaces/environment.ts`, `/apps/duality-social-queue-worker/src/setupDatabase.ts`
 
 The [`environment.ts`](/apps/duality-social-node/src/environment.ts#L0) file in the `/apps/duality-social-node/src/interfaces/environment.ts` directory defines the configuration settings for the Duality Social application. This file exports an [`IEnvironment`](/apps/duality-social-node/src/interfaces/environment.ts#L3) interface that represents the various environment-specific settings, such as the production environment, site URL, developer settings, OpenAI integration, MongoDB connection, cookie settings, and Pusher integration.

@@ -1,4 +1,5 @@
 ## Frontend React Application
+
 References: `/apps/duality-social-react`, `/apps/duality-social-react-e2e`
 
 The main frontend React application that provides the user interface for the Duality Social platform is located in the `/apps/duality-social-react/src` directory. This application includes the following key components and functionality:

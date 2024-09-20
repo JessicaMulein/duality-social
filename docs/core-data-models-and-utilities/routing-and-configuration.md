@@ -1,4 +1,5 @@
 ### Routing and Configuration
+
 References: `/apps/duality-social-node/src/interfaces/environment.ts`, `/apps/duality-social-node/src/routes/api.route.ts`
 
 The [`api.route.ts`](/apps/duality-social-node/src/routes/api.route.ts#L0) file in the `/apps/duality-social-node/src/routes` directory sets up the main API routes for the Duality Social application. It defines two sub-routers: `/feed` and `/user`, which are handled by the [`FeedController`](/apps/duality-social-node/src/controllers/api/feed.ts#L5) and [`UserController`](/apps/duality-social-node/src/controllers/api/user.ts#L4) classes, respectively.

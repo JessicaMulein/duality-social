@@ -1,4 +1,5 @@
 ### Environment Configuration
+
 References: `/apps/duality-social-react/src/environments`
 
 The `/apps/duality-social-react/src/environments` directory contains two files that define the environment configuration for the [`duality-social-react`](/apps/duality-social-react/project.json#L2) application.

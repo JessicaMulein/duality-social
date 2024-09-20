@@ -1,4 +1,5 @@
 ### Social Feed Management
+
 References: `/apps/duality-social-node/src/controllers/api/feed.ts`, `/apps/duality-social-node/src/services/feed.ts`
 
 The [`FeedController`](/apps/duality-social-node/src/controllers/api/feed.ts#L5) class in `/apps/duality-social-node/src/controllers/api/feed.ts` is responsible for handling the API endpoints related to the social feed functionality in the Duality Social application. It uses the [`FeedService`](/apps/duality-social-node/src/services/feed.ts#L14) class to perform the necessary operations.

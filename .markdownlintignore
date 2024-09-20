@@ -1,0 +1,7 @@
+# Ignore all node_modules directories
+**/node_modules/**
+
+# (Optional) Add other directories or files to ignore
+**/dist/**
+**/build/**
+*.config.js

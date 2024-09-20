@@ -1,4 +1,3 @@
-
 ## Icon Markup
 
 - Basic Icon: `{{heart}}` renders as a regular heart icon
@@ -61,7 +60,7 @@ Remember: Only the icon name is required. All other elements are optional.
 Blog posts support full Markdown syntax in addition to the custom icon markup. This includes:
 
 - Headers (# H1, ## H2, etc.)
-- Code blocks (``` code ```)
+- Code blocks (`code`)
 - Tables
 - And more!
 

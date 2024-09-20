@@ -1,4 +1,5 @@
 ### Middleware and Error Handling
+
 References: `/apps/duality-social-node/src/errors`, `/apps/duality-social-node/src/middlewares`
 
 The `/apps/duality-social-node/src/middlewares` directory contains two important middleware functions:

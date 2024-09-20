@@ -1,4 +1,5 @@
 ## Core Data Models and Utilities
+
 References: `/libs/duality-social-lib/src/lib`, `/libs/duality-social-lib/src/lib/documents`, `/libs/duality-social-lib/src/lib/enumerations`, `/libs/duality-social-lib/src/lib/interfaces`, `/libs/duality-social-lib/src/lib/models`, `/libs/duality-social-lib/src/lib/schemas`
 
 The core data models, schemas, and utility functions used throughout the Duality Social application are defined in the `/libs/duality-social-lib/src/lib` directory. This directory contains several subdirectories and files that work together to provide the fundamental building blocks for the application.

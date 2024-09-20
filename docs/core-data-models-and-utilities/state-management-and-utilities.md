@@ -1,4 +1,5 @@
 ### State Management and Utilities
+
 References: `/apps/duality-social-react/src/utils`
 
 The `/apps/duality-social-react/src/utils` directory contains utility functions and modules that provide various supporting functionality for the Duality Social React application.

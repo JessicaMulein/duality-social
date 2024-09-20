@@ -1,4 +1,5 @@
 ### Entry Point and Routing
+
 References: `/apps/duality-social-react/src/app`
 
 The main entry point of the Duality Social React application is located in the `/apps/duality-social-react/src/app/app.tsx` file. This file contains the [`App`](/apps/duality-social-react/src/app/app.tsx#L9) component, which is responsible for setting up the initial rendering of the React application and providing the necessary routing functionality.
