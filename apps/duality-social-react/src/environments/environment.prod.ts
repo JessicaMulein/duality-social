@@ -1,4 +1,4 @@
-import { IEnvironment } from "../interfaces/environment.ts";
+import { IEnvironment } from '../interfaces/environment.ts';
 
 export const environment: IEnvironment = {
   production: true,

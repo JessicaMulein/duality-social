@@ -11,7 +11,11 @@ import {
   Box,
 } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUser, faComment, faQuestionCircle } from '@awesome.me/kit-89ec609b07/icons/classic/regular';
+import {
+  faUser,
+  faComment,
+  faQuestionCircle,
+} from '@awesome.me/kit-89ec609b07/icons/classic/regular';
 import { AuthContext } from '../auth-provider.tsx';
 import { CommentMenuOption, useMenu } from '../menu-context.tsx';
 import dualitySocialSymbol from '../assets/DSImageOnlySmall.png';
@@ -22,7 +26,7 @@ const TopMenu: React.FC = () => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [commentsAnchorEl, setCommentsAnchorEl] = useState<null | HTMLElement>(
-    null
+    null,
   );
   const [helpAnchorEl, setHelpAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -45,7 +49,10 @@ const TopMenu: React.FC = () => {
   };
 
   return (
-    <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+    <AppBar
+      position="fixed"
+      sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
+    >
       <Toolbar sx={{ minHeight: 64 }}>
         <Box display="flex" alignItems="center" flexGrow={1}>
           <img
@@ -54,7 +61,12 @@ const TopMenu: React.FC = () => {
             style={{ height: 40, marginRight: 10 }}
           />
           <Typography variant="h6" component="div">
-            <span style={{ fontFamily: 'Electric Shocker, Arial, sans-serif', fontSize: '2rem' }}>
+            <span
+              style={{
+                fontFamily: 'Electric Shocker, Arial, sans-serif',
+                fontSize: '2rem',
+              }}
+            >
               Duality
             </span>
             <span
@@ -108,7 +120,7 @@ const TopMenu: React.FC = () => {
                       >
                         {option.label}
                       </MenuItem>
-                    )
+                    ),
                   )}
                 </Menu>
               </div>

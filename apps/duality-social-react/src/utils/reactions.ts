@@ -1,5 +1,20 @@
-import { DefaultReactionsTypeEnum, DefaultReactionsEmoji } from '@duality-social/duality-social-lib';
-import { faFaceAngry, faHandsHoldingHeart, faPartyHorn, faFaceSmilingHands, faFaceConfused, faFaceLaugh, faThumbsUp, faHeart, faFaceSadTear, faFaceHushed, faFaceDizzy } from '@awesome.me/kit-89ec609b07/icons/classic/regular';
+import {
+  DefaultReactionsTypeEnum,
+  DefaultReactionsEmoji,
+} from '@duality-social/duality-social-lib';
+import {
+  faFaceAngry,
+  faHandsHoldingHeart,
+  faPartyHorn,
+  faFaceSmilingHands,
+  faFaceConfused,
+  faFaceLaugh,
+  faThumbsUp,
+  faHeart,
+  faFaceSadTear,
+  faFaceHushed,
+  faFaceDizzy,
+} from '@awesome.me/kit-89ec609b07/icons/classic/regular';
 import { IconDefinition } from '@awesome.me/kit-89ec609b07/icons';
 
 export const reactionEmojis: { [type in DefaultReactionsTypeEnum]: string } = {
@@ -13,10 +28,12 @@ export const reactionEmojis: { [type in DefaultReactionsTypeEnum]: string } = {
   [DefaultReactionsTypeEnum.Love]: DefaultReactionsEmoji.Love,
   [DefaultReactionsTypeEnum.Sad]: DefaultReactionsEmoji.Sad,
   [DefaultReactionsTypeEnum.Wow]: DefaultReactionsEmoji.Wow,
-  [DefaultReactionsTypeEnum.Yuck]: DefaultReactionsEmoji.Yuck
+  [DefaultReactionsTypeEnum.Yuck]: DefaultReactionsEmoji.Yuck,
 };
 
-export const reactionFontAwesomeIcons: { [type in DefaultReactionsTypeEnum]: IconDefinition } = {
+export const reactionFontAwesomeIcons: {
+  [type in DefaultReactionsTypeEnum]: IconDefinition;
+} = {
   [DefaultReactionsTypeEnum.Angry]: faFaceAngry,
   [DefaultReactionsTypeEnum.Care]: faHandsHoldingHeart,
   [DefaultReactionsTypeEnum.Celebrate]: faPartyHorn,
@@ -27,5 +44,5 @@ export const reactionFontAwesomeIcons: { [type in DefaultReactionsTypeEnum]: Ico
   [DefaultReactionsTypeEnum.Love]: faHeart,
   [DefaultReactionsTypeEnum.Sad]: faFaceSadTear,
   [DefaultReactionsTypeEnum.Wow]: faFaceHushed,
-  [DefaultReactionsTypeEnum.Yuck]: faFaceDizzy
+  [DefaultReactionsTypeEnum.Yuck]: faFaceDizzy,
 };

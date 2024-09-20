@@ -1,13 +1,39 @@
 import { Request, Response } from 'express';
-import { Types as MongooseTypes, PipelineStage, ObjectId, Types } from 'mongoose';
+import {
+  Types as MongooseTypes,
+  PipelineStage,
+  ObjectId,
+  Types,
+} from 'mongoose';
 import { ObjectId as BsonObjectId } from 'bson';
 import { Upload } from '@aws-sdk/lib-storage';
 import { S3 } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid';
 import sizeOf from 'image-size';
-import { sanitizeWhitespace, HumanityTypeEnum, parsePostContent, IFeedPost, IRequestUser, PostModel, PostViewpointModel, PostViewpointReactionModel, PostViewpointHumanityModel, DefaultReactionsTypeEnum, PostImpressionModel, PostExpandModel, IFeedPostViewpoint, AppConstants, getCharacterCount, MaxImageSizeError, InvalidImageDimensionError, ImageUploadError } from '@duality-social/duality-social-lib';
 import { environment } from '../environment.ts';
 import { MulterRequest } from '../interfaces/multer-request.ts';
+import {
+  sanitizeWhitespace,
+  HumanityTypeEnum,
+  parsePostContent,
+  IFeedPost,
+  IRequestUser,
+  DefaultReactionsTypeEnum,
+  IFeedPostViewpoint,
+  AppConstants,
+  getCharacterCount,
+  MaxImageSizeError,
+  InvalidImageDimensionError,
+  ImageUploadError,
+} from '@duality-social/duality-social-lib';
+import {
+  PostModel,
+  PostViewpointModel,
+  PostViewpointReactionModel,
+  PostViewpointHumanityModel,
+  PostImpressionModel,
+  PostExpandModel,
+} from '@duality-social/duality-social-node-lib';
 
 export class FeedService {
   private s3: S3;
@@ -25,7 +51,7 @@ export class FeedService {
 
   /**
    * For a given viewpoint, update its metadata to reflect the current state of the post.
-   * @param viewpointId 
+   * @param viewpointId
    */
   async recalculateViewpointMetadata(viewpointId: ObjectId): Promise<void> {
     const viewpoint = await PostViewpointModel.findById(viewpointId);
@@ -46,14 +72,18 @@ export class FeedService {
       Love: 0,
       Sad: 0,
       Wow: 0,
-      Yuck: 0
+      Yuck: 0,
     };
     for (const reaction of reactions) {
       reactionsByType[reaction.reaction] += 1;
     }
-    const impressions = await PostImpressionModel.countDocuments({ viewpointId });
+    const impressions = await PostImpressionModel.countDocuments({
+      viewpointId,
+    });
     const expands = await PostExpandModel.countDocuments({ viewpointId });
-    const humanityVotesCount = await PostViewpointHumanityModel.countDocuments({ viewpointId });
+    const humanityVotesCount = await PostViewpointHumanityModel.countDocuments({
+      viewpointId,
+    });
 
     viewpoint.metadata.replies = replyCount;
     viewpoint.metadata.expands = expands;
@@ -66,16 +96,19 @@ export class FeedService {
 
   /**
    * Get the feed for the authenticated user.
-   * @param req 
-   * @param maxPosts 
-   * @returns 
+   * @param req
+   * @param maxPosts
+   * @returns
    */
   async getFeed(req: Request, maxPosts = 10): Promise<IFeedPost[]> {
     if (req.user === undefined) {
       throw new Error('User not authenticated');
     }
     const currentUser: IRequestUser = req.user;
-    const mostRecentPostId: MongooseTypes.ObjectId | undefined = req.query.mostRecentPostId ? new MongooseTypes.ObjectId(req.query.mostRecentPostId as string) : undefined;
+    const mostRecentPostId: MongooseTypes.ObjectId | undefined = req.query
+      .mostRecentPostId
+      ? new MongooseTypes.ObjectId(req.query.mostRecentPostId as string)
+      : undefined;
     const preferredLanguages = currentUser.languages;
 
     const matchStage: PipelineStage = {
@@ -83,8 +116,8 @@ export class FeedService {
         active: true,
         locked: { $ne: true },
         hidden: { $ne: true },
-        deleted: { $ne: true }
-      }
+        deleted: { $ne: true },
+      },
     };
 
     if (mostRecentPostId) {
@@ -95,127 +128,141 @@ export class FeedService {
       matchStage,
       {
         $lookup: {
-          from: "users",
-          localField: "createdBy",
-          foreignField: "_id",
-          as: "user"
-        }
+          from: 'users',
+          localField: 'createdBy',
+          foreignField: '_id',
+          as: 'user',
+        },
       },
       {
-        $unwind: "$user"
+        $unwind: '$user',
       },
       {
         $match: {
-          $or: [
-            { "user.shadowBan": false },
-            { "user._id": currentUser.id }
-          ]
-        }
+          $or: [{ 'user.shadowBan': false }, { 'user._id': currentUser.id }],
+        },
       },
       {
         $lookup: {
-          from: "profiles",
-          localField: "createdBy",
-          foreignField: "userId",
-          as: "userProfile"
-        }
+          from: 'profiles',
+          localField: 'createdBy',
+          foreignField: 'userId',
+          as: 'userProfile',
+        },
       },
       {
-        $unwind: "$userProfile"
+        $unwind: '$userProfile',
       },
       {
         $lookup: {
-          from: "postviewpoints",
-          let: { postId: "$_id" },
+          from: 'postviewpoints',
+          let: { postId: '$_id' },
           pipeline: [
             {
               $match: {
                 $expr: {
                   $and: [
-                    { $eq: ["$postId", "$$postId"] },
-                    { $in: ["$lang", preferredLanguages] }
-                  ]
-                }
-              }
-            }
+                    { $eq: ['$postId', '$$postId'] },
+                    { $in: ['$lang', preferredLanguages] },
+                  ],
+                },
+              },
+            },
           ],
-          as: "viewpoints"
-        }
+          as: 'viewpoints',
+        },
       },
       {
         $addFields: {
           activityScore: {
             $add: [
-              { $size: "$viewpoints" },
-              { $sum: "$viewpoints.metadata.replies" },
-              { $sum: "$viewpoints.metadata.reactions" },
-              { $sum: "$viewpoints.metadata.humanityByType" }
-            ]
-          }
-        }
+              { $size: '$viewpoints' },
+              { $sum: '$viewpoints.metadata.replies' },
+              { $sum: '$viewpoints.metadata.reactions' },
+              { $sum: '$viewpoints.metadata.humanityByType' },
+            ],
+          },
+        },
       },
       {
         $sort: {
           activityScore: -1,
-          createdAt: -1
-        }
+          createdAt: -1,
+        },
       },
       {
-        $limit: maxPosts
-      }
+        $limit: maxPosts,
+      },
     ];
 
     const posts = await PostModel.aggregate(aggregationPipeline).exec();
 
-    const feedPosts: IFeedPost[] = await Promise.all(posts.map(async post => ({
-      id: post._id,
-      createdAt: post.createdAt,
-      createdBy: post.createdBy,
-      viewpoints: await this.getViewpoints(post._id, preferredLanguages)
-    })));
+    const feedPosts: IFeedPost[] = await Promise.all(
+      posts.map(async (post) => ({
+        id: post._id,
+        createdAt: post.createdAt,
+        createdBy: post.createdBy,
+        viewpoints: await this.getViewpoints(post._id, preferredLanguages),
+      })),
+    );
 
     return feedPosts;
   }
 
-  private async getViewpoints(postId: Types.ObjectId, preferredLanguages: string[]): Promise<IFeedPostViewpoint[]> {
-    const viewpoints = await PostViewpointModel.find({ postId, lang: { $in: preferredLanguages } }).exec();
-    return Promise.all(viewpoints.map(async viewpoint => ({
-      id: viewpoint._id,
-      content: viewpoint.content,
-      rendered: viewpoint.rendered,
-      translated: viewpoint.translated,
-      lang: viewpoint.lang,
-      metadata: {
-        replies: viewpoint.metadata.replies,
-        expands: viewpoint.metadata.expands,
-        impressions: viewpoint.metadata.impressions,
-        reactions: viewpoint.metadata.reactions,
-        reactionsByType: viewpoint.metadata.reactionsByType,
-        humanityByType: viewpoint.metadata.humanityByType,
-        votes: viewpoint.metadata.votes,
-      },
-      type: viewpoint.type,
-      createdAt: viewpoint.createdAt,
-      createdBy: viewpoint.createdBy,
-      replies: await this.getReplies(viewpoint.id, preferredLanguages)
-    })));
+  private async getViewpoints(
+    postId: Types.ObjectId,
+    preferredLanguages: string[],
+  ): Promise<IFeedPostViewpoint[]> {
+    const viewpoints = await PostViewpointModel.find({
+      postId,
+      lang: { $in: preferredLanguages },
+    }).exec();
+    return Promise.all(
+      viewpoints.map(async (viewpoint) => ({
+        id: viewpoint._id,
+        content: viewpoint.content,
+        rendered: viewpoint.rendered,
+        translated: viewpoint.translated,
+        lang: viewpoint.lang,
+        metadata: {
+          replies: viewpoint.metadata.replies,
+          expands: viewpoint.metadata.expands,
+          impressions: viewpoint.metadata.impressions,
+          reactions: viewpoint.metadata.reactions,
+          reactionsByType: viewpoint.metadata.reactionsByType,
+          humanityByType: viewpoint.metadata.humanityByType,
+          votes: viewpoint.metadata.votes,
+        },
+        type: viewpoint.type,
+        createdAt: viewpoint.createdAt,
+        createdBy: viewpoint.createdBy,
+        replies: await this.getReplies(viewpoint.id, preferredLanguages),
+      })),
+    );
   }
 
-  private async getReplies(viewpointId: Types.ObjectId, preferredLanguages: string[]): Promise<IFeedPost[]> {
-    const replies = await PostModel.find({ $or: [{ inVpId: viewpointId }, { aiVpId: viewpointId }] }).exec();
-    return Promise.all(replies.map(async reply => ({
-      id: reply._id,
-      createdAt: reply.createdAt,
-      createdBy: reply.createdBy,
-      viewpoints: await this.getViewpoints(reply.id, preferredLanguages)
-    })));
+  private async getReplies(
+    viewpointId: Types.ObjectId,
+    preferredLanguages: string[],
+  ): Promise<IFeedPost[]> {
+    const replies = await PostModel.find({
+      $or: [{ inVpId: viewpointId }, { aiVpId: viewpointId }],
+    }).exec();
+    return Promise.all(
+      replies.map(async (reply) => ({
+        id: reply._id,
+        createdAt: reply.createdAt,
+        createdBy: reply.createdBy,
+        viewpoints: await this.getViewpoints(reply.id, preferredLanguages),
+      })),
+    );
   }
 
   /**
    * Create a new post.
-   * @param req 
-   * @param res 
-   * @returns 
+   * @param req
+   * @param res
+   * @returns
    */
   async newPost(req: Request, res: Response) {
     if (req.user === undefined) {
@@ -231,7 +278,9 @@ export class FeedService {
     const createdById = new Types.ObjectId();
     const language = await this.detectPostLanguage(content);
 
-    const maxLength = isBlogPost ? AppConstants.MaxBlogPostLength : AppConstants.MaxPostLength;
+    const maxLength = isBlogPost
+      ? AppConstants.MaxBlogPostLength
+      : AppConstants.MaxPostLength;
     const characterCount = getCharacterCount(content, isBlogPost);
 
     if (characterCount > maxLength) {
@@ -255,10 +304,16 @@ export class FeedService {
 
         // Validate image dimensions
         const dimensions = sizeOf(image.buffer);
-        if (dimensions.width && dimensions.height &&
+        if (
+          dimensions.width &&
+          dimensions.height &&
           (dimensions.width > AppConstants.MaxImageDimensions.width ||
-            dimensions.height > AppConstants.MaxImageDimensions.height)) {
-          throw new InvalidImageDimensionError(dimensions.width, dimensions.height);
+            dimensions.height > AppConstants.MaxImageDimensions.height)
+        ) {
+          throw new InvalidImageDimensionError(
+            dimensions.width,
+            dimensions.height,
+          );
         }
 
         // Upload to S3
@@ -266,7 +321,7 @@ export class FeedService {
           Bucket: environment.aws.bucketName,
           Key: `posts/${uuidv4()}-${image.originalname}`,
           Body: image.buffer,
-          ContentType: image.mimetype
+          ContentType: image.mimetype,
         };
 
         try {
@@ -330,7 +385,7 @@ export class FeedService {
       const newViewpoint = await PostViewpointModel.create(inputViewpoint);
       res.status(200).send({
         post: newPost,
-        viewpoint: newViewpoint
+        viewpoint: newViewpoint,
       });
     } catch (error) {
       console.error('Error creating new post:', error);
@@ -340,7 +395,7 @@ export class FeedService {
 
   /**
    * Locally (without calling an external API) detect the language of a given text.
-   * @param text 
+   * @param text
    * @returns The detected language code or 'unknown' if the language cannot be detected.
    */
   async detectPostLanguage(text: string): Promise<string> {
@@ -356,7 +411,9 @@ export class FeedService {
       }
     } catch (error) {
       console.error('Error detecting language:', error);
-      throw new Error('An error occurred while detecting the language of the text');
+      throw new Error(
+        'An error occurred while detecting the language of the text',
+      );
     }
   }
 
@@ -375,14 +432,17 @@ export class FeedService {
       }
 
       // Remove existing reaction if it exists
-      await PostViewpointReactionModel.findOneAndDelete({ viewpointId, createdBy: userId });
+      await PostViewpointReactionModel.findOneAndDelete({
+        viewpointId,
+        createdBy: userId,
+      });
 
       // Create new reaction if provided
       if (reaction) {
         const newReaction = new PostViewpointReactionModel({
           viewpointId,
           createdBy: userId,
-          type: reaction
+          type: reaction,
         });
         await newReaction.save();
       }
@@ -396,8 +456,8 @@ export class FeedService {
 
   /**
    * Records a user's vote on the humanity of a viewpoint.
-   * @param req 
-   * @param res 
+   * @param req
+   * @param res
    */
   async voteViewpointHumanity(req: Request, res: Response): Promise<void> {
     if (req.user === undefined) {
@@ -414,7 +474,7 @@ export class FeedService {
       // Check if the user has already rated this viewpoint
       const existingRating = await PostViewpointHumanityModel.findOne({
         viewpointId,
-        createdBy: currentUser.id
+        createdBy: currentUser.id,
       });
 
       if (existingRating) {
@@ -426,7 +486,7 @@ export class FeedService {
         const newRating = new PostViewpointHumanityModel({
           viewpointId,
           humanity,
-          createdBy: currentUser.id
+          createdBy: currentUser.id,
         });
         await newRating.save();
       }

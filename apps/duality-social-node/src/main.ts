@@ -5,5 +5,5 @@ import { validateEnvironment } from './interfaces/environment.ts';
 const app: App = application;
 
 validateEnvironment(environment, () => {
-    app.start();
+  app.start();
 });

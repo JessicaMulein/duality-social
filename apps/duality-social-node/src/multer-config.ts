@@ -5,7 +5,7 @@ export const upload = multer({
   storage: multer.memoryStorage(),
   limits: {
     fileSize: AppConstants.MaxImageSize,
-    files: AppConstants.MaxPostImages
+    files: AppConstants.MaxPostImages,
   },
   fileFilter: (req, file, cb) => {
     if (file.mimetype.startsWith('image/')) {
@@ -13,5 +13,5 @@ export const upload = multer({
     } else {
       cb(new Error('Not an image! Please upload an image.'));
     }
-  }
+  },
 });

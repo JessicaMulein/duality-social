@@ -14,7 +14,7 @@ library.add(...all);
 config.autoAddCss = false;
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById('root') as HTMLElement,
 );
 root.render(
   <StrictMode>
@@ -23,5 +23,5 @@ root.render(
         <App />
       </AuthProvider>
     </BrowserRouter>
-  </StrictMode>
+  </StrictMode>,
 );

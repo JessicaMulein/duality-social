@@ -8,7 +8,10 @@ interface ViewpointPairProps {
   aiViewpoint: IFeedPostViewpoint;
 }
 
-const ViewpointPair: React.FC<ViewpointPairProps> = ({ inputViewpoint, aiViewpoint }) => {
+const ViewpointPair: React.FC<ViewpointPairProps> = ({
+  inputViewpoint,
+  aiViewpoint,
+}) => {
   return (
     <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
       <Viewpoint viewpoint={inputViewpoint} isLeft={true} />

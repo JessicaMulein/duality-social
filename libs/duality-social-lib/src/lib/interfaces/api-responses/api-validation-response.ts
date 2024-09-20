@@ -1,4 +1,4 @@
 import { ValidationError } from 'express-validator';
 export interface IApiExpressValidationErrorResult {
-    errors: ValidationError[];
+  errors: ValidationError[];
 }

@@ -44,7 +44,7 @@ const ForgotPasswordPage: React.FC = () => {
     } catch (error) {
       setIsTokenValid(false);
       setErrorMessage(
-        'Invalid or expired token. Please request a new password reset.'
+        'Invalid or expired token. Please request a new password reset.',
       );
     }
   };
@@ -86,7 +86,7 @@ const ForgotPasswordPage: React.FC = () => {
         const token = params.get('token');
         if (!token) {
           setErrorMessage(
-            'Invalid token. Please try the password reset process again.'
+            'Invalid token. Please try the password reset process again.',
           );
           return;
         }
@@ -96,7 +96,7 @@ const ForgotPasswordPage: React.FC = () => {
         });
         if (response.status === 200) {
           setSuccessMessage(
-            'Your password has been successfully reset. You can now log in with your new password.'
+            'Your password has been successfully reset. You can now log in with your new password.',
           );
           setErrorMessage('');
           setTimeout(() => navigate('/login'), 3000);
@@ -109,7 +109,7 @@ const ForgotPasswordPage: React.FC = () => {
       if (isAxiosError(error) && error.response) {
         setErrorMessage(
           error.response.data.message ||
-            'An error occurred while processing your request.'
+            'An error occurred while processing your request.',
         );
         setSuccessMessage('');
       } else {
@@ -144,7 +144,9 @@ const ForgotPasswordPage: React.FC = () => {
                 value={formik.values.password}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                error={formik.touched.password && Boolean(formik.errors.password)}
+                error={
+                  formik.touched.password && Boolean(formik.errors.password)
+                }
                 helperText={formik.touched.password && formik.errors.password}
               />
               <TextField
@@ -157,8 +159,14 @@ const ForgotPasswordPage: React.FC = () => {
                 value={formik.values.confirmPassword}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                error={formik.touched.confirmPassword && Boolean(formik.errors.confirmPassword)}
-                helperText={formik.touched.confirmPassword && formik.errors.confirmPassword}
+                error={
+                  formik.touched.confirmPassword &&
+                  Boolean(formik.errors.confirmPassword)
+                }
+                helperText={
+                  formik.touched.confirmPassword &&
+                  formik.errors.confirmPassword
+                }
               />
             </>
           ) : (

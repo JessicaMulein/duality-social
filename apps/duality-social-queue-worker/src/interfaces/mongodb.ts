@@ -1,6 +1,7 @@
-import { ISchemaModels } from "@duality-social/duality-social-lib";
-import { Mongoose } from "mongoose";
+import { ISchemaModels } from '@duality-social/duality-social-node-lib';
+import { Mongoose } from 'mongoose';
 
 export interface IMongoDb {
-    db: Mongoose, schema: ISchemaModels
+  db: Mongoose;
+  schema: ISchemaModels;
 }

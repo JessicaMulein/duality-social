@@ -15,7 +15,12 @@
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["packages/duality-social-node-e2e/**/*.{js,ts}"]
+        "lintFilePatterns": [
+          "apps/duality-social-node-e2e/**/*.ts",
+          "apps/duality-social-node-e2e/**/*.tsx",
+          "apps/duality-social-node-e2e/**/*.js",
+          "apps/duality-social-node-e2e/**/*.jsx"
+        ]
       }
     }
   }

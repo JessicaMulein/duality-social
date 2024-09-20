@@ -4,11 +4,15 @@ import { IRequestUser } from '@duality-social/duality-social-lib';
 import api from './api.ts';
 import authenticatedApi from './authenticated-api.ts';
 
-const login = async (identifier: string, password: string, isEmail: boolean): Promise<{ token: string }> => {
+const login = async (
+  identifier: string,
+  password: string,
+  isEmail: boolean,
+): Promise<{ token: string }> => {
   try {
     const response = await api.post('/user/login', {
       [isEmail ? 'email' : 'username']: identifier,
-      password
+      password,
     });
     if (response.data.token) {
       return { token: response.data.token };
@@ -23,15 +27,28 @@ const login = async (identifier: string, password: string, isEmail: boolean): Pr
   }
 };
 
-const register = async (username: string, email: string, password: string, timezone: string) => {
-  const response = await api.post('/user/register', { username, email, password, timezone });
+const register = async (
+  username: string,
+  email: string,
+  password: string,
+  timezone: string,
+) => {
+  const response = await api.post('/user/register', {
+    username,
+    email,
+    password,
+    timezone,
+  });
   return response.data;
 };
 
 const changePassword = async (currentPassword: string, newPassword: string) => {
   // if we get a 200 response, the password was changed successfully
   // else, we throw an error with the response message
-  const response = await authenticatedApi.post('/user/change-password', { currentPassword, newPassword });
+  const response = await authenticatedApi.post('/user/change-password', {
+    currentPassword,
+    newPassword,
+  });
   if (response.status === 200) {
     return response.data;
   } else {
@@ -46,7 +63,7 @@ const logout = () => {
 const verifyToken = async (token: string): Promise<IRequestUser> => {
   try {
     const response = await api.get('/user/verify', {
-      headers: { Authorization: `Bearer ${token}` }
+      headers: { Authorization: `Bearer ${token}` },
     });
     return response.data.user as IRequestUser;
   } catch (error) {
@@ -74,8 +91,7 @@ const refreshToken = async () => {
         localStorage.setItem('user', JSON.stringify(refreshResponse.data.user));
       }
     }
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Token refresh error:', error);
     if (isAxiosError(error) && error.response) {
       console.error('Error response:', error.response.data);
@@ -83,7 +99,7 @@ const refreshToken = async () => {
     }
     throw new Error('An unexpected error occurred during token refresh');
   }
-}
+};
 
 export default {
   changePassword,

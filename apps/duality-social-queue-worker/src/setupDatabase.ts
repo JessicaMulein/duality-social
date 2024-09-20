@@ -1,8 +1,7 @@
 import { connect, set } from 'mongoose';
-import { SchemaModels } from '@duality-social/duality-social-lib';
+import { SchemaModels } from '@duality-social/duality-social-node-lib';
 import { environment } from './environments/environment.ts';
 import { IMongoDb } from './interfaces/mongodb.ts';
-
 
 export async function setupDatabase(): Promise<IMongoDb> {
   set('strictQuery', true);
@@ -11,5 +10,5 @@ export async function setupDatabase(): Promise<IMongoDb> {
     connectTimeoutMS: 30000,
     waitQueueTimeoutMS: 30000,
   });
-  return { db, schema: SchemaModels};
+  return { db, schema: SchemaModels };
 }

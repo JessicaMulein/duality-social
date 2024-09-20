@@ -34,7 +34,10 @@ const SplashPage: React.FC = () => {
             style={{ width: 150 }}
           />
         </Box>
-        <Typography variant="h1" sx={{ mb: 2, color: theme.palette.primary.main }}>
+        <Typography
+          variant="h1"
+          sx={{ mb: 2, color: theme.palette.primary.main }}
+        >
           Discover{' '}
           <span style={{ fontFamily: 'Electric Shocker, Arial, sans-serif' }}>
             Duality
@@ -53,10 +56,19 @@ const SplashPage: React.FC = () => {
             color: theme.palette.primary.main,
           }}
         >
-          Embrace the power of perspective. Challenge your thoughts. Expand your mind.
+          Embrace the power of perspective. Challenge your thoughts. Expand your
+          mind.
         </Typography>
 
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 4, mb: 6, justifyContent: 'center' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: 4,
+            mb: 6,
+            justifyContent: 'center',
+          }}
+        >
           {[
             {
               title: 'AI-Powered Insights',
@@ -78,7 +90,9 @@ const SplashPage: React.FC = () => {
               key={index}
               sx={{ flex: '1 1 300px', maxWidth: 'calc(33.333% - 16px)' }}
             >
-              <Card sx={{ height: '100%', bgcolor: theme.palette.background.paper }}>
+              <Card
+                sx={{ height: '100%', bgcolor: theme.palette.background.paper }}
+              >
                 <CardContent>
                   <Typography
                     variant="h6"
@@ -87,7 +101,10 @@ const SplashPage: React.FC = () => {
                   >
                     {feature.title}
                   </Typography>
-                  <Typography variant="body1" sx={{ color: theme.palette.text.secondary }}>
+                  <Typography
+                    variant="body1"
+                    sx={{ color: theme.palette.text.secondary }}
+                  >
                     {feature.description}
                   </Typography>
                 </CardContent>
@@ -116,7 +133,10 @@ const SplashPage: React.FC = () => {
           </Button>
         </Box>
 
-        <Typography variant="body2" sx={{ color: theme.palette.text.secondary }}>
+        <Typography
+          variant="body2"
+          sx={{ color: theme.palette.text.secondary }}
+        >
           &copy; 2024 DualitySocial. Redefining social interaction.
         </Typography>
       </Container>

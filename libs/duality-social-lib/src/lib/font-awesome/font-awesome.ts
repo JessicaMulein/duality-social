@@ -10,36 +10,110 @@ library.add(...all);
 
 export const DefaultIconClass = FontAwesomeTextStyleTypeEnum.Regular;
 export const FontAwesomeIconPrefixes = [
-  'fab', 'fal',
-  'far', 'fas',
-  'fat', 'fad',
-  'fasl', 'fasr',
-  'fass', 'fast',
-  'fasds'
+  'fab',
+  'fal',
+  'far',
+  'fas',
+  'fat',
+  'fad',
+  'fasl',
+  'fasr',
+  'fass',
+  'fast',
+  'fasds',
 ] as const;
 export const FontAwesomeIconPrefixStrings = [
-  'fab', 'fal',
-  'far', 'fas',
-  'fat', 'fad',
-  'fasl', 'fasr',
-  'fass', 'fast',
-  'fasds'
+  'fab',
+  'fal',
+  'far',
+  'fas',
+  'fat',
+  'fad',
+  'fasl',
+  'fasr',
+  'fass',
+  'fast',
+  'fasds',
 ];
-export type FontAwesomeIconPrefix = typeof FontAwesomeIconPrefixes[number];
-export const FontAwesomeIconStyles = ['classic', 'duotone', 'light', 'regular', 'solid', 'thin', 'brands', 'sharpsolid'] as const;
-export const FontAwesomeIconStyleStrings = ['classic', 'duotone', 'light', 'regular', 'solid', 'thin', 'brands', 'sharpsolid'];
-export type FontAwesomeIconStyles = typeof FontAwesomeIconStyles[number];
-export const FontAwesomeAdditionalClasses = ['xs', 'sm', 'lg', 'xl', '2xl', '1x', '2x', '3x', '4x', '5x', '6x', '7x', '8x', '9x', '10x', 'spin', 'pulse', 'beat', 'fade', 'flip'] as const;
-export const FontAwesomeAdditionalClassStrings = ['xs', 'sm', 'lg', 'xl', '2xl', '1x', '2x', '3x', '4x', '5x', '6x', '7x', '8x', '9x', '10x', 'spin', 'pulse', 'beat', 'fade', 'flip'];
-export type FontAwesomeAdditionalClass = typeof FontAwesomeAdditionalClasses[number];
-export const DisallowedIconPropertyRegex = /^(display|position|top|left|right|bottom|z-index|margin|padding)$/;
+export type FontAwesomeIconPrefix = (typeof FontAwesomeIconPrefixes)[number];
+export const FontAwesomeIconStyles = [
+  'classic',
+  'duotone',
+  'light',
+  'regular',
+  'solid',
+  'thin',
+  'brands',
+  'sharpsolid',
+] as const;
+export const FontAwesomeIconStyleStrings = [
+  'classic',
+  'duotone',
+  'light',
+  'regular',
+  'solid',
+  'thin',
+  'brands',
+  'sharpsolid',
+];
+export type FontAwesomeIconStyles = (typeof FontAwesomeIconStyles)[number];
+export const FontAwesomeAdditionalClasses = [
+  'xs',
+  'sm',
+  'lg',
+  'xl',
+  '2xl',
+  '1x',
+  '2x',
+  '3x',
+  '4x',
+  '5x',
+  '6x',
+  '7x',
+  '8x',
+  '9x',
+  '10x',
+  'spin',
+  'pulse',
+  'beat',
+  'fade',
+  'flip',
+] as const;
+export const FontAwesomeAdditionalClassStrings = [
+  'xs',
+  'sm',
+  'lg',
+  'xl',
+  '2xl',
+  '1x',
+  '2x',
+  '3x',
+  '4x',
+  '5x',
+  '6x',
+  '7x',
+  '8x',
+  '9x',
+  '10x',
+  'spin',
+  'pulse',
+  'beat',
+  'fade',
+  'flip',
+];
+export type FontAwesomeAdditionalClass =
+  (typeof FontAwesomeAdditionalClasses)[number];
+export const DisallowedIconPropertyRegex =
+  /^(display|position|top|left|right|bottom|z-index|margin|padding)$/;
 
 /**
  * Get all available icon names from the Font Awesome library.
- * @returns 
+ * @returns
  */
 export function getIconNames(): string[] {
-  const libraryAsObject = library as unknown as { definitions: { [key: string]: { [iconName: string]: IconDefinition } } };
+  const libraryAsObject = library as unknown as {
+    definitions: { [key: string]: { [iconName: string]: IconDefinition } };
+  };
   const iconNames: Set<string> = new Set();
 
   for (const className of Object.keys(libraryAsObject.definitions)) {
@@ -56,10 +130,14 @@ export const FontAwesomeIconNames = getIconNames();
 
 /**
  * Extract icon details from icon markup.
- * @param parts 
- * @returns 
+ * @param parts
+ * @returns
  */
-export function extractIconDetails(parts: string[]): { iconName: string, iconBaseClass: string[], additionalClasses: string[] } {
+export function extractIconDetails(parts: string[]): {
+  iconName: string;
+  iconBaseClass: string[];
+  additionalClasses: string[];
+} {
   if (parts.length === 0) {
     throw new Error('Invalid icon markup: no icon class or name specified');
   }
@@ -67,9 +145,13 @@ export function extractIconDetails(parts: string[]): { iconName: string, iconBas
   let iconBaseClass: string[] = ['regular'];
   let additionalClasses: string[] = [];
 
-  if (FontAwesomeIconStyleStrings.includes(parts[0]) || parts[0] === 'sharpsolid') {
+  if (
+    FontAwesomeIconStyleStrings.includes(parts[0]) ||
+    parts[0] === 'sharpsolid'
+  ) {
     const styleClass = parts.shift() as string;
-    iconBaseClass = styleClass === 'sharpsolid' ? ['sharp', 'solid'] : [styleClass];
+    iconBaseClass =
+      styleClass === 'sharpsolid' ? ['sharp', 'solid'] : [styleClass];
   }
 
   if (parts.length === 0) {
@@ -83,9 +165,13 @@ export function extractIconDetails(parts: string[]): { iconName: string, iconBas
     throw new Error(`Invalid icon name: ${iconName}`);
   }
 
-  const invalidAdditionalClasses = additionalClasses.filter(cls => !FontAwesomeAdditionalClassStrings.includes(cls));
+  const invalidAdditionalClasses = additionalClasses.filter(
+    (cls) => !FontAwesomeAdditionalClassStrings.includes(cls),
+  );
   if (invalidAdditionalClasses.length > 0) {
-    throw new Error(`Invalid additional class: ${invalidAdditionalClasses.join(', ')}`);
+    throw new Error(
+      `Invalid additional class: ${invalidAdditionalClasses.join(', ')}`,
+    );
   }
 
   return { iconName, iconBaseClass, additionalClasses };
@@ -93,8 +179,8 @@ export function extractIconDetails(parts: string[]): { iconName: string, iconBas
 
 /**
  * Strip icon markup tags from the input string.
- * @param input 
- * @returns 
+ * @param input
+ * @returns
  */
 export function stripIconMarkup(input: string): string {
   // replace {{iconName}} or {{ iconName }} with ''
@@ -113,7 +199,7 @@ function isValidCSSProperty(declaration: string): boolean {
     return false;
   }
 
-  const [property, value] = declaration.split(':').map(str => str.trim());
+  const [property, value] = declaration.split(':').map((str) => str.trim());
 
   if (!property || !value) {
     return false;
@@ -130,7 +216,8 @@ function isValidCSSProperty(declaration: string): boolean {
   }
 
   // Validate value structure
-  const valueRegex = /^[-+]?[0-9]*\.?[0-9]+(px|em|rem|%)?|auto|inherit|initial|none$/;
+  const valueRegex =
+    /^[-+]?[0-9]*\.?[0-9]+(px|em|rem|%)?|auto|inherit|initial|none$/;
   const colorRegex = /^#[0-9A-Fa-f]{3,6}$|^[a-zA-Z]+$/;
   if (!valueRegex.test(value) && !colorRegex.test(value)) {
     return false;
@@ -146,7 +233,7 @@ function isValidCSSProperty(declaration: string): boolean {
 
 /**
  * Validates the CSS properties using the `css` library.
- * 
+ *
  * @param cssString The CSS string to validate
  * @returns `true` if the CSS is valid, `false` otherwise
  */
@@ -169,7 +256,8 @@ function isValidCSS(cssString: string): boolean {
       }
 
       // Validate value structure
-      const valueRegex = /^[-+]?[0-9]*\.?[0-9]+(px|em|rem|%)?|auto|inherit|initial|none$/;
+      const valueRegex =
+        /^[-+]?[0-9]*\.?[0-9]+(px|em|rem|%)?|auto|inherit|initial|none$/;
       const colorRegex = /^#[0-9A-Fa-f]{3,6}$|^[a-zA-Z]+$/;
       if (!valueRegex.test(value) && !colorRegex.test(value)) {
         throw new Error(`Invalid value: ${value}`);
@@ -184,15 +272,15 @@ function isValidCSS(cssString: string): boolean {
 
 /**
  * Validates the icon markup to ensure it follows the correct syntax and contains valid icon names, classes, and additional classes.
- * 
+ *
  * ## Validation Rules
- * 
+ *
  * 1. The markup must be enclosed in double curly braces `{{ }}`.
  * 2. The icon name must be a valid Font Awesome icon name.
  * 3. The icon class (if specified) must be one of the valid Font Awesome classes.
  * 4. Any additional classes must be valid Font Awesome additional classes.
  * 5. The style attributes (if specified) must be valid CSS properties.
- * 
+ *
  * @param markup The icon markup string to validate
  * @returns `true` if the markup is valid, `false` otherwise
  */
@@ -216,7 +304,7 @@ export function isValidIconMarkup(markup: string): boolean {
   }
 
   try {
-    const { iconName, iconBaseClass: iconClass, additionalClasses } = extractIconDetails(mainParts);
+    const { iconName, additionalClasses } = extractIconDetails(mainParts);
 
     if (!FontAwesomeIconNames.includes(iconName)) {
       return false;
@@ -229,13 +317,16 @@ export function isValidIconMarkup(markup: string): boolean {
     }
 
     if (stylePart) {
-      const styleDeclarations = stylePart.split(';').map(decl => decl.trim()).filter(decl => decl);
+      const styleDeclarations = stylePart
+        .split(';')
+        .map((decl) => decl.trim())
+        .filter((decl) => decl);
       for (const declaration of styleDeclarations) {
         if (!isValidCSSProperty(declaration)) {
           return false;
         }
       }
-      if (!isValidCSS(stylePart)){
+      if (!isValidCSS(stylePart)) {
         return false;
       }
     }
@@ -252,7 +343,7 @@ export function isValidIconMarkup(markup: string): boolean {
  * The syntax is enclosed in double curly braces `{{ }}`.
  *
  * ## Basic Syntax
- * 
+ *
  * ```
  * {{iconName}}
  * ```
@@ -260,11 +351,11 @@ export function isValidIconMarkup(markup: string): boolean {
  * - Example: `{{heart}}` becomes `<i class="fa-regular fa-heart" style="display: inline-block;"></i>`
  *
  * ## Specifying Icon Style
- * 
+ *
  * ```
  * {{class iconName}}
  * ```
- * - `class` can be one of: 
+ * - `class` can be one of:
  *   - classic
  *   - duotone
  *   - light
@@ -276,7 +367,7 @@ export function isValidIconMarkup(markup: string): boolean {
  * - Example: `{{solid heart}}` becomes `<i class="fa-solid fa-heart" style="display: inline-block;"></i>`
  *
  * ## Additional Classes
- * 
+ *
  * ```
  * {{class iconName additionalClass1 additionalClass2 ...}}
  * ```
@@ -286,7 +377,7 @@ export function isValidIconMarkup(markup: string): boolean {
  * - Example: `{{solid heart lg spin}}` becomes `<i class="fa-solid fa-heart fa-lg fa-spin" style="display: inline-block;"></i>`
  *
  * ## Custom Styling
- * 
+ *
  * ```
  * {{class iconName additionalClasses; style1; style2; ...}}
  * ```
@@ -294,7 +385,7 @@ export function isValidIconMarkup(markup: string): boolean {
  * - Example: `{{solid heart; color: red; font-size: 20px;}}` becomes `<i class="fa-solid fa-heart" style="display: inline-block; color: red; font-size: 20px;"></i>`
  *
  * ## Important Notes
- * 
+ *
  * 1. The `display: inline-block;` style is always included and cannot be overridden.
  * 2. Multiple icons can be used in a single string.
  * 3. Invalid markup is left untouched in the output.
@@ -306,11 +397,19 @@ export function isValidIconMarkup(markup: string): boolean {
 export function parseIconMarkup(input: string): string {
   return input.replace(/\{\{([^}]+)\}\}/g, (match, content) => {
     if (isValidIconMarkup(match)) {
-      const [iconPart, stylePart] = content.split(/;(.*)/).map((part: string) => part.trim());
-      const { iconName, iconBaseClass, additionalClasses } = extractIconDetails(iconPart.split(/\s+/));
+      const [iconPart, stylePart] = content
+        .split(/;(.*)/)
+        .map((part: string) => part.trim());
+      const { iconName, iconBaseClass, additionalClasses } = extractIconDetails(
+        iconPart.split(/\s+/),
+      );
       const baseStyle = 'display: inline-block;';
       const customStyle = stylePart ? `${baseStyle} ${stylePart}` : baseStyle;
-      const classNames = [`${iconBaseClass.map(c => `fa-${c}`).join(' ')}`, `fa-${iconName}`, ...additionalClasses.map(c => `fa-${c}`)].join(' ');
+      const classNames = [
+        `${iconBaseClass.map((c) => `fa-${c}`).join(' ')}`,
+        `fa-${iconName}`,
+        ...additionalClasses.map((c) => `fa-${c}`),
+      ].join(' ');
       return `<i class="${classNames}" style="${customStyle}"></i>`;
     }
     return match;

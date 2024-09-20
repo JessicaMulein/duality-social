@@ -137,7 +137,9 @@ Here is a red, 20px solid heart icon: {{solid heart; color: red; font-size: 20px
 `;
 
 const FormatGuide: React.FC = () => {
-  const [content, setContent] = useState<string>(exampleBlurb + '---\n' + iconExampleBlurb);
+  const [content, setContent] = useState<string>(
+    exampleBlurb + '---\n' + iconExampleBlurb,
+  );
   const [isBlogPost, setIsBlogPost] = useState<boolean>(true);
   const [characterCount, setCharacterCount] = useState(0);
   const maxCharacterCount = isBlogPost
@@ -148,12 +150,21 @@ const FormatGuide: React.FC = () => {
     const newContent = e.target.value;
     setContent(newContent);
     setCharacterCount(
-      prepareContentForCharacterCount(newContent, isBlogPost).length
+      prepareContentForCharacterCount(newContent, isBlogPost).length,
     );
   };
 
   return (
-    <Paper elevation={3} sx={{ padding: 2, paddingTop: 4, maxWidth: 600, margin: 'auto', marginTop: 8 }}>
+    <Paper
+      elevation={3}
+      sx={{
+        padding: 2,
+        paddingTop: 4,
+        maxWidth: 600,
+        margin: 'auto',
+        marginTop: 8,
+      }}
+    >
       <Typography variant="h4" gutterBottom>
         Post Formatting Guide
       </Typography>

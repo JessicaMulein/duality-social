@@ -1,5 +1,9 @@
 import sanitizeHtml from 'sanitize-html';
-import { isValidIconMarkup, parseIconMarkup, stripIconMarkup } from './font-awesome/font-awesome';
+import {
+  isValidIconMarkup,
+  parseIconMarkup,
+  stripIconMarkup,
+} from './font-awesome/font-awesome';
 import { v4 } from 'uuid';
 import customFootnote from './markdown-it-footnote-currenturl';
 
@@ -27,8 +31,8 @@ export function makeDataUrl(imageBase64Json: string): string {
 
 // /**
 //  * Given an input image size, return the closest image size our AI can process
-//  * @param size 
-//  * @returns 
+//  * @param size
+//  * @returns
 //  */
 // export function closestImageSize(size: number): CreateImageRequestSizeEnum {
 //   // If size is greater than or equal to 1024, return 1024
@@ -46,11 +50,14 @@ export function makeDataUrl(imageBase64Json: string): string {
 
 /**
  * Converts an image data url to a File object
- * @param imageDataUrl 
- * @param filename 
- * @returns 
+ * @param imageDataUrl
+ * @param filename
+ * @returns
  */
-export function imageDataUrlToFile(imageDataUrl: string, filename = 'image.png'): File {
+export function imageDataUrlToFile(
+  imageDataUrl: string,
+  filename = 'image.png',
+): File {
   if (!imageDataUrl.startsWith('data:image/png;base64,')) {
     throw new Error('Invalid image data URL');
   }
@@ -72,18 +79,21 @@ export function imageDataUrlToFile(imageDataUrl: string, filename = 'image.png')
 
 /**
  * Converts a markdown string to HTML
- * @param markdown 
- * @returns 
+ * @param markdown
+ * @returns
  */
-export function parseMarkdown(markdown: string, docId?: string, currentUrl?: string): string {
-  const md = MarkdownIt('default')
-    .set({
-      breaks: true,
-      html: true,
-      linkify: true,
-      typographer: true,
-      xhtmlOut: true,
-    });
+export function parseMarkdown(
+  markdown: string,
+  docId?: string,
+  currentUrl?: string,
+): string {
+  const md = MarkdownIt('default').set({
+    breaks: true,
+    html: true,
+    linkify: true,
+    typographer: true,
+    xhtmlOut: true,
+  });
 
   markdownItPlugins.forEach(({ plugin, options }) => {
     if (options !== undefined) {
@@ -93,17 +103,25 @@ export function parseMarkdown(markdown: string, docId?: string, currentUrl?: str
     }
   });
 
-  const env = { docId: docId ? docId : v4(), currentUrl: currentUrl ? currentUrl : '' };
+  const env = {
+    docId: docId ? docId : v4(),
+    currentUrl: currentUrl ? currentUrl : '',
+  };
 
   return md.render(markdown, env);
 }
 
 /**
  * Strips HTML tags/attributes, parses markdown, then parses our custom icon markup
- * @param content 
- * @returns 
+ * @param content
+ * @returns
  */
-export function parsePostContent(content: string, isBlogPost: boolean, docId?: string, currentUrl?: string): string {
+export function parsePostContent(
+  content: string,
+  isBlogPost: boolean,
+  docId?: string,
+  currentUrl?: string,
+): string {
   // Phase 1: Strip HTML
   // we strip the html first because we don't support HTML in posts,
   // but our syntax is too close to markdown so it gets parsed as HTML
@@ -137,11 +155,14 @@ export function parsePostContent(content: string, isBlogPost: boolean, docId?: s
  * - Replaces <img> tags with their alt text or a bullet character if alt is not present.
  * - Strips all other HTML tags and attributes.
  * - Replaces CRLF pairs with a single newline character.
- * @param input 
- * @param isBlogPost 
- * @returns 
+ * @param input
+ * @param isBlogPost
+ * @returns
  */
-export function prepareContentForCharacterCount(input: string, isBlogPost: boolean): string {
+export function prepareContentForCharacterCount(
+  input: string,
+  isBlogPost: boolean,
+): string {
   // Replace valid icon markup with a bullet character for character counting
   input = input.replace(/\{\{[^}]+\}\}/g, (match) => {
     return isValidIconMarkup(match) ? '•' : match;
@@ -201,8 +222,8 @@ export function getCharacterCount(input: string, isBlogPost: boolean): number {
 
 /**
  * Sanitizes whitespace in a string by replacing sequential whitespace with single space
- * @param input 
- * @returns 
+ * @param input
+ * @returns
  */
 export function sanitizeWhitespace(input: string): string {
   // replace all whitespace with a single space
@@ -211,8 +232,8 @@ export function sanitizeWhitespace(input: string): string {
 
 /**
  * Sanitized whitespace and strips icon markup prior to submission to AI
- * @param input 
- * @returns 
+ * @param input
+ * @returns
  */
 export function sanitizeForAi(input: string): string {
   const sanitized = sanitizeWhitespace(input);
@@ -222,8 +243,8 @@ export function sanitizeForAi(input: string): string {
 
 /**
  * Gets the timezone offset in minutes for a given timezone.
- * @param timezone 
- * @returns 
+ * @param timezone
+ * @returns
  */
 export function getTimezoneOffset(timezone: string): number {
   const date = new Date();
@@ -234,8 +255,8 @@ export function getTimezoneOffset(timezone: string): number {
 
 /**
  * Checks if a timezone is valid
- * @param timezone 
- * @returns 
+ * @param timezone
+ * @returns
  */
 export function isValidTimezone(timezone: string): boolean {
   try {

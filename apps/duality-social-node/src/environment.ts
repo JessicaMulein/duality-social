@@ -1,5 +1,5 @@
 import { dirname } from 'path';
-import 'dotenv/config'
+import 'dotenv/config';
 import { randomBytes } from 'crypto';
 import { IEnvironment } from './interfaces/environment.ts';
 
@@ -9,9 +9,9 @@ const production = process.env.NODE_ENV === 'production';
 
 function getServerUrl() {
   if (port === 80) {
-      return `http://${host}`;
+    return `http://${host}`;
   } else {
-      return `http://${host}:${port}`;
+    return `http://${host}:${port}`;
   }
 }
 
@@ -51,6 +51,6 @@ export const environment: IEnvironment = {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? '',
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? '',
     region: process.env.AWS_REGION ?? '',
-    bucketName: process.env.AWS_BUCKET_NAME?? '',
-  }
+    bucketName: process.env.AWS_BUCKET_NAME ?? '',
+  },
 };

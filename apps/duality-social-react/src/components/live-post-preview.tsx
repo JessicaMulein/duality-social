@@ -17,7 +17,9 @@ const LivePostPreview: React.FC<LivePostPreviewProps> = ({
   const currentUrl = `${window.location.origin}${location.pathname}`;
 
   useEffect(() => {
-    setParsedContent(parsePostContent(content, isBlogPost, 'preview', currentUrl));
+    setParsedContent(
+      parsePostContent(content, isBlogPost, 'preview', currentUrl),
+    );
   }, [content, isBlogPost, parsedContent, currentUrl]);
 
   return (

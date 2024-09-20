@@ -34,7 +34,7 @@ const NewPost: React.FC<NewPostProps> = ({
   const [cropDialogOpen, setCropDialogOpen] = useState(false);
   const [imageToEdit, setImageToEdit] = useState<string | null>(null);
   const [currentEditingIndex, setCurrentEditingIndex] = useState<number | null>(
-    null
+    null,
   );
   const [postError, setPostError] = useState<string | null>(null);
 
@@ -53,7 +53,7 @@ const NewPost: React.FC<NewPostProps> = ({
               return getCharacterCount(value, isBlogPost) <= maxLength;
             }
             return false;
-          }
+          },
         ),
     }),
     onSubmit: async (values, { setSubmitting, setErrors, resetForm }) => {
@@ -125,7 +125,7 @@ const NewPost: React.FC<NewPostProps> = ({
           images[currentEditingIndex].name || 'cropped_image.jpg',
           {
             type: 'image/jpeg',
-          }
+          },
         );
         return newImages;
       });

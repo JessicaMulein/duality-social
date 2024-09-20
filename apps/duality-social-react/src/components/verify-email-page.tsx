@@ -50,7 +50,7 @@ const VerifyEmailPage: React.FC = () => {
       }
     } catch (error) {
       setMessage(
-        'An error occurred during email verification. Please try again.'
+        'An error occurred during email verification. Please try again.',
       );
       setVerificationStatus('error');
     } finally {

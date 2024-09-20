@@ -26,8 +26,11 @@ interface FormValues {
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = React.useContext(AuthContext);
-  const [registrationError, setRegistrationError] = useState<string | null>(null);
-  const [registrationSuccess, setRegistrationSuccess] = useState<boolean>(false);
+  const [registrationError, setRegistrationError] = useState<string | null>(
+    null,
+  );
+  const [registrationSuccess, setRegistrationSuccess] =
+    useState<boolean>(false);
   const [userTimezone, setUserTimezone] = useState<string>('');
 
   useEffect(() => {
@@ -59,7 +62,7 @@ const RegisterPage: React.FC = () => {
           values.username,
           values.email,
           values.password,
-          values.timezone
+          values.timezone,
         );
         setRegistrationError(null);
         setRegistrationSuccess(true);
@@ -71,10 +74,12 @@ const RegisterPage: React.FC = () => {
         if (isAxiosError(error) && error.response) {
           setRegistrationError(
             error.response.data?.message ||
-              'An error occurred during registration. Please try again.'
+              'An error occurred during registration. Please try again.',
           );
         } else {
-          setRegistrationError('An unexpected error occurred. Please try again.');
+          setRegistrationError(
+            'An unexpected error occurred. Please try again.',
+          );
         }
         setRegistrationSuccess(false);
       } finally {
@@ -95,7 +100,8 @@ const RegisterPage: React.FC = () => {
         </Typography>
         {registrationSuccess && (
           <Alert severity="success" sx={{ mb: 2 }}>
-            Registration successful! You will be redirected to the login page shortly.
+            Registration successful! You will be redirected to the login page
+            shortly.
           </Alert>
         )}
         <Box component="form" onSubmit={formik.handleSubmit} noValidate>

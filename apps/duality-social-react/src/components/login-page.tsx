@@ -53,7 +53,7 @@ function LoginPage() {
         : Yup.string()
             .matches(
               AppConstants.UsernameRegex,
-              AppConstants.UsernameRegexError
+              AppConstants.UsernameRegexError,
             )
             .required('Required'),
     password: Yup.string()
@@ -63,14 +63,24 @@ function LoginPage() {
 
   const handleSubmit = async (
     values: typeof initialValues,
-    { setSubmitting, resetForm }: { setSubmitting: (isSubmitting: boolean) => void; resetForm: () => void }
+    {
+      setSubmitting,
+      resetForm,
+    }: {
+      setSubmitting: (isSubmitting: boolean) => void;
+      resetForm: () => void;
+    },
   ) => {
     try {
-      await login(loginType === 'email' ? values.email : values.username, values.password, loginType === 'email');
-      
+      await login(
+        loginType === 'email' ? values.email : values.username,
+        values.password,
+        loginType === 'email',
+      );
+
       // Wait for a short time to ensure state is updated
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
+      await new Promise((resolve) => setTimeout(resolve, 100));
+
       resetForm();
       navigate('/dashboard');
     } catch (error) {
@@ -116,7 +126,12 @@ function LoginPage() {
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-          {({ isSubmitting, values, errors, touched }: FormikProps<FormValues>) => (
+          {({
+            isSubmitting,
+            values,
+            errors,
+            touched,
+          }: FormikProps<FormValues>) => (
             <Form>
               <Field
                 as={TextField}
@@ -177,7 +192,14 @@ function LoginPage() {
             </Form>
           )}
         </Formik>
-        <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+        <Box
+          sx={{
+            mt: 2,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
           <MuiLink
             component={Link}
             to="#"

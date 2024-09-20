@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
-  Box,
-} from '@mui/material';
+import { Typography, List, ListItem, ListItemText, Box } from '@mui/material';
 import { AppConstants } from '@duality-social/duality-social-lib';
 
 const CharacterCountGuide: React.FC = () => {

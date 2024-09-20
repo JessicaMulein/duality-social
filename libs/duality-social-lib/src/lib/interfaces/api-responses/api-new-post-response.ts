@@ -1,5 +1,3 @@
-import { IApiMessageResponse } from "./api-message-response.ts";
+import { IApiMessageResponse } from './api-message-response.ts';
 
-export interface IApiNewPostResponse extends IApiMessageResponse {
-
-}
+export type IApiNewPostResponse = IApiMessageResponse;

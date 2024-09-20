@@ -3,7 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/duality-social-queue-worker/src",
   "projectType": "application",
-  "implicitDependencies": ["duality-social-lib"],
+  "implicitDependencies": ["duality-social-lib", "duality-social-node-lib"],
   "targets": {
     "build": {
       "executor": "@nrwl/esbuild:esbuild",

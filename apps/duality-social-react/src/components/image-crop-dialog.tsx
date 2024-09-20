@@ -10,14 +10,22 @@ interface ImageCropDialogProps {
   onSave: (croppedImage: Blob) => void;
 }
 
-const ImageCropDialog: React.FC<ImageCropDialogProps> = ({ open, image, onClose, onSave }) => {
+const ImageCropDialog: React.FC<ImageCropDialogProps> = ({
+  open,
+  image,
+  onClose,
+  onSave,
+}) => {
   const [crop, setCrop] = useState<Point>({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null);
 
-  const onCropComplete = useCallback((croppedArea: Area, croppedAreaPixels: Area) => {
-    setCroppedAreaPixels(croppedAreaPixels);
-  }, []);
+  const onCropComplete = useCallback(
+    (croppedArea: Area, croppedAreaPixels: Area) => {
+      setCroppedAreaPixels(croppedAreaPixels);
+    },
+    [],
+  );
 
   const createCroppedImage = useCallback(async () => {
     if (croppedAreaPixels) {
@@ -39,14 +47,14 @@ const ImageCropDialog: React.FC<ImageCropDialogProps> = ({ open, image, onClose,
         0,
         0,
         croppedAreaPixels.width,
-        croppedAreaPixels.height
+        croppedAreaPixels.height,
       );
       canvas.toBlob(
         (blob) => {
           if (blob) onSave(blob);
         },
         'image/jpeg',
-        1
+        1,
       );
     }
   }, [croppedAreaPixels, image, onSave]);

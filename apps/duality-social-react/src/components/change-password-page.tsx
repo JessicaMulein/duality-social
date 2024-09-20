@@ -26,7 +26,10 @@ const ChangePasswordPage: React.FC = () => {
       .required('Current password is required'),
     newPassword: Yup.string()
       .matches(AppConstants.PasswordRegex, AppConstants.PasswordRegexError)
-      .notOneOf([Yup.ref('currentPassword')], 'New password must be different from the current password')
+      .notOneOf(
+        [Yup.ref('currentPassword')],
+        'New password must be different from the current password',
+      )
       .required('New password is required'),
     confirmNewPassword: Yup.string()
       .oneOf([Yup.ref('newPassword')], 'Passwords must match')
@@ -42,7 +45,10 @@ const ChangePasswordPage: React.FC = () => {
     validationSchema,
     onSubmit: async (values, { setSubmitting, resetForm }) => {
       try {
-        const result = await changePassword(values.currentPassword, values.newPassword);
+        const result = await changePassword(
+          values.currentPassword,
+          values.newPassword,
+        );
         if (result.success) {
           setSuccessMessage(result.message);
           setErrorMessage(null);
@@ -87,8 +93,13 @@ const ChangePasswordPage: React.FC = () => {
             value={formik.values.currentPassword}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={formik.touched.currentPassword && Boolean(formik.errors.currentPassword)}
-            helperText={formik.touched.currentPassword && formik.errors.currentPassword}
+            error={
+              formik.touched.currentPassword &&
+              Boolean(formik.errors.currentPassword)
+            }
+            helperText={
+              formik.touched.currentPassword && formik.errors.currentPassword
+            }
           />
           <TextField
             fullWidth
@@ -100,7 +111,9 @@ const ChangePasswordPage: React.FC = () => {
             value={formik.values.newPassword}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={formik.touched.newPassword && Boolean(formik.errors.newPassword)}
+            error={
+              formik.touched.newPassword && Boolean(formik.errors.newPassword)
+            }
             helperText={formik.touched.newPassword && formik.errors.newPassword}
           />
           <TextField
@@ -113,8 +126,14 @@ const ChangePasswordPage: React.FC = () => {
             value={formik.values.confirmNewPassword}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            error={formik.touched.confirmNewPassword && Boolean(formik.errors.confirmNewPassword)}
-            helperText={formik.touched.confirmNewPassword && formik.errors.confirmNewPassword}
+            error={
+              formik.touched.confirmNewPassword &&
+              Boolean(formik.errors.confirmNewPassword)
+            }
+            helperText={
+              formik.touched.confirmNewPassword &&
+              formik.errors.confirmNewPassword
+            }
           />
 
           {(error || errorMessage) && (

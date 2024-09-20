@@ -158,7 +158,8 @@ const BlogPostGuide: React.FC = () => {
                 [^longnote]: Here's one with multiple blocks.
                 <br />
                 <br />
-                &nbsp;&nbsp;&nbsp;&nbsp;Subsequent paragraphs are indented to show that they
+                &nbsp;&nbsp;&nbsp;&nbsp;Subsequent paragraphs are indented to
+                show that they
                 <br />
                 belong to the previous footnote.
               </Typography>

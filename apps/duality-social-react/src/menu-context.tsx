@@ -24,7 +24,7 @@ const MenuContext = createContext<MenuContextType | undefined>(undefined);
 export const MenuProvider: React.FC<MenuProviderProps> = ({ children }) => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  
+
   const initialCommentOptions: CommentMenuOption[] = [
     {
       label: 'New Debate',
@@ -32,8 +32,10 @@ export const MenuProvider: React.FC<MenuProviderProps> = ({ children }) => {
       isGlobal: true,
     },
   ];
-  
-  const [globalOptions, setGlobalOptions] = useState<CommentMenuOption[]>(initialCommentOptions);
+
+  const [globalOptions, setGlobalOptions] = useState<CommentMenuOption[]>(
+    initialCommentOptions,
+  );
   const [contextOptions, setContextOptions] = useState<CommentMenuOption[]>([]);
 
   const addCommentOptions = useCallback((newOptions: CommentMenuOption[]) => {

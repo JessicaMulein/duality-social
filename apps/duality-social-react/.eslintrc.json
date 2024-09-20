@@ -4,15 +4,24 @@
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-      "rules": {}
+      "extends": ["plugin:prettier/recommended"],
+      "rules": {
+        "prettier/prettier": "error"
+      }
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "rules": {}
+      "extends": ["plugin:prettier/recommended"],
+      "rules": {
+        "prettier/prettier": "error"
+      }
     },
     {
       "files": ["*.js", "*.jsx"],
-      "rules": {}
+      "extends": ["plugin:prettier/recommended"],
+      "rules": {
+        "prettier/prettier": "error"
+      }
     }
   ]
 }

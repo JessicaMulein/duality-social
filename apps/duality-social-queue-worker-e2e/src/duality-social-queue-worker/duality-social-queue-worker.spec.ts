@@ -5,7 +5,7 @@ describe('CLI tests', () => {
   it('should print a message', () => {
     const cliPath = join(
       process.cwd(),
-      'dist/apps/duality-social-queue-worker'
+      'dist/apps/duality-social-queue-worker',
     );
 
     const output = execSync(`node ${cliPath}`).toString();

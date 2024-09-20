@@ -1,4 +1,3 @@
-
 export enum DefaultReactionsTypeEnum {
   Angry = 'Angry',
   Care = 'Care',

@@ -1,3 +1,3 @@
 export interface IHasUpdates {
-    updatedAt: Date;
+  updatedAt: Date;
 }

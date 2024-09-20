@@ -23,6 +23,9 @@
     "paths": {
       "@duality-social/duality-social-lib": [
         "libs/duality-social-lib/src/index.ts"
+      ],
+      "@duality-social/duality-social-node-lib": [
+        "libs/duality-social-node-lib/src/index.ts"
       ]
     }
   },

@@ -1,9 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-
   const attachFootnoteListeners = () => {
-    const footnoteLinks = document.querySelectorAll('.footnote-backref, .footnote-ref a');
+    const footnoteLinks = document.querySelectorAll(
+      '.footnote-backref, .footnote-ref a',
+    );
 
-    footnoteLinks.forEach(link => {
+    footnoteLinks.forEach((link) => {
       link.addEventListener('click', (event) => {
         event.preventDefault();
         const href = link.getAttribute('href');
@@ -28,13 +29,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const additionalOffset = 20; // Additional buffer to ensure the element is fully visible
 
     // Calculate the scroll position
-    const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY;
+    const targetPosition =
+      targetElement.getBoundingClientRect().top + window.scrollY;
     const scrollToPosition = targetPosition - headerHeight - additionalOffset;
 
     // Scroll to the calculated position
     window.scrollTo({
       top: scrollToPosition,
-      behavior: 'smooth'
+      behavior: 'smooth',
     });
   };
 

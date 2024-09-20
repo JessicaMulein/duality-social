@@ -1,4 +1,10 @@
-import { extractIconDetails, isValidIconMarkup, parseIconMarkup, FontAwesomeAdditionalClasses, FontAwesomeIconStyles } from './font-awesome';
+import {
+  extractIconDetails,
+  isValidIconMarkup,
+  parseIconMarkup,
+  FontAwesomeAdditionalClasses,
+  FontAwesomeIconStyles,
+} from './font-awesome';
 
 describe('font-awesome', () => {
   describe('extractIconDetails', () => {
@@ -8,7 +14,7 @@ describe('font-awesome', () => {
       expect(result).toEqual({
         iconName: 'heart',
         iconBaseClass: ['solid'],
-        additionalClasses: []
+        additionalClasses: [],
       });
     });
 
@@ -18,7 +24,7 @@ describe('font-awesome', () => {
       expect(result).toEqual({
         iconName: 'heart',
         iconBaseClass: ['solid'],
-        additionalClasses: ['lg', 'spin']
+        additionalClasses: ['lg', 'spin'],
       });
     });
 
@@ -28,7 +34,7 @@ describe('font-awesome', () => {
       expect(result).toEqual({
         iconName: 'heart',
         iconBaseClass: ['regular'],
-        additionalClasses: []
+        additionalClasses: [],
       });
     });
 
@@ -38,7 +44,7 @@ describe('font-awesome', () => {
       expect(result).toEqual({
         iconName: 'heart',
         iconBaseClass: ['regular'],
-        additionalClasses: ['lg', 'spin']
+        additionalClasses: ['lg', 'spin'],
       });
     });
 
@@ -46,35 +52,47 @@ describe('font-awesome', () => {
      * then since the first term was not one of FontAwesomeIconStyleStrings,
      * invalid-class becomes the iconName, and heart is expected to be an additional class.
      * invalid-class is therefore an invalid icon name.
-    */
+     */
     it('should throw an error for invalid icon class', () => {
       const parts = ['invalid', 'heart'];
-      expect(() => extractIconDetails(parts)).toThrow('Invalid icon name: invalid');
+      expect(() => extractIconDetails(parts)).toThrow(
+        'Invalid icon name: invalid',
+      );
     });
 
     it('should throw an error for invalid icon name', () => {
       const parts = ['solid', 'invalid-icon'];
-      expect(() => extractIconDetails(parts)).toThrow('Invalid icon name: invalid-icon');
+      expect(() => extractIconDetails(parts)).toThrow(
+        'Invalid icon name: invalid-icon',
+      );
     });
 
     it('should throw an error for invalid additional classes', () => {
       const parts = ['solid', 'heart', 'invalid-class'];
-      expect(() => extractIconDetails(parts)).toThrow('Invalid additional class: invalid-class');
+      expect(() => extractIconDetails(parts)).toThrow(
+        'Invalid additional class: invalid-class',
+      );
     });
 
     it('should throw an error for invalid icon name when first term is invalid class', () => {
       const parts = ['invalid-class'];
-      expect(() => extractIconDetails(parts)).toThrow('Invalid icon name: invalid-class');
+      expect(() => extractIconDetails(parts)).toThrow(
+        'Invalid icon name: invalid-class',
+      );
     });
 
     it('should handle empty input array', () => {
       const parts: string[] = [];
-      expect(() => extractIconDetails(parts)).toThrow('Invalid icon markup: no icon class or name specified');
+      expect(() => extractIconDetails(parts)).toThrow(
+        'Invalid icon markup: no icon class or name specified',
+      );
     });
 
     it('should handle input array with only invalid additional classes', () => {
       const parts = ['invalid-class'];
-      expect(() => extractIconDetails(parts)).toThrow('Invalid icon name: invalid-class');
+      expect(() => extractIconDetails(parts)).toThrow(
+        'Invalid icon name: invalid-class',
+      );
     });
 
     it('should handle input array with only valid additional classes', () => {
@@ -84,51 +102,72 @@ describe('font-awesome', () => {
 
     it('should handle input array with valid icon name and invalid additional classes', () => {
       const parts = ['heart', 'invalid-class'];
-      expect(() => extractIconDetails(parts)).toThrow('Invalid additional class: invalid-class');
+      expect(() => extractIconDetails(parts)).toThrow(
+        'Invalid additional class: invalid-class',
+      );
     });
 
     it('should handle input array with valid icon class, name, and invalid additional classes', () => {
       const parts = ['solid', 'heart', 'invalid-class'];
-      expect(() => extractIconDetails(parts)).toThrow('Invalid additional class: invalid-class');
+      expect(() => extractIconDetails(parts)).toThrow(
+        'Invalid additional class: invalid-class',
+      );
     });
   });
 
   describe('parseIconMarkup', () => {
     it('should handle single word icons', () => {
-      expect(parseIconMarkup('{{heart}}')).toBe('<i class="fa-regular fa-heart" style="display: inline-block;"></i>');
+      expect(parseIconMarkup('{{heart}}')).toBe(
+        '<i class="fa-regular fa-heart" style="display: inline-block;"></i>',
+      );
     });
 
     it('should handle all valid classes', () => {
-      FontAwesomeIconStyles
-        .filter(iconClass => iconClass !== 'sharpsolid')
-        .forEach(iconClass => {
-          expect(parseIconMarkup(`{{${iconClass} heart}}`)).toBe(`<i class="fa-${iconClass} fa-heart" style="display: inline-block;"></i>`);
-        });
-      expect(parseIconMarkup('{{sharpsolid heart}}')).toBe('<i class="fa-sharp fa-solid fa-heart" style="display: inline-block;"></i>');
+      FontAwesomeIconStyles.filter(
+        (iconClass) => iconClass !== 'sharpsolid',
+      ).forEach((iconClass) => {
+        expect(parseIconMarkup(`{{${iconClass} heart}}`)).toBe(
+          `<i class="fa-${iconClass} fa-heart" style="display: inline-block;"></i>`,
+        );
+      });
+      expect(parseIconMarkup('{{sharpsolid heart}}')).toBe(
+        '<i class="fa-sharp fa-solid fa-heart" style="display: inline-block;"></i>',
+      );
     });
 
     it('should handle all additional classes', () => {
-      FontAwesomeAdditionalClasses.forEach(additionalClass => {
-        expect(parseIconMarkup(`{{heart ${additionalClass}}}`)).toBe(`<i class="fa-regular fa-heart fa-${additionalClass}" style="display: inline-block;"></i>`);
+      FontAwesomeAdditionalClasses.forEach((additionalClass) => {
+        expect(parseIconMarkup(`{{heart ${additionalClass}}}`)).toBe(
+          `<i class="fa-regular fa-heart fa-${additionalClass}" style="display: inline-block;"></i>`,
+        );
       });
     });
 
     it('should handle multiple classes', () => {
-      expect(parseIconMarkup('{{solid heart lg spin}}')).toBe('<i class="fa-solid fa-heart fa-lg fa-spin" style="display: inline-block;"></i>');
+      expect(parseIconMarkup('{{solid heart lg spin}}')).toBe(
+        '<i class="fa-solid fa-heart fa-lg fa-spin" style="display: inline-block;"></i>',
+      );
     });
 
     it('should handle custom styles', () => {
-      expect(parseIconMarkup('{{solid heart; color: red; font-size: 20px;}}')).toBe('<i class="fa-solid fa-heart" style="display: inline-block; color: red; font-size: 20px;"></i>');
+      expect(
+        parseIconMarkup('{{solid heart; color: red; font-size: 20px;}}'),
+      ).toBe(
+        '<i class="fa-solid fa-heart" style="display: inline-block; color: red; font-size: 20px;"></i>',
+      );
     });
 
     it('should handle multiple icons in a string', () => {
       const input = 'Hello {{heart}} World {{solid star 2x spin}}';
-      const expected = 'Hello <i class="fa-regular fa-heart" style="display: inline-block;"></i> World <i class="fa-solid fa-star fa-2x fa-spin" style="display: inline-block;"></i>';
+      const expected =
+        'Hello <i class="fa-regular fa-heart" style="display: inline-block;"></i> World <i class="fa-solid fa-star fa-2x fa-spin" style="display: inline-block;"></i>';
       expect(parseIconMarkup(input)).toBe(expected);
     });
 
     it('should handle combined usage with multiple classes and icon name', () => {
-      expect(parseIconMarkup('{{solid heart lg spin}}')).toBe('<i class="fa-solid fa-heart fa-lg fa-spin" style="display: inline-block;"></i>');
+      expect(parseIconMarkup('{{solid heart lg spin}}')).toBe(
+        '<i class="fa-solid fa-heart fa-lg fa-spin" style="display: inline-block;"></i>',
+      );
     });
 
     it('should leave invalid markup untouched', () => {
@@ -154,12 +193,23 @@ describe('font-awesome', () => {
 
     it('should return true for valid icon markup with style attributes', () => {
       expect(isValidIconMarkup('{{solid heart; color: red;}}')).toBe(true);
-      expect(isValidIconMarkup('{{solid heart 2x; color: red; font-size: 20px;}}')).toBe(true);
+      expect(
+        isValidIconMarkup('{{solid heart 2x; color: red; font-size: 20px;}}'),
+      ).toBe(true);
     });
 
     it('should return true for valid icon markup with all supported styles', () => {
-      const styles = ['classic', 'duotone', 'light', 'regular', 'solid', 'thin', 'brands', 'sharpsolid'];
-      styles.forEach(style => {
+      const styles = [
+        'classic',
+        'duotone',
+        'light',
+        'regular',
+        'solid',
+        'thin',
+        'brands',
+        'sharpsolid',
+      ];
+      styles.forEach((style) => {
         expect(isValidIconMarkup(`{{${style} heart}}`)).toBe(true);
       });
     });
@@ -196,8 +246,20 @@ describe('font-awesome', () => {
     });
 
     it('should not allow override of specific properties', () => {
-      ['display', 'position', 'top', 'left', 'right', 'bottom', 'z-index', 'margin', 'padding'].forEach(property => {
-        expect(isValidIconMarkup(`{{solid heart; ${property}: value;}}`)).toBe(false);
+      [
+        'display',
+        'position',
+        'top',
+        'left',
+        'right',
+        'bottom',
+        'z-index',
+        'margin',
+        'padding',
+      ].forEach((property) => {
+        expect(isValidIconMarkup(`{{solid heart; ${property}: value;}}`)).toBe(
+          false,
+        );
       });
     });
   });
@@ -205,16 +267,22 @@ describe('font-awesome', () => {
   // more extensive testing of css validation
   describe('isValidIconMarkup CSS Validation', () => {
     it('should prevent bad css syntax', () => {
-      expect(isValidIconMarkup('{{solid heart; invalid-property: invalidValue;}}')).toBe(false);
+      expect(
+        isValidIconMarkup('{{solid heart; invalid-property: invalidValue;}}'),
+      ).toBe(false);
     });
 
     it('should prevent unknown CSS property', () => {
-      expect(isValidIconMarkup('{{solid heart; unknown-property: value;}}')).toBe(false);
+      expect(
+        isValidIconMarkup('{{solid heart; unknown-property: value;}}'),
+      ).toBe(false);
     });
 
     it('should flag invalid CSS syntax (invalid property structure)', () => {
       expect(isValidIconMarkup('{{solid heart; color: red;}}')).toBe(true);
-      expect(isValidIconMarkup('{{solid heart; color: red invalid-syntax}}')).toBe(false);
+      expect(
+        isValidIconMarkup('{{solid heart; color: red invalid-syntax}}'),
+      ).toBe(false);
     });
 
     // it('should flag invalid CSS value (invalid value structure)', () => {
@@ -234,7 +302,9 @@ describe('font-awesome', () => {
     // });
 
     it('should flag CSS property missing a semicolon', () => {
-      expect(isValidIconMarkup('{{solid heart; color: red display: block;}}')).toBe(false);
+      expect(
+        isValidIconMarkup('{{solid heart; color: red display: block;}}'),
+      ).toBe(false);
     });
 
     // it('should flag invalid characters in CSS property', () => {
@@ -246,7 +316,9 @@ describe('font-awesome', () => {
     });
 
     it('should flag invalid CSS property names and values', () => {
-      expect(isValidIconMarkup('{{solid heart; 123color: 456value;}}')).toBe(false);
+      expect(isValidIconMarkup('{{solid heart; 123color: 456value;}}')).toBe(
+        false,
+      );
     });
   });
 });

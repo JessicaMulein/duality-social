@@ -24,13 +24,13 @@ interface ViewpointProps {
 const Viewpoint: React.FC<ViewpointProps> = ({ viewpoint, isLeft }) => {
   const [showReactions, setShowReactions] = useState(false);
   const [humanVotes, setHumanVotes] = useState(
-    viewpoint.metadata.humanityByType.Human || 0
+    viewpoint.metadata.humanityByType.Human || 0,
   );
   const [aiVotes, setAiVotes] = useState(
-    viewpoint.metadata.humanityByType.Ai || 0
+    viewpoint.metadata.humanityByType.Ai || 0,
   );
   const [botVotes, setBotVotes] = useState(
-    viewpoint.metadata.humanityByType.Bot || 0
+    viewpoint.metadata.humanityByType.Bot || 0,
   );
   const [expanded, setExpanded] = useState(true);
 
@@ -80,7 +80,7 @@ const Viewpoint: React.FC<ViewpointProps> = ({ viewpoint, isLeft }) => {
                   size="small"
                   variant="outlined"
                 />
-              )
+              ),
             )}
           </Box>
 

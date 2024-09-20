@@ -1,9 +1,41 @@
 import { MailDataRequired, MailService } from '@sendgrid/mail';
 import { environment } from '../environment';
-import { AccountDeletedError, AccountLockedError, AccountStatusError, AccountStatusTypeEnum, AppConstants, EmailInUseError, EmailTokenExpiredError, EmailTokenModel, EmailTokenSentTooRecentlyError, EmailTokenType, EmailTokenUsedOrInvalidError, EmailVerifiedError, IEmailTokenDocument, InvalidCredentialsError, InvalidPasswordError, InvalidTokenError, InvalidUsernameError, IUser, IUserDocument, ICreateUserBasics, LockTypeEnum, PendingEmailVerificationError, UserModel, UsernameInUseError, UsernameOrEmailRequiredError, UserNotFoundError, ProfileModel, IProfile, IApiUserProfileResponse } from '@duality-social/duality-social-lib';
 import { compare, hashSync } from 'bcrypt';
 import { randomBytes } from 'crypto';
 import { MongooseValidationError } from '../errors/mongoose-validation-error.ts';
+import {
+  AccountDeletedError,
+  AccountLockedError,
+  AccountStatusError,
+  AccountStatusTypeEnum,
+  AppConstants,
+  EmailInUseError,
+  EmailTokenExpiredError,
+  EmailTokenSentTooRecentlyError,
+  EmailTokenType,
+  EmailTokenUsedOrInvalidError,
+  EmailVerifiedError,
+  IEmailTokenDocument,
+  InvalidCredentialsError,
+  InvalidPasswordError,
+  InvalidTokenError,
+  InvalidUsernameError,
+  IUser,
+  IUserDocument,
+  ICreateUserBasics,
+  LockTypeEnum,
+  PendingEmailVerificationError,
+  UsernameInUseError,
+  UsernameOrEmailRequiredError,
+  UserNotFoundError,
+  IProfile,
+  IApiUserProfileResponse,
+} from '@duality-social/duality-social-lib';
+import {
+  EmailTokenModel,
+  UserModel,
+  ProfileModel,
+} from '@duality-social/duality-social-node-lib';
 
 export class UserService {
   private sendgridClient: MailService;
@@ -14,12 +46,19 @@ export class UserService {
 
   /**
    * Create a new email token to send to the user for email verification
-   * @param userDoc 
-   * @returns 
+   * @param userDoc
+   * @returns
    */
-  public async createEmailToken(userDoc: IUserDocument, type: EmailTokenType): Promise<IEmailTokenDocument> {
+  public async createEmailToken(
+    userDoc: IUserDocument,
+    type: EmailTokenType,
+  ): Promise<IEmailTokenDocument> {
     // delete any expired tokens for the same user and email to prevent index constraint conflicts
-    await EmailTokenModel.deleteMany({ userId: userDoc.id, email: userDoc.email, expiresAt: { $lt: new Date() } });
+    await EmailTokenModel.deleteMany({
+      userId: userDoc.id,
+      email: userDoc.email,
+      expiresAt: { $lt: new Date() },
+    });
     const emailToken: IEmailTokenDocument = await EmailTokenModel.create({
       userId: userDoc.id,
       type: type,
@@ -34,10 +73,14 @@ export class UserService {
 
   /**
    * Send an email token to the user for email verification
-   * @param token 
+   * @param token
    */
   public async sendEmailToken(emailToken: IEmailTokenDocument): Promise<void> {
-    if (emailToken.lastSent && emailToken.lastSent.getTime() + AppConstants.EmailTokenResendInterval > Date.now()) {
+    if (
+      emailToken.lastSent &&
+      emailToken.lastSent.getTime() + AppConstants.EmailTokenResendInterval >
+        Date.now()
+    ) {
       throw new EmailTokenSentTooRecentlyError(emailToken.lastSent);
     }
     const verifyUrl = `${environment.serverUrl}/verify-email?token=${emailToken.token}`;
@@ -51,7 +94,7 @@ export class UserService {
           subject: `${AppConstants.ApplicationName} email confirmation`,
           text: `Please click the link below to confirm your email.\r\n\r\n${verifyUrl}`,
           html: `<p>Please click the link below to confirm your email.</p><br/><p><a href="${verifyUrl}">${verifyUrl}</a></p><p>Link expires in ${AppConstants.EmailTokenResendInterval / 1000} minutes.</p>`,
-        }
+        };
         break;
       case EmailTokenType.PasswordReset:
         msg = {
@@ -60,7 +103,7 @@ export class UserService {
           subject: `${AppConstants.ApplicationName} password reset`,
           text: `Please click the link below to reset your password.\r\n\r\n${passwordUrl}`,
           html: `<p>Please click the link below to reset your password.</p><br/><p><a href="${passwordUrl}">${passwordUrl}</a></p><p>Link expires in ${AppConstants.EmailTokenResendInterval / 1000} minutes.</p>`,
-        }
+        };
         break;
       default:
         throw new InvalidTokenError();
@@ -70,7 +113,9 @@ export class UserService {
       console.log(`Email token sent to ${emailToken.email}`);
       // update lastSent/expiration
       emailToken.lastSent = new Date();
-      emailToken.expiresAt = new Date(Date.now() + AppConstants.EmailTokenExpiration);
+      emailToken.expiresAt = new Date(
+        Date.now() + AppConstants.EmailTokenExpiration,
+      );
       await emailToken.save();
     } catch (error) {
       console.error('Error sending email:', error);
@@ -80,16 +125,22 @@ export class UserService {
 
   /**
    * Find a user by their email or username and password.
-   * @param password 
-   * @param email 
-   * @param username 
-   * @returns 
+   * @param password
+   * @param email
+   * @param username
+   * @returns
    */
-  public async findUser(password: string, email?: string, username?: string): Promise<IUserDocument> {
+  public async findUser(
+    password: string,
+    email?: string,
+    username?: string,
+  ): Promise<IUserDocument> {
     let userDoc: IUserDocument | null;
 
     if (username) {
-      userDoc = await UserModel.findOne({ username: { $regex: new RegExp(`^${username}$`, 'i') } });
+      userDoc = await UserModel.findOne({
+        username: { $regex: new RegExp(`^${username}$`, 'i') },
+      });
     } else if (email) {
       userDoc = await UserModel.findOne({ email: email.toLowerCase() });
     } else {
@@ -126,8 +177,8 @@ export class UserService {
 
   /**
    * Fill in the default values to a user object
-   * @param newUser 
-   * @returns 
+   * @param newUser
+   * @returns
    */
   public fillUserDefaults(newUser: ICreateUserBasics): IUser {
     return {
@@ -149,15 +200,15 @@ export class UserService {
         totalProfileViewsReceived: 0,
         totalPostViewsReceived: 0,
         totalReplyViewsReceived: 0,
-      }
+      },
     } as IUser;
   }
 
   /**
    * Create a new user document from an IUser and unhashed password
-   * @param newUser 
+   * @param newUser
    * @param password Unhashed password
-   * @returns 
+   * @returns
    */
   public makeUserDoc(newUser: IUser, password: string): IUserDocument {
     const hashedPassword = hashSync(password, AppConstants.BcryptRounds);
@@ -177,13 +228,16 @@ export class UserService {
 
   /**
    * Create a new user
-   * @param username 
-   * @param email 
-   * @param password 
-   * @param timezone 
-   * @returns 
+   * @param username
+   * @param email
+   * @param password
+   * @param timezone
+   * @returns
    */
-  public async newUser(userData: ICreateUserBasics, password: string): Promise<IUserDocument> {
+  public async newUser(
+    userData: ICreateUserBasics,
+    password: string,
+  ): Promise<IUserDocument> {
     if (!AppConstants.UsernameRegex.test(userData.username)) {
       throw new InvalidUsernameError();
     }
@@ -192,19 +246,24 @@ export class UserService {
       throw new InvalidPasswordError();
     }
 
-    const existingEmailCount = await UserModel.countDocuments({ email: userData.email.toLowerCase() });
+    const existingEmailCount = await UserModel.countDocuments({
+      email: userData.email.toLowerCase(),
+    });
     if (existingEmailCount > 0) {
       throw new EmailInUseError();
     }
 
     const existingUsernameCount = await UserModel.countDocuments({
-      username: { $regex: new RegExp(`^${userData.username}$`, 'i') }
+      username: { $regex: new RegExp(`^${userData.username}$`, 'i') },
     });
     if (existingUsernameCount > 0) {
       throw new UsernameInUseError();
     }
 
-    const newUser: IUserDocument = this.makeUserDoc(this.fillUserDefaults(userData), password);
+    const newUser: IUserDocument = this.makeUserDoc(
+      this.fillUserDefaults(userData),
+      password,
+    );
     await newUser.save();
 
     await ProfileModel.create({
@@ -218,11 +277,13 @@ export class UserService {
       updatedAt: new Date(),
     } as IProfile);
 
-    const emailToken = await this.createEmailToken(newUser, EmailTokenType.AccountVerification);
+    const emailToken = await this.createEmailToken(
+      newUser,
+      EmailTokenType.AccountVerification,
+    );
     try {
       await this.sendEmailToken(emailToken);
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Error sending verification email:', error);
     }
     return newUser;
@@ -230,21 +291,23 @@ export class UserService {
 
   /**
    * Re-send a previously sent email token
-   * @param userId 
+   * @param userId
    */
   public async resendEmailToken(userId: string): Promise<void> {
     const now = new Date();
-    const minLastSentTime = new Date(now.getTime() - AppConstants.EmailTokenResendInterval);
+    const minLastSentTime = new Date(
+      now.getTime() - AppConstants.EmailTokenResendInterval,
+    );
 
     // look up the most recent email token for a given user, then send it
-    const emailToken: IEmailTokenDocument | null = await EmailTokenModel.findOne({
-      userId,
-      expiresAt: { $gt: now },
-      $or: [
-        { lastSent: null },
-        { lastSent: { $lte: minLastSentTime } }
-      ]
-    }).sort({ createdAt: -1 }).limit(1);
+    const emailToken: IEmailTokenDocument | null =
+      await EmailTokenModel.findOne({
+        userId,
+        expiresAt: { $gt: now },
+        $or: [{ lastSent: null }, { lastSent: { $lte: minLastSentTime } }],
+      })
+        .sort({ createdAt: -1 })
+        .limit(1);
 
     if (!emailToken) {
       throw new EmailTokenUsedOrInvalidError();
@@ -255,11 +318,13 @@ export class UserService {
 
   /**
    * Verifies an email token is valid and unexpired
-   * @param emailToken 
-   * @returns 
+   * @param emailToken
+   * @returns
    */
   public async verifyEmailToken(emailToken: string): Promise<boolean> {
-    const token: IEmailTokenDocument | null = await EmailTokenModel.findOne({ token: emailToken });
+    const token: IEmailTokenDocument | null = await EmailTokenModel.findOne({
+      token: emailToken,
+    });
 
     if (!token) {
       throw new EmailTokenUsedOrInvalidError();
@@ -275,10 +340,12 @@ export class UserService {
 
   /**
    * Verify the email token and update the user's account status
-   * @param emailToken 
+   * @param emailToken
    */
   public async verifyEmailTokenAndFinalize(emailToken: string): Promise<void> {
-    const token: IEmailTokenDocument | null = await EmailTokenModel.findOne({ token: emailToken });
+    const token: IEmailTokenDocument | null = await EmailTokenModel.findOne({
+      token: emailToken,
+    });
 
     if (!token) {
       throw new EmailTokenUsedOrInvalidError();
@@ -295,7 +362,10 @@ export class UserService {
       throw new UserNotFoundError();
     }
 
-    if (user.lockStatus !== LockTypeEnum.PendingEmailVerification || user.emailVerified) {
+    if (
+      user.lockStatus !== LockTypeEnum.PendingEmailVerification ||
+      user.emailVerified
+    ) {
       throw new EmailVerifiedError();
     }
 
@@ -310,11 +380,15 @@ export class UserService {
 
   /**
    * Change the user's password
-   * @param userId 
-   * @param currentPassword 
-   * @param newPassword 
+   * @param userId
+   * @param currentPassword
+   * @param newPassword
    */
-  public async changePassword(userId: string, currentPassword: string, newPassword: string): Promise<void> {
+  public async changePassword(
+    userId: string,
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<void> {
     const user: IUserDocument | null = await UserModel.findById(userId);
     if (!user) {
       throw new UserNotFoundError();
@@ -336,40 +410,64 @@ export class UserService {
 
   /**
    * Create a password reset record and send a password reset link
-   * @param email 
-   * @returns 
+   * @param email
+   * @returns
    */
-  public async initiatePasswordReset(email: string): Promise<{ success: boolean, message: string }> {
+  public async initiatePasswordReset(
+    email: string,
+  ): Promise<{ success: boolean; message: string }> {
     try {
       const user = await UserModel.findOne({ email: email.toLowerCase() });
       if (!user) {
         // We don't want to reveal whether an email exists in our system
-        return { success: true, message: 'If an account with that email exists, a password reset link has been sent.' };
+        return {
+          success: true,
+          message:
+            'If an account with that email exists, a password reset link has been sent.',
+        };
       }
 
       // Check if the user's email is not verified
       if (!user.emailVerified) {
-        return { success: false, message: 'Please verify your email address before resetting your password.' };
+        return {
+          success: false,
+          message:
+            'Please verify your email address before resetting your password.',
+        };
       }
 
       // Create and send password reset token
-      const emailToken = await this.createEmailToken(user, EmailTokenType.PasswordReset);
+      const emailToken = await this.createEmailToken(
+        user,
+        EmailTokenType.PasswordReset,
+      );
       await this.sendEmailToken(emailToken);
 
-      return { success: true, message: 'Password reset link has been sent to your email.' };
+      return {
+        success: true,
+        message: 'Password reset link has been sent to your email.',
+      };
     } catch (error) {
       console.error('Error in initiatePasswordReset:', error);
-      return { success: false, message: 'An unexpected error occurred. Please try again later.' };
+      return {
+        success: false,
+        message: 'An unexpected error occurred. Please try again later.',
+      };
     }
   }
 
   /**
    * Check if the given token is a valid email token for password reset
-   * @param token 
-   * @returns 
+   * @param token
+   * @returns
    */
-  public async validatePasswordResetToken(token: string): Promise<IEmailTokenDocument> {
-    const emailToken = await EmailTokenModel.findOne({ token, type: EmailTokenType.PasswordReset });
+  public async validatePasswordResetToken(
+    token: string,
+  ): Promise<IEmailTokenDocument> {
+    const emailToken = await EmailTokenModel.findOne({
+      token,
+      type: EmailTokenType.PasswordReset,
+    });
     if (!emailToken) {
       throw new Error('Invalid or expired password reset token');
     }
@@ -382,15 +480,18 @@ export class UserService {
 
   /**
    * Reset a user's password given a valid token
-   * @param token 
-   * @param password 
-   * @returns 
+   * @param token
+   * @param password
+   * @returns
    */
-  public async resetPassword(token: string, password: string): Promise<IUserDocument> {
+  public async resetPassword(
+    token: string,
+    password: string,
+  ): Promise<IUserDocument> {
     const emailToken = await EmailTokenModel.findOne({
       token,
       type: EmailTokenType.PasswordReset,
-      expiresAt: { $gt: new Date() }
+      expiresAt: { $gt: new Date() },
     });
 
     if (!emailToken) {
@@ -418,11 +519,15 @@ export class UserService {
 
   /**
    * Get the public user profile
-   * @param username 
-   * @returns 
+   * @param username
+   * @returns
    */
-  public async getPublicUserProfile(username: string): Promise<IApiUserProfileResponse | null> {
-    const user = await UserModel.findOne({ username: { $regex: new RegExp(`^${username}$`, 'i') } });
+  public async getPublicUserProfile(
+    username: string,
+  ): Promise<IApiUserProfileResponse | null> {
+    const user = await UserModel.findOne({
+      username: { $regex: new RegExp(`^${username}$`, 'i') },
+    });
 
     if (!user) {
       throw new UserNotFoundError();
@@ -454,8 +559,8 @@ export class UserService {
           totalReplies: user.metadata.totalReplies,
           totalReactionsReceived: user.metadata.totalReactionsReceived,
           totalVotesReceived: user.metadata.totalVotesReceived,
-        }
-      }
+        },
+      },
     };
   }
 }

@@ -8,7 +8,7 @@ The [`setupDatabase()`](/apps/duality-social-node/src/setupDatabase.ts#L6) funct
 - Configures several connection options, including [`socketTimeoutMS`](/apps/duality-social-node/src/setupDatabase.ts#L9), [`connectTimeoutMS`](/apps/duality-social-node/src/setupDatabase.ts#L10), and [`waitQueueTimeoutMS`](/apps/duality-social-node/src/setupDatabase.ts#L11), which control the timeout behavior of the database connection.
 - Returns an object with two properties:
   - [`db`](/apps/duality-social-node/src/setupDatabase.ts#L8): the Mongoose instance representing the database connection.
-  - [`schema`](/libs/duality-social-lib/src/lib/schemaModelData.ts#L35): the [`SchemaModels`](/libs/duality-social-lib/src/lib/schema.ts#L27) object, which likely contains the database schema definitions. This object is imported from the `@duality-social/duality-social-lib` module.
+  - [`schema`](/libs/duality-social-node-lib/src/lib/schemaModelData.ts#L35): the [`SchemaModels`](/libs/duality-social-node-lib/src/lib/schema.ts#L27) object, which likely contains the database schema definitions. This object is imported from the `@duality-social/duality-social-node-lib` module.
 
 The environment-specific configuration for the database connection is handled in the `/apps/duality-social-queue-worker/src/environments` directory. This directory contains two files:
 
