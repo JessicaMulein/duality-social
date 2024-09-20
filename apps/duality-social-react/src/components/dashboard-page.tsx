@@ -5,10 +5,6 @@ import {
   Container,
   Paper,
   Typography,
-  List,
-  ListItem,
-  ListItemText,
-  Divider,
   CircularProgress,
   useTheme,
 } from '@mui/material';
@@ -36,8 +32,9 @@ const DashboardPage: React.FC = () => {
         justifyContent="center"
         alignItems="center"
         height="100vh"
+        bgcolor={theme.palette.background.default}
       >
-        <CircularProgress />
+        <CircularProgress color="primary" />
       </Box>
     );
   }
