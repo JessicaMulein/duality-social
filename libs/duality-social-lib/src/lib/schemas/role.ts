@@ -1,6 +1,6 @@
 import { Schema } from "mongoose";
-import { IRoleDocument } from "../documents/role";
-import { ModelName } from "../enumerations/model-name";
+import { IRoleDocument } from "../documents/role.ts";
+import { ModelName } from "../enumerations/model-name.ts";
 
 /**
  * Schema for roles

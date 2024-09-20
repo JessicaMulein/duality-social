@@ -1,4 +1,4 @@
-import { IModelData } from "./model-data";
+import { IModelData } from "./model-data.ts";
 
 export interface ISchemaModelData {
     AdminUser: IModelData;

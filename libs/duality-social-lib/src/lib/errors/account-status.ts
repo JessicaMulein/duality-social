@@ -1,4 +1,4 @@
-import { AccountStatusTypeEnum } from "../enumerations/account-status-type";
+import { AccountStatusTypeEnum } from "../enumerations/account-status-type.ts";
 
 export class AccountStatusError extends Error {
     constructor(accountStatus: AccountStatusTypeEnum) {

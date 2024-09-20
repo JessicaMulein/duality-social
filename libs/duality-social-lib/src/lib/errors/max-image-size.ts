@@ -1,4 +1,4 @@
-import { AppConstants } from "../constants";
+import { AppConstants } from "../constants.ts";
 
 export class MaxImageSizeError extends Error {
     constructor(size: number) {

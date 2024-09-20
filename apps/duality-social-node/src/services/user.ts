@@ -1,9 +1,9 @@
 import { MailDataRequired, MailService } from '@sendgrid/mail';
 import { environment } from '../environment';
 import { AccountDeletedError, AccountLockedError, AccountStatusError, AccountStatusTypeEnum, AppConstants, EmailInUseError, EmailTokenExpiredError, EmailTokenModel, EmailTokenSentTooRecentlyError, EmailTokenType, EmailTokenUsedOrInvalidError, EmailVerifiedError, IEmailTokenDocument, InvalidCredentialsError, InvalidPasswordError, InvalidTokenError, InvalidUsernameError, IRequestUser, IRoleDocument, IUser, IUserDocument, ICreateUserBasics, LockTypeEnum, PendingEmailVerificationError, UserModel, UsernameInUseError, UsernameOrEmailRequiredError, UserNotFoundError, ProfileModel, IProfile, IApiUserProfileResponse } from '@duality-social/duality-social-lib';
-import { compare, hash } from 'bcrypt';
+import { compare, hashSync } from 'bcrypt';
 import { randomBytes } from 'crypto';
-import { MongooseValidationError } from '../errors/mongoose-validation-error';
+import { MongooseValidationError } from '../errors/mongoose-validation-error.ts';
 
 export class UserService {
   private sendgridClient: MailService;
@@ -159,8 +159,8 @@ export class UserService {
    * @param password Unhashed password
    * @returns 
    */
-  public async makeUserDoc(newUser: IUser, password: string): Promise<IUserDocument> {
-    const hashedPassword = await hash(password, AppConstants.BcryptRounds);
+  public makeUserDoc(newUser: IUser, password: string): IUserDocument {
+    const hashedPassword = hashSync(password, AppConstants.BcryptRounds);
     const newUserData: IUser = {
       ...newUser,
       password: hashedPassword,
@@ -204,7 +204,7 @@ export class UserService {
       throw new UsernameInUseError();
     }
 
-    const newUser: IUserDocument = await this.makeUserDoc(this.fillUserDefaults(userData), password);
+    const newUser: IUserDocument = this.makeUserDoc(this.fillUserDefaults(userData), password);
     await newUser.save();
 
     await ProfileModel.create({
@@ -329,7 +329,7 @@ export class UserService {
       throw new InvalidPasswordError();
     }
 
-    const hashedPassword = await hash(newPassword, AppConstants.BcryptRounds);
+    const hashedPassword = hashSync(newPassword, AppConstants.BcryptRounds);
     user.password = hashedPassword;
     await user.save();
   }
@@ -428,7 +428,7 @@ export class UserService {
     }
 
     // Hash the new password
-    const hashedPassword = await hash(password, AppConstants.BcryptRounds);
+    const hashedPassword = hashSync(password, AppConstants.BcryptRounds);
 
     // Update the user's password
     user.password = hashedPassword;

@@ -1,7 +1,7 @@
 import { dirname } from 'path';
-import { IEnvironment } from './interfaces/environment';
 import 'dotenv/config'
 import { randomBytes } from 'crypto';
+import { IEnvironment } from './interfaces/environment.ts';
 
 const host = process.env.SERVER_HOST ?? '0.0.0.0';
 const port = Number(process.env.PORT ?? 3000);

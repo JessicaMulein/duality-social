@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
-import ModelName from '../enumerations/model-name';
-import { ILoginDocument } from '../documents/login';
+import ModelName from '../enumerations/model-name.ts';
+import { ILoginDocument } from '../documents/login.ts';
 
 /**
  * Represents a user logging in.

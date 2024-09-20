@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
-import ModelName from '../enumerations/model-name';
-import { IProfileDocument } from '../documents/profile';
+import ModelName from '../enumerations/model-name.ts';
+import { IProfileDocument } from '../documents/profile.ts';
 
 export const ProfileSchema = new Schema<IProfileDocument>(
   {

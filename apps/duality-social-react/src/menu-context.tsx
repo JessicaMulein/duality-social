@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from './auth-provider';
+import { useAuth } from './auth-provider.tsx';
 
 export type CommentMenuOption = {
   label: string;

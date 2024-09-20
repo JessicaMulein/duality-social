@@ -1,4 +1,4 @@
-import { Document, ObjectId } from "mongoose";
-import { IPostViewpoint } from "../interfaces/post-viewpoint";
+import { Document, Types } from "mongoose";
+import { IPostViewpoint } from "../interfaces/post-viewpoint.ts";
 
-export interface IPostViewpointDocument extends IPostViewpoint, Document<ObjectId, any, any> {};
+export interface IPostViewpointDocument extends IPostViewpoint, Document<Types.ObjectId, any, any> {};

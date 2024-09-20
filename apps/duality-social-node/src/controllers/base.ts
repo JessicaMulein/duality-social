@@ -2,7 +2,7 @@ import { NextFunction, Request, Response, Router } from "express";
 import { RouteConfig } from "../interfaces/route-config";
 import { IApiErrorResponse, IApiExpressValidationErrorResponse, IApiMessageResponse, IApiMongoValidationErrorResponse, IMongoErrors } from "@duality-social/duality-social-lib";
 import { ValidationError, validationResult } from "express-validator";
-import { authenticateToken } from '../middlewares/authenticate-token';
+import { authenticateToken } from '../middlewares/authenticate-token.ts';
 
 export abstract class BaseController {
     public readonly router: Router;

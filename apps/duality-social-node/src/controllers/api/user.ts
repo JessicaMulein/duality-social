@@ -16,12 +16,12 @@ import {
   UserNotFoundError,
   IApiUserProfileResponse,
 } from '@duality-social/duality-social-lib';
-import { findAuthToken } from '../../middlewares/authenticate-token';
-import { UserService } from '../../services/user';
-import { JwtService } from '../../services/jwt';
-import { MongooseValidationError } from '../../errors/mongoose-validation-error';
-import { BaseController } from '../base';
-import { RouteConfig } from '../../interfaces/route-config';
+import { findAuthToken } from '../../middlewares/authenticate-token.ts';
+import { UserService } from '../../services/user.ts';
+import { JwtService } from '../../services/jwt.ts';
+import { MongooseValidationError } from '../../errors/mongoose-validation-error.ts';
+import { BaseController } from '../base.ts';
+import { RouteConfig } from '../../interfaces/route-config.ts';
 
 /**
  * Controller for user-related routes

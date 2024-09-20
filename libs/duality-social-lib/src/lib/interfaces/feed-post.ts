@@ -1,9 +1,9 @@
-import { ObjectId } from "mongoose";
-import { IFeedPostViewpoint } from "./feed-post-viewpoint";
+import { Types } from "mongoose";
+import { IFeedPostViewpoint } from "./feed-post-viewpoint.ts";
 
 export interface IFeedPost {
-    id: ObjectId;
+    id: Types.ObjectId;
     createdAt: Date;
-    createdBy: ObjectId;
+    createdBy: Types.ObjectId;
     viewpoints: IFeedPostViewpoint[];
   }

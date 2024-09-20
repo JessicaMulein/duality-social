@@ -1,13 +1,13 @@
 import { Request, Response } from 'express';
-import { Schema, Types as MongooseTypes, PipelineStage, ObjectId, Types } from 'mongoose';
+import { Types as MongooseTypes, PipelineStage, ObjectId, Types } from 'mongoose';
 import { ObjectId as BsonObjectId } from 'bson';
 import { Upload } from '@aws-sdk/lib-storage';
 import { S3 } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid';
 import sizeOf from 'image-size';
-import { sanitizeWhitespace, HumanityTypeEnum, parsePostContent, IFeedPost, IRequestUser, ModelData, PostModel, PostViewpointModel, PostViewpointReactionModel, PostViewpointHumanityModel, DefaultReactionsTypeEnum, PostImpressionModel, PostExpandModel, IFeedPostViewpoint, AppConstants, getCharacterCount, MaxImageSizeError, InvalidImageDimensionError, ImageUploadError } from '@duality-social/duality-social-lib';
-import { environment } from '../environment';
-import { MulterRequest } from '../interfaces/multer-request';
+import { sanitizeWhitespace, HumanityTypeEnum, parsePostContent, IFeedPost, IRequestUser, PostModel, PostViewpointModel, PostViewpointReactionModel, PostViewpointHumanityModel, DefaultReactionsTypeEnum, PostImpressionModel, PostExpandModel, IFeedPostViewpoint, AppConstants, getCharacterCount, MaxImageSizeError, InvalidImageDimensionError, ImageUploadError } from '@duality-social/duality-social-lib';
+import { environment } from '../environment.ts';
+import { MulterRequest } from '../interfaces/multer-request.ts';
 
 export class FeedService {
   private s3: S3;
@@ -228,7 +228,7 @@ export class FeedService {
     const parentPostId = req.body.parentPostId;
     const rendered = parsePostContent(content, isBlogPost);
     const currentDate = new Date();
-    const createdById = new Schema.Types.ObjectId(ModelData.User.path);
+    const createdById = new Types.ObjectId();
     const language = await this.detectPostLanguage(content);
 
     const maxLength = isBlogPost ? AppConstants.MaxBlogPostLength : AppConstants.MaxPostLength;
@@ -291,9 +291,9 @@ export class FeedService {
     const post = new PostModel({
       _id: postId,
       createdAt: currentDate,
-      createdById: createdById,
+      createdBy: createdById,
       updatedAt: currentDate,
-      updatedById: createdById,
+      updatedBy: createdById,
       pId: parentPostId,
       vpId: parentViewpointId,
       inVpId: inputViewpointId,
@@ -304,7 +304,8 @@ export class FeedService {
         impressions: 0,
         reactions: 0,
         reactionsByType: {},
-        updatedAt: currentDate,
+        replies: 0,
+        votes: 0,
       },
     });
 

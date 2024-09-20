@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useFormik, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
-import authService from '../services/auth-service';
 import { useNavigate, Navigate } from 'react-router-dom';
 import { isAxiosError } from 'axios';
-import { AuthContext } from '../auth-provider';
+import authService from '../services/auth-service.ts';
+import { AuthContext } from '../auth-provider.tsx';
 import { AppConstants } from '@duality-social/duality-social-lib';
 import {
   Box,

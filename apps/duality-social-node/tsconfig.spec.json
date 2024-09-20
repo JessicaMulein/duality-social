@@ -3,10 +3,12 @@
   "compilerOptions": {
     "outDir": "../../dist/out-tsc",
     "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "types": ["jest", "node"]
   },
   "include": [
     "jest.config.ts",
+    "src/**/*.testsetup.ts",
     "src/**/*.test.ts",
     "src/**/*.spec.ts",
     "src/**/*.d.ts"

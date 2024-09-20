@@ -1,7 +1,7 @@
 import { Schema } from 'mongoose';
-import ModelName from '../enumerations/model-name';
-import { DefaultReactionsTypeEnum } from '../enumerations/default-reactions-type';
-import { IPostViewpointReactionDocument } from '../documents/post-viewpoint-reaction';
+import ModelName from '../enumerations/model-name.ts';
+import { DefaultReactionsTypeEnum } from '../enumerations/default-reactions-type.ts';
+import { IPostViewpointReactionDocument } from '../documents/post-viewpoint-reaction.ts';
 
 /**
  * Represents a user reacting to a viewpoint

@@ -12,11 +12,11 @@ import {
   AppConstants,
   prepareContentForCharacterCount,
 } from '@duality-social/duality-social-lib';
-import LivePostPreview from './live-post-preview';
-import IconMarkupGuide from './icon-markup-guide';
-import BlogPostGuide from './blog-post-guide';
-import CharacterCountGuide from './character-count-guide';
-import { environment } from '../environments/environment';
+import LivePostPreview from './live-post-preview.tsx';
+import IconMarkupGuide from './icon-markup-guide.tsx';
+import BlogPostGuide from './blog-post-guide.tsx';
+import CharacterCountGuide from './character-count-guide.tsx';
+import { environment } from '../environments/environment.ts';
 
 const exampleBlurb = `
 # Welcome to the Blog Post Guide

@@ -1,11 +1,11 @@
-import { ReportTypeEnum } from "../enumerations/report-type";
-import { ObjectId } from "mongoose";
+import { Types } from "mongoose";
+import { ReportTypeEnum } from "../enumerations/report-type.ts";
 
 export interface IReport {
-    postId: ObjectId;
-    viewpointId: ObjectId;
+    postId: Types.ObjectId;
+    viewpointId: Types.ObjectId;
     reportType: ReportTypeEnum;
     notes: string;
-    createdBy: ObjectId;
+    createdBy: Types.ObjectId;
     createdAt: Date;
 }

@@ -1,9 +1,9 @@
 import { Schema } from 'mongoose';
-import { HumanityTypeEnum } from '../enumerations/humanity-type';
-import { ViewpointTypeEnum } from '../enumerations/viewpoint-type';
-import ModelName from '../enumerations/model-name';
-import { IPostViewpointDocument } from '../documents/post-viewpoint';
-import { DefaultReactionsTypeEnum } from '../enumerations/default-reactions-type';
+import { HumanityTypeEnum } from '../enumerations/humanity-type.ts';
+import { ViewpointTypeEnum } from '../enumerations/viewpoint-type.ts';
+import ModelName from '../enumerations/model-name.ts';
+import { IPostViewpointDocument } from '../documents/post-viewpoint.ts';
+import { DefaultReactionsTypeEnum } from '../enumerations/default-reactions-type.ts';
 
 export const PostViewpointSchema = new Schema<IPostViewpointDocument>(
   {

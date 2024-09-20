@@ -1,6 +1,6 @@
-import { Model, Schema } from "mongoose";
-import ModelName from "../enumerations/model-name";
-import ModelNameCollection from "../enumerations/model-name-collection";
+import { Schema } from "mongoose";
+import ModelName from "../enumerations/model-name.ts";
+import ModelNameCollection from "../enumerations/model-name-collection.ts";
 
 export interface IModelData {
     readonly name: ModelName;

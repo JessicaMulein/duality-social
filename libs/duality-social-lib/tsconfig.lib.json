@@ -2,6 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "outDir": "../../dist/out-tsc",
     "declaration": true,
     "esModuleInterop": true,
@@ -9,5 +10,5 @@
     "types": [],
   },
   "exclude": ["node_modules", "jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"],
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts", "src/lib/duality-social-lib.ts", "src/index.ts"]
 }

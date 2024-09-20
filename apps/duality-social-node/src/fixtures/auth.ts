@@ -1,6 +1,6 @@
 import { IUserDocument } from "@duality-social/duality-social-lib";
-import { ISignedToken } from "../interfaces/signed-token";
-import { JwtService } from "../services/jwt";
+import { ISignedToken } from "../interfaces/signed-token.ts";
+import { JwtService } from "../services/jwt.ts";
 
 const jwtService: JwtService = new JwtService();
 export async function getAuthToken(userDoc: IUserDocument): Promise<ISignedToken> {

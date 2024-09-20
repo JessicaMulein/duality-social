@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box } from '@mui/material';
 import { IFeedPostViewpoint } from '@duality-social/duality-social-lib';
-import Viewpoint from './viewpoint';
+import Viewpoint from './viewpoint.tsx';
 
 interface ViewpointPairProps {
   inputViewpoint: IFeedPostViewpoint;

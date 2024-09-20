@@ -1,5 +1,5 @@
-import { AccountStatusTypeEnum } from "../enumerations/account-status-type";
-import { AccountStatusError } from "./account-status";
+import { AccountStatusTypeEnum } from "../enumerations/account-status-type.ts";
+import { AccountStatusError } from "./account-status.ts";
 
 export class PendingEmailVerificationError extends AccountStatusError {
     constructor() {

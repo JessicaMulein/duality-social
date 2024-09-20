@@ -1,7 +1,7 @@
-import { Schema } from "mongoose";
+import { Types } from "mongoose";
 
 export interface ILogin {
-    userId: Schema.Types.ObjectId;
+    userId: Types.ObjectId;
     ip: string;
     userAgent: string;
     createdAt: Date;

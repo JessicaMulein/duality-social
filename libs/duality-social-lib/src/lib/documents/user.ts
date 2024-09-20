@@ -1,4 +1,4 @@
-import { Document, ObjectId } from "mongoose";
-import { IUser } from "../interfaces/user";
+import { Document, Types } from "mongoose";
+import { IUser } from "../interfaces/user.ts";
 
-export interface IUserDocument extends IUser, Document<ObjectId, any, any> {};
+export interface IUserDocument extends IUser, Document<Types.ObjectId, any, any> {};

@@ -1,9 +1,8 @@
 import { Types } from 'mongoose';
-import { IHasDeleter } from './has-deleter';
-import { IHasSoftDelete } from './has-soft-delete';
-import { IHasTimestampOwners } from './has-timestamp-owners';
-import { IHasTimestamps } from './has-timestamps';
-import { DefaultReactionsTypeEnum } from '../enumerations/default-reactions-type';
+import { IHasDeleter } from './has-deleter.ts';
+import { IHasSoftDelete } from './has-soft-delete.ts';
+import { IHasTimestampOwners } from './has-timestamp-owners.ts';
+import { IHasTimestamps } from './has-timestamps.ts';
 
 /**
  * This interface represents a post, which is a piece of content that a user can create.

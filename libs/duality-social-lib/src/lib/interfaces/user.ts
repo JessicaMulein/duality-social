@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 /* eslint-disable @typescript-eslint/no-namespace */
-import { AccountStatusTypeEnum } from '../enumerations/account-status-type';
-import { LockTypeEnum } from '../enumerations/lock-type';
-import { IHasSoftDelete } from './has-soft-delete';
-import { IHasTimestampOwners } from './has-timestamp-owners';
-import { IHasTimestamps } from './has-timestamps';
-import { HumanityTypeEnum } from '../enumerations/humanity-type';
-import { IHasDeleter } from './has-deleter';
+import { AccountStatusTypeEnum } from '../enumerations/account-status-type.ts';
+import { LockTypeEnum } from '../enumerations/lock-type.ts';
+import { IHasSoftDelete } from './has-soft-delete.ts';
+import { IHasTimestampOwners } from './has-timestamp-owners.ts';
+import { IHasTimestamps } from './has-timestamps.ts';
+import { HumanityTypeEnum } from '../enumerations/humanity-type.ts';
+import { IHasDeleter } from './has-deleter.ts';
 
 export interface IUser extends IHasTimestamps, IHasTimestampOwners, IHasSoftDelete, IHasDeleter {
   username: string;

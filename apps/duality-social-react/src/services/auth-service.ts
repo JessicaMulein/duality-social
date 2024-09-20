@@ -1,8 +1,8 @@
 // services/authService.js
 import { isAxiosError } from 'axios';
-import api from './api';
-import authenticatedApi from './authenticated-api';
 import { IRequestUser } from '@duality-social/duality-social-lib';
+import api from './api.ts';
+import authenticatedApi from './authenticated-api.ts';
 
 const login = async (identifier: string, password: string, isEmail: boolean): Promise<{ token: string }> => {
   try {

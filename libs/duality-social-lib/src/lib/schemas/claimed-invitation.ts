@@ -1,7 +1,7 @@
 import { Schema } from 'mongoose';
 import validator from 'validator';
-import ModelName from '../enumerations/model-name';
-import { IClaimedInvitationDocument } from '../documents/claimed-invitation';
+import ModelName from '../enumerations/model-name.ts';
+import { IClaimedInvitationDocument } from '../documents/claimed-invitation.ts';
 
 /*
 export interface IClaimedInvitation extends IHasID {

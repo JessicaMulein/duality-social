@@ -12,8 +12,8 @@ import {
 } from '@mui/material';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faComment, faQuestionCircle } from '@awesome.me/kit-89ec609b07/icons/classic/regular';
-import { AuthContext } from '../auth-provider';
-import { CommentMenuOption, useMenu } from '../menu-context';
+import { AuthContext } from '../auth-provider.tsx';
+import { CommentMenuOption, useMenu } from '../menu-context.tsx';
 import dualitySocialSymbol from '../assets/DSImageOnlySmall.png';
 
 const TopMenu: React.FC = () => {

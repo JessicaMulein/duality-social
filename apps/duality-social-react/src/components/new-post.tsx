@@ -4,10 +4,10 @@ import { Button, TextField, Box, Typography } from '@mui/material';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { isAxiosError } from 'axios';
-import ImagePreview from './image-preview';
-import LivePostPreview from './live-post-preview';
-import ImageCropDialog from './image-crop-dialog';
-import authenticatedApi from '../services/authenticated-api';
+import ImagePreview from './image-preview.tsx';
+import LivePostPreview from './live-post-preview.tsx';
+import ImageCropDialog from './image-crop-dialog.tsx';
+import authenticatedApi from '../services/authenticated-api.ts';
 import {
   AppConstants,
   getCharacterCount,

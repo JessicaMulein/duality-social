@@ -1,22 +1,23 @@
+import { Types } from "mongoose";
+import { hashSync } from "bcrypt";
+import { faker } from '@faker-js/faker';
 import { AccountStatusTypeEnum, AppConstants, HumanityTypeEnum, IUser, IUserDocument, LockTypeEnum } from "@duality-social/duality-social-lib";
-import { ObjectId, Types } from "mongoose";
-import { hash } from "bcrypt";
 
-export function makeUser(): IUser {
-    const creatorId = new Types.ObjectId() as unknown as ObjectId;
+export function makeUser(overrides = {}): IUser {
+    const creatorId = new Types.ObjectId();
     const createdAt = new Date();
     return {
-        username: 'testuser',
+        username: faker.internet.userName(),
         languages: ['en'],
         lockStatus: LockTypeEnum.Unlocked,
         shadowBan: false,
         userHidden: false,
         accountStatusType: AccountStatusTypeEnum.Active,
         humanityType: HumanityTypeEnum.Human,
-        email: 'test@example.com',
+        email: faker.internet.email(),
         emailVerified: true,
-        password: 'testPassword123',
-        timezone: 'UTC',
+        password: faker.internet.password(),
+        timezone: faker.location.timeZone(),
         createdAt: createdAt,
         updatedAt: createdAt,
         createdBy: creatorId,
@@ -32,14 +33,15 @@ export function makeUser(): IUser {
             totalPostViewsReceived: 0,
             totalReplyViewsReceived: 0,
         },
+        ...overrides,
     };
 }
 
-export async function getUserDoc(newUser: IUser): Promise<IUserDocument> {
-    const hashedPassword = await hash(newUser.password, AppConstants.BcryptRounds);
+export function getUserDoc(newUser: IUser): IUserDocument {
+    const hashedPassword = hashSync(newUser.password, AppConstants.BcryptRounds);
     const newUserData: IUserDocument = {
       ...newUser,
-      _id: new Types.ObjectId() as any,
+      _id: new Types.ObjectId(),
       password: hashedPassword,
     } as IUserDocument;
     return newUserData;

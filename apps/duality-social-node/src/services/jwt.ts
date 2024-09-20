@@ -1,8 +1,8 @@
 import { AppConstants, InvalidTokenError, IUserDocument, RoleModel, ITokenUser } from "@duality-social/duality-social-lib";
 import { sign, verify, JwtPayload, VerifyOptions } from "jsonwebtoken";
 import { promisify } from 'util';
-import { environment } from "../environment";
-import { ISignedToken } from "../interfaces/signed-token";
+import { environment } from "../environment.ts";
+import { ISignedToken } from "../interfaces/signed-token.ts";
 
 const verifyAsync = promisify<string, string | Buffer, VerifyOptions, JwtPayload | string>(verify);
 

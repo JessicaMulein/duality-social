@@ -1,16 +1,16 @@
-import { ObjectId } from 'mongoose';
-import { HumanityTypeEnum } from '../enumerations/humanity-type';
-import { ViewpointTypeEnum } from '../enumerations/viewpoint-type';
-import { IHasSoftDelete } from './has-soft-delete';
-import { IHasTimestamps } from './has-timestamps';
-import { IHasDeleter } from './has-deleter';
-import { DefaultReactionsTypeEnum } from '../enumerations/default-reactions-type';
+import { Types } from 'mongoose';
+import { HumanityTypeEnum } from '../enumerations/humanity-type.ts';
+import { ViewpointTypeEnum } from '../enumerations/viewpoint-type.ts';
+import { IHasSoftDelete } from './has-soft-delete.ts';
+import { IHasTimestamps } from './has-timestamps.ts';
+import { IHasDeleter } from './has-deleter.ts';
+import { DefaultReactionsTypeEnum } from '../enumerations/default-reactions-type.ts';
 
 export interface IPostViewpoint extends IHasTimestamps, IHasSoftDelete, IHasDeleter {
   /**
    * Correlation id to link the dualities.
    */
-  postId: ObjectId;
+  postId: Types.ObjectId;
   /**
    * What type of entity created this post.
    */
@@ -34,7 +34,7 @@ export interface IPostViewpoint extends IHasTimestamps, IHasSoftDelete, IHasDele
   /**
    * The id of the parent viewpoint if this is a reply.
    */
-  pVpId?: ObjectId;
+  pVpId?: Types.ObjectId;
   metadata: {
     /**
      * The total number of replies for this viewpoint.
@@ -66,6 +66,6 @@ export interface IPostViewpoint extends IHasTimestamps, IHasSoftDelete, IHasDele
     votes: number;
   };
   type: ViewpointTypeEnum;
-  createdBy: ObjectId;
-  updatedBy: ObjectId;
+  createdBy: Types.ObjectId;
+  updatedBy: Types.ObjectId;
 }

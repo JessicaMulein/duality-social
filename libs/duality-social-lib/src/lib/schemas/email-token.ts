@@ -1,10 +1,9 @@
 import { Schema } from "mongoose";
-import { ModelName } from '../enumerations/model-name';
-import { IEmailTokenDocument } from "../documents/email-token";
-import { EmailTokenType } from "../enumerations/email-token-type";
-import { v4 as uuidv4 } from 'uuid';
 import validator from "validator";
-
+import { v4 as uuidv4 } from 'uuid';
+import { ModelName } from '../enumerations/model-name.ts';
+import { IEmailTokenDocument } from "../documents/email-token.ts";
+import { EmailTokenType } from "../enumerations/email-token-type.ts";
 
 const generateRandomToken = () => {
   return uuidv4();

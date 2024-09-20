@@ -1,12 +1,18 @@
-import { IRoleDocument } from "@duality-social/duality-social-lib";
-import { ObjectId, Types } from "mongoose";
+import { Types } from "mongoose";
+import { IRole, IRoleDocument } from "@duality-social/duality-social-lib";
+import { faker } from '@faker-js/faker'; '@faker-js/faker';
 
-export function makeRole(users: ObjectId[], admin: boolean): Partial<IRoleDocument> {
+export function makeRole(overrides = {}): Partial<IRoleDocument> {
+    const isAdmin = faker.datatype.boolean();
+    const role: IRole = {
+        name: faker.lorem.word(),
+        users: [new Types.ObjectId()],
+        globalAdmin: isAdmin,
+        member: !isAdmin,
+        ...overrides,
+    };
     return {
-        _id: new Types.ObjectId() as any,
-        name: admin ? 'admin' : 'member',
-        users: users,
-        globalAdmin: admin,
-        member: !admin
+        _id: new Types.ObjectId(),
+        ...role
     } as Partial<IRoleDocument>;
 }

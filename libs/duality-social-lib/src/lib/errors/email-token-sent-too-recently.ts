@@ -1,4 +1,4 @@
-import { AppConstants } from "../constants";
+import { AppConstants } from "../constants.ts";
 
 export class EmailTokenSentTooRecentlyError extends Error {
     public readonly lastSent: Date;

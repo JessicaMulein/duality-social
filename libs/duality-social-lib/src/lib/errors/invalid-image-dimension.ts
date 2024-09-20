@@ -1,4 +1,4 @@
-import { AppConstants } from "../constants";
+import { AppConstants } from "../constants.ts";
 
 export class InvalidImageDimensionError extends Error {
     constructor(width: number, height: number) {

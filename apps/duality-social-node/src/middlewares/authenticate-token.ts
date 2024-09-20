@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { IncomingHttpHeaders } from "http";
 import { AccountStatusTypeEnum, IRoleDocument, RoleModel, UserModel, ITokenUser } from "@duality-social/duality-social-lib";
-import { JwtService } from "../services/jwt";
-import { UserService } from "../services/user";
+import { JwtService } from "../services/jwt.ts";
+import { UserService } from "../services/user.ts";
 
 export function findAuthToken(headers: IncomingHttpHeaders): string | null {
   const authHeader = headers['Authorization'] || headers['authorization'];

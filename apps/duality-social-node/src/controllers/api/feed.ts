@@ -1,12 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
-import { FeedService } from '../../services/feed';
-import { BaseController } from '../base';
-import { RouteConfig } from '../../interfaces/route-config';
 import { body } from 'express-validator';
 import sizeOf from 'image-size';
+import { FeedService } from '../../services/feed.ts';
+import { BaseController } from '../base.ts';
+import { RouteConfig } from '../../interfaces/route-config.ts';
+import { MulterRequest } from '../../interfaces/multer-request.ts';
+import { upload } from '../../multer-config.ts';
 import { AppConstants, parsePostContent } from '@duality-social/duality-social-lib';
-import { MulterRequest } from '../../interfaces/multer-request';
-import { upload } from '../../multer-config';
 
 export class FeedController extends BaseController {
     private feedService: FeedService;

@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
-import ModelName from '../enumerations/model-name';
-import { IPostExpandDocument } from '../documents/post-expand';
+import ModelName from '../enumerations/model-name.ts';
+import { IPostExpandDocument } from '../documents/post-expand.ts';
 
 /**
  * Represents a post being expanded.

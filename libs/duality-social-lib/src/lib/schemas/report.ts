@@ -1,7 +1,7 @@
 import { Schema } from 'mongoose';
-import { ReportTypeEnum } from '../enumerations/report-type';
-import ModelName from '../enumerations/model-name';
-import { IReportDocument } from '../documents/report';
+import { ReportTypeEnum } from '../enumerations/report-type.ts';
+import ModelName from '../enumerations/model-name.ts';
+import { IReportDocument } from '../documents/report.ts';
 
 export const ReportSchema = new Schema<IReportDocument>({
   /**

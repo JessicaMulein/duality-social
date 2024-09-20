@@ -1,83 +1,37 @@
+import './mock-setup.testsetup.ts';
+
 import request from 'supertest';
-import express, { NextFunction, Request, Response } from 'express';
+import express, { Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import sizeOf from 'image-size';
-import feedRouter, { FeedController, FeedControllerInstance } from './feed';
-import { ISignedToken } from '../../interfaces/signed-token';
-import { makeRequestUser } from '../../fixtures/request-user';
-import { getAuthToken } from '../../fixtures/auth';
-import { getUserDoc, makeUser } from '../../fixtures/user';
-import { MulterRequest } from '../../interfaces/multer-request';
-import { FeedService } from '../../services/feed';
-import { AppConstants } from '@duality-social/duality-social-lib';
-
-jest.mock('image-size');
+import { Upload } from '@aws-sdk/lib-storage';
+import feedRouter, { FeedController, FeedControllerInstance } from './feed.ts';
+import { ISignedToken } from '../../interfaces/signed-token.ts';
+import { getAuthToken } from '../../fixtures/auth.ts';
+import { getUserDoc, makeUser } from '../../fixtures/user.ts';
+import { MulterRequest } from '../../interfaces/multer-request.ts';
+import { FeedService } from '../../services/feed.ts';
+import { AppConstants, HumanityTypeEnum, IRoleDocument, IUserDocument, PostModel, PostViewpointModel, RoleModel, UserModel } from '@duality-social/duality-social-lib';
+import { UserService } from '../../services/user.ts';
 
 const app = express();
 app.use(bodyParser.json());
 app.use('/api/feed', feedRouter);
 
-jest.mock('@duality-social/duality-social-lib/src/lib/models/user', () => ({
-    UserModel: jest.fn().mockImplementation(() => ({
-        validateSync: jest.fn().mockReturnValue(null),
-    })),
-}));
-
-
-jest.mock('@duality-social/duality-social-lib/src/lib/models/role', () => {
-    return {
-        RoleModel: {
-            find: jest.fn().mockImplementation(() => {
-                // eslint-disable-next-line @typescript-eslint/no-var-requires
-                const { makeRole } = require('../../fixtures/role');
-                return Promise.resolve([
-                    makeRole([], false),
-                    makeRole([], true),
-                ]);
-            }),
-        },
-    };
-});
-
-jest.mock('../../middlewares/authenticate-token', () => ({
-    authenticateToken: (req: Request, res: Response, next: NextFunction) => {
-        const token = req.get('Authorization')?.split(' ')[1] || req.header('Authorization')?.split(' ')[1];
-        if (token) {
-            req.user = makeRequestUser();
-            next();
-        } else {
-            res.status(401).json({ message: 'Unauthorized' });
-        }
-    },
-}));
-
-describe('FeedController - newPost Validation', () => {
+describe('FeedController - newPost', () => {
     let authToken: ISignedToken;
     let feedController: FeedController;
-    let mockRequest: Partial<MulterRequest>;
-    let mockResponse: Partial<Response>;
-    let mockNext: jest.Mock;
 
     beforeAll(async () => {
         //authToken = { token: 'valid-token', tokenUser: { userId: 'user-id', roles: []}, roleNames: [], roles: [] };
-        authToken = await getAuthToken(await getUserDoc(makeUser()));
+        authToken = await getAuthToken(getUserDoc(makeUser()));
         feedController = FeedControllerInstance;
     });
 
-    beforeEach(() => {
-        mockRequest = {
-            body: {},
-            files: { images: [] },
-            user: makeRequestUser(),
-        };
-        mockResponse = {
-            status: jest.fn().mockReturnThis(),
-            json: jest.fn(),
-        };
-        mockNext = jest.fn();
-    });
-
     describe('new post validation', () => {
+        afterEach(() => {
+            jest.restoreAllMocks();
+        });
         it('should return 401 if no token is provided', async () => {
             const response = await request(app)
                 .post('/api/feed')
@@ -163,11 +117,38 @@ describe('FeedController - newPost Validation', () => {
     });
 
     describe('newPost file handling', () => {
-        beforeEach(() => {
+        let mockRequest: Partial<MulterRequest>;
+        let mockResponse: Partial<Response>;
+        let mockNext: jest.Mock;
+        let userService: UserService;
+        let userDoc: IUserDocument;
+        let roles: IRoleDocument[];
+        beforeEach(async () => {
+            userService = new UserService();
+            userDoc = new UserModel();
+            roles = await RoleModel.find({})
+            mockRequest = {
+                body: {},
+                files: { images: [] },
+                user: userService.makeRequestUser(userDoc, roles),
+            };
+            mockResponse = {
+                status: jest.fn().mockImplementation(function (this: Response) {
+                    return this;
+                }),
+                send: jest.fn(),
+                json: jest.fn(),
+            } as Partial<Response>;
+            mockNext = jest.fn();
             jest.spyOn(FeedService.prototype, 'newPost').mockImplementation(async (req, res) => {
                 res.status(200).json({ message: 'Post created successfully' });
             });
         });
+
+        afterEach(() => {
+            jest.restoreAllMocks();
+        });
+
         it('should handle file upload correctly', async () => {
             const mockFile: Express.Multer.File = {
                 fieldname: 'images',
@@ -291,9 +272,9 @@ describe('FeedController - newPost Validation', () => {
                 buffer: Buffer.from('mock image data'),
                 stream: {} as any,
             };
-    
+
             (sizeOf as jest.Mock).mockReturnValue({ width: AppConstants.MaxImageDimensions.width + 1, height: AppConstants.MaxImageDimensions.height });
-    
+
             const multerReq = {
                 ...mockRequest,
                 files: { images: [mockFile] },
@@ -302,16 +283,16 @@ describe('FeedController - newPost Validation', () => {
                     content: 'Test post content',
                 },
             } as MulterRequest;
-    
+
             await feedController.newPost(multerReq as Request, mockResponse as Response, mockNext);
-    
+
             expect(mockResponse.status).toHaveBeenCalledWith(400);
             expect(mockResponse.json).toHaveBeenCalledWith({
                 message: `Image dimensions should not exceed ${AppConstants.MaxImageDimensions.width}x${AppConstants.MaxImageDimensions.height}`,
                 error: null,
             });
         });
-    
+
         it('should reject if image height exceeds the maximum allowed dimensions in height', async () => {
             const mockFile: Express.Multer.File = {
                 fieldname: 'images',
@@ -325,9 +306,9 @@ describe('FeedController - newPost Validation', () => {
                 buffer: Buffer.from('mock image data'),
                 stream: {} as any,
             };
-    
+
             (sizeOf as jest.Mock).mockReturnValue({ width: AppConstants.MaxImageDimensions.width, height: AppConstants.MaxImageDimensions.height + 1 });
-    
+
             const multerReq = {
                 ...mockRequest,
                 files: { images: [mockFile] },
@@ -336,14 +317,128 @@ describe('FeedController - newPost Validation', () => {
                     content: 'Test post content',
                 },
             } as MulterRequest;
-    
+
             await feedController.newPost(multerReq as Request, mockResponse as Response, mockNext);
-    
+
             expect(mockResponse.status).toHaveBeenCalledWith(400);
             expect(mockResponse.json).toHaveBeenCalledWith({
                 message: `Image dimensions should not exceed ${AppConstants.MaxImageDimensions.width}x${AppConstants.MaxImageDimensions.height}`,
                 error: null,
             });
+        });
+    });
+    describe('newPost full processing', () => {
+        let mockRequest: Partial<MulterRequest>;
+        let mockResponse: Partial<Response>;
+        let mockNext: jest.Mock;
+        let userService: UserService;
+        let userDoc: IUserDocument;
+        let roles: IRoleDocument[];
+        beforeEach(async () => {
+            userService = new UserService();
+            userDoc = new UserModel();
+            roles = await RoleModel.find({})
+            mockRequest = {
+                body: {},
+                files: { images: [] },
+                user: userService.makeRequestUser(userDoc, roles),
+            };
+            mockResponse = {
+                status: jest.fn().mockImplementation(function (this: Response) {
+                    return this;
+                }),
+                send: jest.fn(),
+                json: jest.fn(),
+            } as Partial<Response>;
+            mockNext = jest.fn();
+        });
+
+        afterEach(() => {
+            jest.restoreAllMocks();
+        });
+        it('should insert a new post and viewpoint into the database', async () => {
+            const mockFile: Express.Multer.File = {
+                fieldname: 'images',
+                originalname: 'test.jpg',
+                encoding: '7bit',
+                mimetype: 'image/jpeg',
+                size: 1024,
+                destination: '/tmp',
+                filename: 'test-1234567890.jpg',
+                path: '/tmp/test-1234567890.jpg',
+                buffer: Buffer.from('mock image data'),
+                stream: {} as any,
+            };
+
+            (sizeOf as jest.Mock).mockReturnValue({ width: AppConstants.MaxImageDimensions.width, height: AppConstants.MaxImageDimensions.height });
+
+            const multerReq = {
+                ...mockRequest,
+                files: { images: [mockFile] },
+                body: {
+                    isBlogPost: 'false',
+                    content: 'Test post content',
+                },
+            } as MulterRequest;
+
+            await feedController.newPost(multerReq as Request, mockResponse as Response, mockNext);
+
+            expect(mockResponse.status).toHaveBeenCalledWith(201);
+            const expectedPost = (PostModel.create as jest.Mock).mock.calls[0][0];
+            expect(PostModel.create).toHaveBeenCalledWith(expect.objectContaining({
+                _id: expectedPost._id,
+                depth: expectedPost.depth,
+                lastReplyAt: expectedPost.lastReplyAt,
+                lastReplyBy: expectedPost.lastReplyBy,
+                pId: expectedPost.pId,
+                pIds: expectedPost.pIds,
+                vpId: expectedPost.vpId,
+                vpPIds: expectedPost.vpPIds,
+                inVpId: expectedPost.inVpId,
+                inVpTransIds: expectedPost.inVpTransIds,
+                aiVpId: expectedPost.aiVpId,
+                aiVpTransIds: expectedPost.aiVpTransIds,
+                reqTransLangs: expectedPost.reqTransLangs,
+                aiReqTransLangs: expectedPost.aiReqTransLangs,
+                imageUrls: expectedPost.imageUrls,
+                hidden: expectedPost.hidden,
+                deletedAt: expectedPost.deletedAt,
+                createdAt: expectedPost.createdAt,
+                createdBy: expectedPost.createdBy,
+                deletedBy: expectedPost.deletedBy,
+                updatedAt: expectedPost.updatedAt,
+                updatedBy: expectedPost.updatedBy,
+                metadata: {
+                    replies: expectedPost.metadata.replies,
+                    expands: expectedPost.metadata.expands,
+                    impressions: expectedPost.metadata.impressions,
+                    reactions: expectedPost.metadata.reactions,
+                    reactionsByType: expectedPost.metadata.reactionsByType,
+                    votes: expectedPost.metadata.votes,
+                },
+                procLock: {
+                    id: expectedPost.procLock.id,
+                    date: expectedPost.procLock.date,
+                },
+            }));
+            const expectedViewpoint = (PostViewpointModel.create as jest.Mock).mock.calls[0][0];
+            expect(PostViewpointModel.create).toHaveBeenCalledWith(expect.objectContaining({
+                _id: expectedPost.inVpId,
+                postId: expectedPost._id,
+                content: 'Test post content',
+                humanity: HumanityTypeEnum.Human,
+                rendered: 'Test post content',
+            }));
+            // Verify that the Upload class was called with the correct parameters
+            expect(Upload).toHaveBeenCalledWith(expect.objectContaining({
+                client: expect.any(Object),
+                params: expect.objectContaining({
+                    Bucket: expect.any(String),
+                    Key: expect.stringContaining('posts/'),
+                    Body: expect.any(Buffer),
+                    ContentType: 'image/jpeg',
+                }),
+            }));
         });
     });
 });

@@ -1,6 +1,6 @@
 import { Schema } from 'mongoose';
-import ModelName from '../enumerations/model-name';
-import { IAdminUserDocument } from '../documents/admin-user';
+import ModelName from '../enumerations/model-name.ts';
+import { IAdminUserDocument } from '../documents/admin-user.ts';
 
 /**
  * An admin user in the system.

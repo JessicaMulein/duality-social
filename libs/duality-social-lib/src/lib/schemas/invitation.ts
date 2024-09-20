@@ -1,9 +1,8 @@
-import { v4 as uuidv4 } from 'uuid';
 import { Schema } from 'mongoose';
 import validator from 'validator';
-import ModelName from '../enumerations/model-name';
-import { IInvitationDocument } from '../documents/invitation';
-
+import { v4 as uuidv4 } from 'uuid';
+import ModelName from '../enumerations/model-name.ts';
+import { IInvitationDocument } from '../documents/invitation.ts';
 
 const generateRandomToken = () => {
   return uuidv4();
