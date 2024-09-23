@@ -29,7 +29,7 @@ export const PostSchema = new Schema<IPostDocument>(
     vpId: {
       type: Schema.Types.ObjectId,
       ref: ModelName.PostViewpoint,
-      required: true,
+      required: false,
       default: null,
       readonly: true,
     },

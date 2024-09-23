@@ -1,36 +1,11 @@
-import request from 'supertest';
-import express, { Request, Response, NextFunction } from 'express';
-import bodyParser from 'body-parser';
-import sizeOf from 'image-size';
-import { Upload } from '@aws-sdk/lib-storage';
-import { Types } from 'mongoose';
-import { Readable } from 'stream';
-import feedRouter, { FeedController, FeedControllerInstance } from './feed.ts';
-import { ISignedToken } from '../../interfaces/signed-token.ts';
-import { getAuthToken } from '../../fixtures/auth.ts';
-import { getUserDoc, makeUser } from '../../fixtures/user.ts';
-import { MulterRequest } from '../../interfaces/multer-request.ts';
-import { FeedService } from '../../services/feed.ts';
-import { RequestUserService } from '../../services/request-user.ts';
-import {
-  AppConstants,
-  HumanityTypeEnum,
-  IPost,
-  IPostViewpoint,
-  IRole,
-  IRoleDocument,
-  IUser,
-  IUserDocument,
-} from '@duality-social/duality-social-lib';
-import {
-  PostModel,
-  PostViewpointModel,
-  RoleModel,
-  UserModel,
-} from '@duality-social/duality-social-node-lib';
+/* eslint-disable @typescript-eslint/no-var-requires */
 
+// 1. Place all jest.mock calls at the very top to prevent circular dependencies
+
+// Mock 'image-size' module
 jest.mock('image-size');
 
+// Mock '@aws-sdk/lib-storage' module
 jest.mock('@aws-sdk/lib-storage', () => ({
   Upload: jest.fn().mockImplementation(() => ({
     done: jest.fn().mockResolvedValue({
@@ -43,98 +18,24 @@ jest.mock('@duality-social/duality-social-node-lib', () => {
   const originalModule = jest.requireActual(
     '@duality-social/duality-social-node-lib',
   );
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { makePost } = require('../../fixtures/post');
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { makePostViewpoint } = require('../../fixtures/post-viewpoint');
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { makeRole } = require('../../fixtures/role');
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { makeUser, getUserDoc } = require('../../fixtures/user');
 
-  class PostModel {
-    constructor(postData: IPost) {
-      const postDoc = makePost(postData);
-      Object.assign(this, postDoc);
-    }
-
-    save() {
-      return Promise.resolve({ _id: new Types.ObjectId(), ...this });
-    }
-
-    static create = jest.fn((postData: IPost) => {
-      return Promise.resolve(makePost(postData));
-    });
-
-    static findById() {
-      return jest.fn();
-    }
-
-    static find() {
-      return jest.fn();
-    }
-  }
-
-  class PostViewpointModel {
-    constructor(viewpointData: IPostViewpoint) {
-      const viewpointDoc = makePostViewpoint(viewpointData);
-      Object.assign(this, viewpointDoc);
-    }
-
-    save() {
-      return Promise.resolve({ _id: new Types.ObjectId(), ...this });
-    }
-
-    static create = jest.fn((viewpointData: IPostViewpoint) => {
-      return Promise.resolve(makePostViewpoint(viewpointData));
-    });
-  }
-
-  class UserModel {
-    constructor(userData: IUser) {
-      Object.assign(this, getUserDoc(makeUser(userData)));
-    }
-
-    validateSync() {
-      return null;
-    }
-
-    static create = jest.fn((userData: IUser) => {
-      return Promise.resolve(getUserDoc(makeUser(userData)));
-    });
-
-    static findById() {
-      return jest.fn();
-    }
-
-    static find() {
-      return jest.fn();
-    }
-  }
-
-  class RoleModel {
-    constructor(roleData: IRole) {
-      const roleDoc = makeRole(roleData);
-      Object.assign(this, roleDoc);
-    }
-
-    static find = jest.fn(() => {
-      const userId = new Types.ObjectId();
-      return Promise.resolve([
-        makeRole({ users: [userId], admin: true, member: false }),
-        makeRole({ users: [userId], admin: false, member: true }),
-      ]);
-    });
-  }
+  // Directly import the mock models instead of requiring the mock file itself
+  const PostModel = require('../../mocks/models/post-model').PostModel;
+  const PostViewpointModel =
+    require('../../mocks/models/post-viewpoint-model').PostViewpointModel;
+  const RoleModel = require('../../mocks/models/role-model').RoleModel;
+  const UserModel = require('../../mocks/models/user-model').UserModel;
 
   return {
     ...originalModule,
-    PostModel,
-    PostViewpointModel,
     UserModel,
     RoleModel,
+    PostModel,
+    PostViewpointModel,
   };
 });
+
+// Mock '@duality-social/duality-social-lib' to override AppConstants
 jest.mock('@duality-social/duality-social-lib', () => {
   const originalModule = jest.requireActual(
     '@duality-social/duality-social-lib',
@@ -162,64 +63,141 @@ jest.mock('@duality-social/duality-social-lib', () => {
     MaxImageSize: 5 * 1024 * 1024, // 5 MB
     MaxImageDimensions: { width: 1920, height: 1080 },
   };
-
   return {
     ...originalModule,
     AppConstants,
   };
 });
 
+const userDoc: IUserDocument = require('../../fixtures/user').makeUser();
+
+// Mock '../../middlewares/authenticate-token' to simulate authenticated user
 jest.mock('../../middlewares/authenticate-token', () => {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const { makeUser, getUserDoc } = require('../../fixtures/user');
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const { makeRole } = require('../../fixtures/role');
-  const userDoc: IUserDocument = getUserDoc(makeUser());
-  const roles: IRoleDocument[] = [
-    makeRole({ users: [userDoc._id], admin: true, member: false }),
-    makeRole({ users: [userDoc._id], admin: false, member: true }),
+  const { RequestUserService } = require('../../services/request-user.ts');
+  const roles = [
+    makeRole({ users: [userDoc._id], globalAdmin: true, member: false }),
+    makeRole({ users: [userDoc._id], globalAdmin: false, member: true }),
   ];
   return {
     authenticateToken: (req: Request, res: Response, next: NextFunction) => {
-      const token =
-        req.get('Authorization')?.split(' ')[1] ||
-        req.header('Authorization')?.split(' ')[1];
+      const authHeader =
+        req.get('Authorization') || req.header('Authorization');
+      const token = authHeader?.split(' ')[1];
       if (token) {
         req.user = RequestUserService.makeRequestUser(userDoc, roles);
         next();
       } else {
-        res.status(401).json({ message: 'Unauthorized' });
+        res.status(401).send({ message: 'Unauthorized' });
       }
     },
   };
 });
 
+// Mock 'franc' module to always return 'en' for language detection
 jest.mock('franc', () => ({
-  franc: jest.fn(() => 'en'), // Always returns 'en' for language detection
+  franc: jest.fn(() => 'en'),
 }));
 
+// 2. Now proceed with the import statements
+import request from 'supertest';
+import express, { Request, Response, NextFunction } from 'express';
+import bodyParser from 'body-parser';
+import sizeOf from 'image-size';
+import { Upload } from '@aws-sdk/lib-storage';
+import { Types } from 'mongoose';
+import { Readable } from 'stream';
+import feedRouter, { FeedControllerInstance } from './feed.ts';
+import { ISignedToken } from '../../interfaces/signed-token.ts';
+import { getAuthToken } from '../../fixtures/auth.ts';
+import { makeRole } from '../../fixtures/role';
+import { makePost } from '../../fixtures/post';
+import { makePostViewpoint } from '../../fixtures/post-viewpoint';
+import { MulterRequest } from '../../interfaces/multer-request.ts';
+import { FeedService } from '../../services/feed.ts';
+import { RequestUserService } from '../../services/request-user.ts';
+import {
+  AppConstants,
+  HumanityTypeEnum,
+  IPost,
+  IPostDocument,
+  IPostObject,
+  IPostViewpoint,
+  IPostViewpointDocument,
+  IPostViewpointObject,
+  IRoleDocument,
+  IUserDocument,
+  ParentPostIdMismatchError,
+  ParentPostNotFoundError,
+  ParentViewpointNotFoundError,
+  ViewpointTypeEnum,
+} from '@duality-social/duality-social-lib';
+import { RoleModel } from '../../mocks/models/role-model';
+import { PostModel } from '../../mocks/models/post-model';
+import { PostViewpointModel } from '../../mocks/models/post-viewpoint-model';
+import {
+  convertDatesToISOStrings,
+  createMockDocument,
+} from '../../mocks/create-mock-document.ts';
+
+// 3. Initialize Express app for testing
 const app = express();
 app.use(bodyParser.json());
 app.use('/api/feed', feedRouter);
 
+// 4. Begin test suite
 describe('FeedController - newPost', () => {
   let authToken: ISignedToken;
-  let feedController: FeedController;
+
+  let roles: IRoleDocument[];
+  let post: IPostDocument;
+  let viewpoint: IPostViewpointDocument;
 
   beforeAll(async () => {
-    //authToken = { token: 'valid-token', tokenUser: { userId: 'user-id', roles: []}, roleNames: [], roles: [] };
-    authToken = await getAuthToken(getUserDoc(makeUser()));
-    feedController = FeedControllerInstance;
+    // Generate an authentication token for a mock user
+    authToken = await getAuthToken(userDoc);
+  });
+
+  beforeEach(async () => {
+    // Mock RoleModel.find to return roles that include the current user's ID
+    jest.spyOn(RoleModel, 'find').mockResolvedValue([
+      makeRole({ users: [userDoc._id], globalAdmin: true, member: false }),
+      makeRole({
+        users: [userDoc._id],
+        globalAdmin: false,
+        member: true,
+      }),
+    ]);
+
+    // Fetch mocked roles
+    roles = await RoleModel.find({});
+
+    post = createMockDocument<IPostDocument>(() =>
+      makePost({
+        createdBy: userDoc._id,
+        updatedBy: userDoc._id,
+        deletedBy: userDoc._id,
+      }),
+    );
+    viewpoint = createMockDocument<IPostViewpointDocument>(() =>
+      makePostViewpoint({
+        createdBy: userDoc._id,
+        updatedBy: userDoc._id,
+        deletedBy: undefined,
+        postId: post._id,
+      }),
+    );
   });
 
   describe('new post validation', () => {
     afterEach(() => {
       jest.restoreAllMocks();
     });
+
     it('should return 401 if no token is provided', async () => {
       const response = await request(app).post('/api/feed').send({
         isBlogPost: 'true',
-        content: 'This is a test post',
+        content: viewpoint.content,
       });
 
       expect(response.status).toBe(401);
@@ -231,7 +209,7 @@ describe('FeedController - newPost', () => {
         .post('/api/feed')
         .auth(authToken.token, { type: 'bearer' })
         .send({
-          content: 'This is a test post',
+          content: viewpoint.content,
         });
 
       expect(response.status).toBe(400);
@@ -250,7 +228,7 @@ describe('FeedController - newPost', () => {
         .auth(authToken.token, { type: 'bearer' })
         .send({
           isBlogPost: 'maybe',
-          content: 'This is a test post',
+          content: viewpoint.content,
         });
 
       expect(response.status).toBe(400);
@@ -282,9 +260,10 @@ describe('FeedController - newPost', () => {
     });
 
     it('should return 201 if all required fields are present and valid', async () => {
-      const mockNewPost = jest
-        .fn()
-        .mockResolvedValue({ message: 'Post created successfully' });
+      const mockNewPost = jest.fn().mockResolvedValue({
+        post,
+        viewpoint,
+      });
       jest
         .spyOn(FeedService.prototype, 'newPost')
         .mockImplementation(mockNewPost);
@@ -294,11 +273,16 @@ describe('FeedController - newPost', () => {
         .auth(authToken.token, { type: 'bearer' })
         .send({
           isBlogPost: 'true',
-          content: 'This is a test post',
+          content: viewpoint.content,
         });
 
       expect(response.status).toBe(201);
       expect(FeedService.prototype.newPost).toHaveBeenCalled();
+      expect(response.body).toEqual({
+        message: 'New post created successfully',
+        post: post.toObject() as IPostObject,
+        viewpoint: viewpoint.toObject() as IPostViewpointObject,
+      });
     });
   });
 
@@ -306,16 +290,16 @@ describe('FeedController - newPost', () => {
     let mockRequest: Partial<MulterRequest>;
     let mockResponse: Partial<Response>;
     let mockNext: jest.Mock;
-    let userDoc: IUserDocument;
-    let roles: IRoleDocument[];
+
     beforeEach(async () => {
-      userDoc = new UserModel();
-      roles = await RoleModel.find({});
+      // Prepare mock request
       mockRequest = {
         body: {},
         files: { images: [] },
         user: RequestUserService.makeRequestUser(userDoc, roles),
       };
+
+      // Prepare mock response
       mockResponse = {
         status: jest.fn().mockImplementation(function (this: Response) {
           return this;
@@ -323,12 +307,24 @@ describe('FeedController - newPost', () => {
         send: jest.fn(),
         json: jest.fn(),
       } as Partial<Response>;
+
+      // Prepare mock next function
       mockNext = jest.fn();
-      jest
-        .spyOn(FeedService.prototype, 'newPost')
-        .mockImplementation(async (req, res) => {
-          res.status(200).json({ message: 'Post created successfully' });
-        });
+
+      // Mock FeedService.prototype.newPost to return the mock post
+      jest.spyOn(FeedService.prototype, 'newPost').mockImplementation(
+        async (
+          req: Request,
+        ): Promise<{
+          post: IPostDocument;
+          viewpoint: IPostViewpointDocument;
+        }> => {
+          return {
+            post,
+            viewpoint,
+          };
+        },
+      );
     });
 
     afterEach(() => {
@@ -349,6 +345,7 @@ describe('FeedController - newPost', () => {
         stream: {} as Readable,
       };
 
+      // Mock sizeOf to return valid dimensions
       (sizeOf as jest.Mock).mockReturnValue({
         width: AppConstants.MaxImageDimensions.width,
         height: AppConstants.MaxImageDimensions.height,
@@ -359,15 +356,10 @@ describe('FeedController - newPost', () => {
       };
       mockRequest.body = {
         isBlogPost: 'false',
-        content: 'Test post content',
+        content: viewpoint.content,
       };
 
-      const mockNewPost = { _id: 'mockPostId', content: 'Test post content' };
-      (FeedService.prototype.newPost as jest.Mock).mockResolvedValue(
-        mockNewPost,
-      );
-
-      await feedController.newPost(
+      await FeedControllerInstance.newPost(
         mockRequest as Request,
         mockResponse as Response,
         mockNext,
@@ -375,18 +367,42 @@ describe('FeedController - newPost', () => {
 
       expect(FeedService.prototype.newPost).toHaveBeenCalledWith(
         expect.objectContaining({
+          body: {
+            content: viewpoint.content,
+            isBlogPost: 'false',
+          },
           files: {
             images: [expect.objectContaining({ originalname: 'test.jpg' })],
           },
-          body: {
-            isBlogPost: 'false',
-            content: 'Test post content',
-          },
+          user: expect.objectContaining({
+            email: userDoc.email,
+            emailVerified: userDoc.emailVerified,
+            humanityType: userDoc.humanityType,
+            id: userDoc._id.toString(),
+            languages: userDoc.languages,
+            lastLogin: userDoc.lastLogin,
+            roles: expect.arrayContaining(
+              roles.map((role) =>
+                expect.objectContaining({
+                  _id: role._id,
+                  globalAdmin: role.globalAdmin,
+                  member: role.member,
+                  name: role.name,
+                  users: expect.arrayContaining([userDoc._id]),
+                }),
+              ),
+            ),
+            timezone: userDoc.timezone,
+            username: userDoc.username,
+          }),
         }),
-        expect.anything(),
       );
       expect(mockResponse.status).toHaveBeenCalledWith(201);
-      expect(mockResponse.json).toHaveBeenCalledWith(mockNewPost);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        message: 'New post created successfully',
+        post: post.toObject() as IPostObject,
+        viewpoint: viewpoint.toObject() as IPostViewpointObject,
+      });
     });
 
     it('should reject if too many images are uploaded', async () => {
@@ -410,10 +426,10 @@ describe('FeedController - newPost', () => {
       };
       mockRequest.body = {
         isBlogPost: 'false',
-        content: 'Test post content',
+        content: viewpoint.content,
       };
 
-      await feedController.newPost(
+      await FeedControllerInstance.newPost(
         mockRequest as Request,
         mockResponse as Response,
         mockNext,
@@ -448,10 +464,10 @@ describe('FeedController - newPost', () => {
       };
       mockRequest.body = {
         isBlogPost: 'false',
-        content: 'Test post content',
+        content: viewpoint.content,
       };
 
-      await feedController.newPost(
+      await FeedControllerInstance.newPost(
         mockRequest as Request,
         mockResponse as Response,
         mockNext,
@@ -466,6 +482,7 @@ describe('FeedController - newPost', () => {
         }),
       );
     });
+
     it('should reject if image width exceeds the maximum allowed dimensions in width', async () => {
       const mockFile: Express.Multer.File = {
         fieldname: 'images',
@@ -480,6 +497,7 @@ describe('FeedController - newPost', () => {
         stream: {} as Readable,
       };
 
+      // Mock sizeOf to return width exceeding the limit
       (sizeOf as jest.Mock).mockReturnValue({
         width: AppConstants.MaxImageDimensions.width + 1,
         height: AppConstants.MaxImageDimensions.height,
@@ -490,11 +508,11 @@ describe('FeedController - newPost', () => {
         files: { images: [mockFile] },
         body: {
           isBlogPost: 'false',
-          content: 'Test post content',
+          content: viewpoint.content,
         },
       } as MulterRequest;
 
-      await feedController.newPost(
+      await FeedControllerInstance.newPost(
         multerReq as Request,
         mockResponse as Response,
         mockNext,
@@ -521,6 +539,7 @@ describe('FeedController - newPost', () => {
         stream: {} as Readable,
       };
 
+      // Mock sizeOf to return height exceeding the limit
       (sizeOf as jest.Mock).mockReturnValue({
         width: AppConstants.MaxImageDimensions.width,
         height: AppConstants.MaxImageDimensions.height + 1,
@@ -531,11 +550,11 @@ describe('FeedController - newPost', () => {
         files: { images: [mockFile] },
         body: {
           isBlogPost: 'false',
-          content: 'Test post content',
+          content: viewpoint.content,
         },
       } as MulterRequest;
 
-      await feedController.newPost(
+      await FeedControllerInstance.newPost(
         multerReq as Request,
         mockResponse as Response,
         mockNext,
@@ -548,33 +567,218 @@ describe('FeedController - newPost', () => {
       });
     });
   });
-  describe('newPost full processing', () => {
+
+  describe('FeedController - newPost with parentPostId and parentViewpointId', () => {
     let mockRequest: Partial<MulterRequest>;
     let mockResponse: Partial<Response>;
     let mockNext: jest.Mock;
-    let userDoc: IUserDocument;
-    let roles: IRoleDocument[];
+
     beforeEach(async () => {
-      userDoc = new UserModel();
-      roles = await RoleModel.find({});
       mockRequest = {
-        body: {},
-        files: { images: [] },
+        body: {
+          isBlogPost: 'false',
+          content: viewpoint.content,
+          parentPostId: post._id.toString(),
+          parentViewpointId: viewpoint._id.toString(),
+        },
         user: RequestUserService.makeRequestUser(userDoc, roles),
       };
+
       mockResponse = {
-        status: jest.fn().mockImplementation(function (this: Response) {
-          return this;
-        }),
-        send: jest.fn(),
+        status: jest.fn().mockReturnThis(),
         json: jest.fn(),
       } as Partial<Response>;
+
       mockNext = jest.fn();
+
+      jest
+        .spyOn(PostModel, 'findById')
+        .mockImplementation((id: string | Types.ObjectId) => {
+          if (
+            (typeof id === 'string' && id === post._id.toString()) ||
+            (typeof id !== 'string' && id.equals(post._id))
+          ) {
+            return {
+              exec: jest.fn().mockResolvedValue(post),
+            };
+          }
+          return {
+            exec: jest.fn().mockResolvedValue(null),
+          };
+        });
+
+      jest
+        .spyOn(PostViewpointModel, 'findById')
+        .mockImplementation((id: string | Types.ObjectId) => {
+          if (
+            (typeof id === 'string' && id === viewpoint._id.toString()) ||
+            (typeof id !== 'string' && id.equals(viewpoint._id))
+          ) {
+            return {
+              exec: jest.fn().mockResolvedValue(viewpoint),
+            };
+          }
+          return {
+            exec: jest.fn().mockResolvedValue(null),
+          };
+        });
     });
 
     afterEach(() => {
       jest.restoreAllMocks();
     });
+
+    it('should handle correct parentPostId and parentViewpointId', async () => {
+      await FeedControllerInstance.newPost(
+        mockRequest as MulterRequest,
+        mockResponse as Response,
+        mockNext,
+      );
+
+      expect(PostModel.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          _id: expect.any(Types.ObjectId),
+          createdAt: expect.any(Date),
+          createdBy: userDoc._id,
+          depth: expect.any(Number),
+          imageUrls: expect.any(Array),
+          inVpId: expect.any(Types.ObjectId),
+          metadata: expect.objectContaining({
+            expands: 0,
+            impressions: 0,
+            reactions: 0,
+            reactionsByType: expect.any(Object),
+            replies: 0,
+            votes: 0,
+          }),
+          pId: post._id,
+          pIds: expect.any(Array),
+          reqTransLangs: expect.any(Array),
+          updatedAt: expect.any(Date),
+          updatedBy: userDoc._id,
+          vpId: viewpoint._id,
+          vpPIds: expect.any(Array),
+          inVpTransIds: expect.any(Array),
+          aiVpTransIds: expect.any(Array),
+          aiReqTransLangs: expect.any(Array),
+        }),
+      );
+      const createdPost = await PostModel.create.mock.results[0].value;
+      expect(PostViewpointModel.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          _id: expect.any(Types.ObjectId),
+          postId: createdPost._id,
+          content: mockRequest.body.content,
+          rendered: expect.any(String),
+          translated: false,
+          type: ViewpointTypeEnum.HumanSource,
+          createdAt: expect.any(Date),
+          createdBy: userDoc._id,
+          humanity: HumanityTypeEnum.Human,
+          lang: expect.any(String),
+          metadata: expect.objectContaining({
+            expands: 0,
+            impressions: 0,
+            reactions: 0,
+            reactionsByType: expect.any(Object),
+            humanityByType: expect.any(Object),
+            replies: 0,
+            votes: 0,
+          }),
+          updatedAt: expect.any(Date),
+          updatedBy: userDoc._id,
+        }),
+      );
+      expect(mockResponse.status).toHaveBeenCalledWith(201);
+      expect(mockResponse.json).toHaveBeenCalledWith(expect.any(Object));
+    });
+
+    it('should handle mismatched parentPostId and parentViewpointId', async () => {
+      jest
+        .spyOn(PostViewpointModel, 'findById')
+        .mockImplementation((id: string | Types.ObjectId) => {
+          if (
+            (typeof id === 'string' && id === viewpoint._id.toString()) ||
+            (typeof id !== 'string' && id.equals(viewpoint._id))
+          ) {
+            return {
+              exec: jest
+                .fn()
+                .mockResolvedValue(
+                  createMockDocument<IPostViewpointDocument>(() =>
+                    makePostViewpoint(),
+                  ),
+                ),
+            };
+          }
+          return {
+            exec: jest.fn().mockResolvedValue(null),
+          };
+        });
+
+      await FeedControllerInstance.newPost(
+        mockRequest as MulterRequest,
+        mockResponse as Response,
+        mockNext,
+      );
+
+      expect(mockNext).toHaveBeenCalledWith(
+        expect.any(ParentPostIdMismatchError),
+      );
+    });
+
+    it('should handle non-existing parentPostId', async () => {
+      jest.spyOn(PostModel, 'findById').mockReturnValue({
+        exec: jest.fn().mockResolvedValue(null),
+      } as any);
+
+      await FeedControllerInstance.newPost(
+        mockRequest as MulterRequest,
+        mockResponse as Response,
+        mockNext,
+      );
+
+      expect(mockNext).toHaveBeenCalledWith(
+        expect.any(ParentPostNotFoundError),
+      );
+    });
+
+    it('should handle non-existing parentViewpointId', async () => {
+      jest.spyOn(PostViewpointModel, 'findById').mockReturnValue({
+        exec: jest.fn().mockResolvedValue(null),
+      } as any);
+
+      await FeedControllerInstance.newPost(
+        mockRequest as MulterRequest,
+        mockResponse as Response,
+        mockNext,
+      );
+
+      expect(mockNext).toHaveBeenCalledWith(
+        expect.any(ParentViewpointNotFoundError),
+      );
+    });
+  });
+
+  describe('FeedController - newPost full processing', () => {
+    let feedService: FeedService;
+    let mockRequest: Partial<MulterRequest>;
+
+    beforeEach(async () => {
+      feedService = new FeedService();
+      mockRequest = {
+        body: {
+          isBlogPost: 'false',
+          content: viewpoint.content,
+        },
+        user: RequestUserService.makeRequestUser(userDoc, roles),
+      };
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
     it('should insert a new post and viewpoint into the database', async () => {
       const mockFile: Express.Multer.File = {
         fieldname: 'images',
@@ -589,78 +793,21 @@ describe('FeedController - newPost', () => {
         stream: {} as Readable,
       };
 
+      const mockMulterRequest = {
+        ...mockRequest,
+        files: {
+          images: [mockFile],
+        },
+      } as MulterRequest;
+
+      // Mock sizeOf to return valid dimensions
       (sizeOf as jest.Mock).mockReturnValue({
         width: AppConstants.MaxImageDimensions.width,
         height: AppConstants.MaxImageDimensions.height,
       });
 
-      const multerReq = {
-        ...mockRequest,
-        files: { images: [mockFile] },
-        body: {
-          isBlogPost: 'false',
-          content: 'Test post content',
-        },
-      } as MulterRequest;
+      const result = await feedService.newPost(mockMulterRequest);
 
-      await feedController.newPost(
-        multerReq as Request,
-        mockResponse as Response,
-        mockNext,
-      );
-
-      expect(mockResponse.status).toHaveBeenCalledWith(201);
-      const expectedPost = (PostModel.create as jest.Mock).mock.calls[0][0];
-      expect(PostModel.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          _id: expectedPost._id,
-          depth: expectedPost.depth,
-          lastReplyAt: expectedPost.lastReplyAt,
-          lastReplyBy: expectedPost.lastReplyBy,
-          pId: expectedPost.pId,
-          pIds: expectedPost.pIds,
-          vpId: expectedPost.vpId,
-          vpPIds: expectedPost.vpPIds,
-          inVpId: expectedPost.inVpId,
-          inVpTransIds: expectedPost.inVpTransIds,
-          aiVpId: expectedPost.aiVpId,
-          aiVpTransIds: expectedPost.aiVpTransIds,
-          reqTransLangs: expectedPost.reqTransLangs,
-          aiReqTransLangs: expectedPost.aiReqTransLangs,
-          imageUrls: expectedPost.imageUrls,
-          hidden: expectedPost.hidden,
-          deletedAt: expectedPost.deletedAt,
-          createdAt: expectedPost.createdAt,
-          createdBy: expectedPost.createdBy,
-          deletedBy: expectedPost.deletedBy,
-          updatedAt: expectedPost.updatedAt,
-          updatedBy: expectedPost.updatedBy,
-          metadata: {
-            replies: expectedPost.metadata.replies,
-            expands: expectedPost.metadata.expands,
-            impressions: expectedPost.metadata.impressions,
-            reactions: expectedPost.metadata.reactions,
-            reactionsByType: expectedPost.metadata.reactionsByType,
-            votes: expectedPost.metadata.votes,
-          },
-          procLock: {
-            id: expectedPost.procLock.id,
-            date: expectedPost.procLock.date,
-          },
-        }),
-      );
-      const expectedViewpoint = (PostViewpointModel.create as jest.Mock).mock
-        .calls[0][0];
-      expect(PostViewpointModel.create).toHaveBeenCalledWith(
-        expect.objectContaining({
-          _id: expectedPost.inVpId,
-          postId: expectedPost._id,
-          content: 'Test post content',
-          humanity: HumanityTypeEnum.Human,
-          rendered: 'Test post content',
-          metadata: expectedViewpoint.metadata,
-        }),
-      );
       // Verify that the Upload class was called with the correct parameters
       expect(Upload).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -671,6 +818,68 @@ describe('FeedController - newPost', () => {
             Body: expect.any(Buffer),
             ContentType: 'image/jpeg',
           }),
+        }),
+      );
+
+      const createdPost = await PostModel.create.mock.results[0].value;
+      const createdViewpoint =
+        await PostViewpointModel.create.mock.results[0].value;
+      expect(result).toEqual({
+        post: createdPost,
+        viewpoint: createdViewpoint,
+      });
+
+      expect(PostModel.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          _id: expect.any(Types.ObjectId),
+          createdAt: expect.any(Date),
+          createdBy: userDoc._id,
+          depth: expect.any(Number),
+          imageUrls: expect.any(Array),
+          inVpId: expect.any(Types.ObjectId),
+          metadata: expect.objectContaining({
+            expands: 0,
+            impressions: 0,
+            reactions: 0,
+            reactionsByType: expect.any(Object),
+            replies: 0,
+            votes: 0,
+          }),
+          pId: undefined,
+          pIds: expect.any(Array),
+          reqTransLangs: expect.any(Array),
+          updatedAt: expect.any(Date),
+          updatedBy: userDoc._id,
+          vpId: undefined,
+          vpPIds: expect.any(Array),
+          inVpTransIds: expect.any(Array),
+          aiVpTransIds: expect.any(Array),
+          aiReqTransLangs: expect.any(Array),
+        }),
+      );
+      expect(PostViewpointModel.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          _id: expect.any(Types.ObjectId),
+          postId: createdPost._id,
+          content: mockRequest.body.content,
+          rendered: expect.any(String),
+          translated: false,
+          type: ViewpointTypeEnum.HumanSource,
+          createdAt: expect.any(Date),
+          createdBy: userDoc._id,
+          humanity: HumanityTypeEnum.Human,
+          lang: expect.any(String),
+          metadata: expect.objectContaining({
+            expands: 0,
+            impressions: 0,
+            reactions: 0,
+            reactionsByType: expect.any(Object),
+            humanityByType: expect.any(Object),
+            replies: 0,
+            votes: 0,
+          }),
+          updatedAt: expect.any(Date),
+          updatedBy: userDoc._id,
         }),
       );
     });

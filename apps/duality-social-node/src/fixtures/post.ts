@@ -4,21 +4,24 @@ import {
   DefaultReactionsTypeEnum,
   IPost,
   IPostDocument,
+  IPostObject,
 } from '@duality-social/duality-social-lib';
 
-export const makePost = (overrides = {}): Partial<IPostDocument> => {
+export const makePost = (
+  overrides: Partial<IPostObject> = {},
+): IPostDocument => {
   const post = {
     depth: faker.number.int({ min: 1, max: 10 }),
     lastReplyAt: faker.date.recent(),
     lastReplyBy: new Types.ObjectId(),
-    pId: new Types.ObjectId(),
-    pIds: [new Types.ObjectId()],
+    pId: undefined,
+    pIds: [],
     vpId: undefined,
     vpPIds: [],
     inVpId: new Types.ObjectId(),
     inVpTransIds: [new Types.ObjectId()],
-    aiVpId: new Types.ObjectId(),
-    aiVpTransIds: [new Types.ObjectId()],
+    aiVpId: undefined,
+    aiVpTransIds: [],
     reqTransLangs: [
       faker.helpers.arrayElement([
         'en',
@@ -52,7 +55,7 @@ export const makePost = (overrides = {}): Partial<IPostDocument> => {
     deletedAt: faker.date.recent(),
     createdAt: faker.date.recent(),
     createdBy: new Types.ObjectId(),
-    deletedBy: new Types.ObjectId(),
+    deletedBy: undefined,
     updatedAt: faker.date.recent(),
     updatedBy: new Types.ObjectId(),
     metadata: {
@@ -77,5 +80,7 @@ export const makePost = (overrides = {}): Partial<IPostDocument> => {
   return {
     _id: new Types.ObjectId(),
     ...post,
-  } as Partial<IPostDocument>;
+  } as IPostDocument;
 };
+
+export default makePost;

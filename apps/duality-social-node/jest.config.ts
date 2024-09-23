@@ -9,4 +9,8 @@ export default {
     }],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
+  moduleNameMapper: {
+    '^@duality-social/duality-social-node-lib$': '<rootDir>/__mocks__/@duality-social/duality-social-node-lib.ts',
+    '^@duality-social/duality-social-node-lib/(.*)$': '<rootDir>/__mocks__/@duality-social/duality-social-node-lib.ts',
+  },
 };

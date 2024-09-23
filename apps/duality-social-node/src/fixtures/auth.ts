@@ -9,3 +9,5 @@ export async function getAuthToken(
   const authToken = await jwtService.signToken(userDoc);
   return authToken;
 }
+
+export default getAuthToken;

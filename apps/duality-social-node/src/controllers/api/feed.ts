@@ -8,7 +8,11 @@ import { MulterRequest } from '../../interfaces/multer-request.ts';
 import { upload } from '../../multer-config.ts';
 import {
   AppConstants,
+  IApiNewPostResponse,
+  IPostObject,
+  IPostViewpointObject,
   parsePostContent,
+  ValidationError,
 } from '@duality-social/duality-social-lib';
 
 export class FeedController extends BaseController {
@@ -221,6 +225,7 @@ export class FeedController extends BaseController {
     // Check number of images
     if (
       multerReq.files &&
+      multerReq.files.images &&
       multerReq.files.images.length > AppConstants.MaxPostImages
     ) {
       return this.sendApiErrorResponse(
@@ -231,7 +236,7 @@ export class FeedController extends BaseController {
       );
     }
     // Check image size and dimensions
-    if (multerReq.files) {
+    if (multerReq.files && multerReq.files.images) {
       for (const image of multerReq.files.images) {
         if (image.size > AppConstants.MaxImageSize) {
           return this.sendApiErrorResponse(
@@ -258,16 +263,31 @@ export class FeedController extends BaseController {
       }
     }
     try {
-      const post = await this.feedService.newPost(req as MulterRequest, res);
-      res.status(201).json(post);
-    } catch (error) {
-      console.error('Error creating new post:', error);
-      this.sendApiErrorResponse(
-        500,
-        'An error occurred while creating the post',
-        error,
+      const result = await this.feedService.newPost(req as MulterRequest);
+      this.sendApiMessageResponse(
+        201,
+        {
+          message: 'New post created successfully',
+          post: result.post.toObject() as IPostObject,
+          viewpoint: result.viewpoint.toObject() as IPostViewpointObject,
+        } as IApiNewPostResponse,
         res,
       );
+    } catch (error) {
+      console.error('Error creating new post:', error);
+      if (error instanceof ValidationError) {
+        this.sendApiErrorResponse(400, error.message, error, res);
+        next(error);
+        return;
+      } else {
+        this.sendApiErrorResponse(
+          500,
+          'An error occurred while creating the post',
+          error,
+          res,
+        );
+        next(error);
+      }
     }
   }
 

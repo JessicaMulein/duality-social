@@ -1,6 +1,8 @@
 import {
   IPostViewpoint,
   IPostViewpointDocument,
+  IPostViewpointObject,
+  parsePostContent,
 } from '@duality-social/duality-social-lib';
 import { faker } from '@faker-js/faker';
 import { Types } from 'mongoose';
@@ -10,8 +12,9 @@ import {
 } from '@duality-social/duality-social-lib';
 
 export const makePostViewpoint = (
-  overrides = {},
-): Partial<IPostViewpointDocument> => {
+  overrides: Partial<IPostViewpointObject> = {},
+): IPostViewpointDocument => {
+  const content = faker.lorem.paragraph();
   const viewpoint = {
     postId: new Types.ObjectId(),
     humanity: faker.helpers.arrayElement(Object.values(HumanityTypeEnum)),
@@ -28,9 +31,9 @@ export const makePostViewpoint = (
       'ja',
       'ko',
     ]),
-    pVpId: new Types.ObjectId(),
-    content: faker.lorem.paragraph(),
-    rendered: faker.lorem.paragraph(),
+    pVpId: undefined,
+    content: content,
+    rendered: parsePostContent(content, overrides.pVpId !== undefined),
     translated: faker.datatype.boolean(),
     deletedAt: faker.date.recent(),
     createdAt: faker.date.recent(),
@@ -68,5 +71,7 @@ export const makePostViewpoint = (
   return {
     _id: new Types.ObjectId(),
     ...viewpoint,
-  } as Partial<IPostViewpointDocument>;
+  } as IPostViewpointDocument;
 };
+
+export default makePostViewpoint;

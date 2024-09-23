@@ -5,13 +5,13 @@ import {
   ObjectId,
   Types,
 } from 'mongoose';
-import { ObjectId as BsonObjectId } from 'bson';
 import { Upload } from '@aws-sdk/lib-storage';
 import { S3 } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid';
 import sizeOf from 'image-size';
 import { environment } from '../environment.ts';
 import { MulterRequest } from '../interfaces/multer-request.ts';
+import { INewPostResult } from '../interfaces/new-post-result.ts';
 import {
   sanitizeWhitespace,
   HumanityTypeEnum,
@@ -25,6 +25,17 @@ import {
   MaxImageSizeError,
   InvalidImageDimensionError,
   ImageUploadError,
+  ParentPostNotFoundError,
+  ParentViewpointNotFoundError,
+  ParentPostIdMismatchError,
+  NestedBlogError,
+  ContentTooLongError,
+  ContentEmptyError,
+  IPostViewpoint,
+  IPost,
+  ViewpointTypeEnum,
+  IPostDocument,
+  IPostViewpointDocument,
 } from '@duality-social/duality-social-lib';
 import {
   PostModel,
@@ -264,18 +275,23 @@ export class FeedService {
    * @param res
    * @returns
    */
-  async newPost(req: Request, res: Response) {
+  async newPost(req: Request): Promise<INewPostResult> {
     if (req.user === undefined) {
       throw new Error('User not authenticated');
     }
 
     const content = sanitizeWhitespace(req.body.content);
     const isBlogPost = req.body.isBlogPost === 'true';
-    const parentViewpointId = req.body.parentViewpointId;
-    const parentPostId = req.body.parentPostId;
+    const parentViewpointId: Types.ObjectId | undefined = req.body
+      .parentViewpointId
+      ? new Types.ObjectId(req.body.parentViewpointId as string)
+      : undefined;
+    const parentPostId: Types.ObjectId | undefined = req.body.parentPostId
+      ? new Types.ObjectId(req.body.parentPostId as string)
+      : undefined;
     const rendered = parsePostContent(content, isBlogPost);
     const currentDate = new Date();
-    const createdById = new Types.ObjectId();
+    const createdById = new Types.ObjectId(req.user.id);
     const language = await this.detectPostLanguage(content);
 
     const maxLength = isBlogPost
@@ -284,12 +300,43 @@ export class FeedService {
     const characterCount = getCharacterCount(content, isBlogPost);
 
     if (characterCount > maxLength) {
-      res.status(400).send('Post content is too long');
-      return;
+      throw new ContentTooLongError(characterCount);
     }
     if (characterCount === 0) {
-      res.status(400).send('Post content is empty');
-      return;
+      throw new ContentEmptyError();
+    }
+
+    if (isBlogPost && (parentPostId || parentViewpointId)) {
+      throw new NestedBlogError();
+    }
+
+    const parentPost: IPostDocument | null = parentPostId
+      ? await PostModel.findById(parentPostId).exec()
+      : null;
+
+    if (!parentPost && parentPostId) {
+      throw new ParentPostNotFoundError(parentPostId.toString());
+    }
+
+    const parentViewpoint: IPostViewpointDocument | null = parentViewpointId
+      ? await PostViewpointModel.findById(parentViewpointId).exec()
+      : null;
+
+    if (!parentViewpoint && parentViewpointId) {
+      throw new ParentViewpointNotFoundError(parentViewpointId.toString());
+    }
+
+    if (
+      parentPostId &&
+      parentPost &&
+      parentViewpointId &&
+      parentViewpoint &&
+      !parentViewpoint.postId.equals(parentPost._id)
+    ) {
+      throw new ParentPostIdMismatchError(
+        parentPostId.toString(),
+        parentViewpointId.toString(),
+      );
     }
 
     // Handle image uploads
@@ -340,57 +387,91 @@ export class FeedService {
       }
     }
 
-    const postId = new BsonObjectId();
-    const inputViewpointId = new BsonObjectId();
+    const postId = new Types.ObjectId();
+    const inputViewpointId = new Types.ObjectId();
     const requestedLanguages = language !== 'en' ? ['en'] : [];
-    const post = new PostModel({
-      _id: postId,
-      createdAt: currentDate,
-      createdBy: createdById,
-      updatedAt: currentDate,
-      updatedBy: createdById,
-      pId: parentPostId,
-      vpId: parentViewpointId,
-      inVpId: inputViewpointId,
-      reqTransLangs: requestedLanguages,
-      imageUrls: imageUrls,
-      metadata: {
-        expands: 0,
-        impressions: 0,
-        reactions: 0,
-        reactionsByType: {},
-        replies: 0,
-        votes: 0,
-      },
-    });
+    const depth = !parentPost ? 0 : parentPost.depth + 1;
+    return {
+      post: await PostModel.create({
+        _id: postId,
+        depth: depth,
+        createdAt: currentDate,
+        createdBy: createdById,
+        updatedAt: currentDate,
+        updatedBy: createdById,
+        pId: parentPostId,
+        pIds: parentPost ? [...parentPost.pIds, parentPostId] : [],
+        vpId: parentViewpointId,
+        vpPIds: parentPost ? [...parentPost.vpPIds, parentViewpointId] : [],
+        inVpId: inputViewpointId,
+        inVpTransIds: [],
+        aiVpTransIds: [],
+        aiReqTransLangs: requestedLanguages,
+        reqTransLangs: requestedLanguages,
+        imageUrls: imageUrls,
+        hidden: false,
+        metadata: {
+          expands: 0,
+          impressions: 0,
+          reactions: 0,
+          reactionsByType: {
+            Angry: 0,
+            Care: 0,
+            Celebrate: 0,
+            Hug: 0,
+            'Huh?': 0,
+            Laugh: 0,
+            Like: 0,
+            Love: 0,
+            Sad: 0,
+            Wow: 0,
+            Yuck: 0,
+          },
+          replies: 0,
+          votes: 0,
+        },
+      } as IPost),
 
-    const inputViewpoint = new PostViewpointModel({
-      _id: inputViewpointId,
-      postId: postId,
-      humanity: req.user?.humanityType ?? HumanityTypeEnum.Human,
-      createdAt: currentDate,
-      createdBy: createdById,
-      content: content,
-      rendered: rendered,
-      lang: language,
-      metadata: {
-        expands: 0,
-        impressions: 0,
-        reactions: 0,
-        reactionsByType: {},
-      },
-    });
-    try {
-      const newPost = await PostModel.create(post);
-      const newViewpoint = await PostViewpointModel.create(inputViewpoint);
-      res.status(200).send({
-        post: newPost,
-        viewpoint: newViewpoint,
-      });
-    } catch (error) {
-      console.error('Error creating new post:', error);
-      res.status(500).send('An error occurred while creating the post');
-    }
+      viewpoint: await PostViewpointModel.create({
+        _id: inputViewpointId,
+        postId: postId,
+        humanity: req.user?.humanityType ?? HumanityTypeEnum.Human,
+        createdAt: currentDate,
+        createdBy: createdById,
+        updatedAt: currentDate,
+        updatedBy: createdById,
+        content: content,
+        rendered: rendered,
+        translated: false,
+        type: ViewpointTypeEnum.HumanSource,
+        lang: language,
+        metadata: {
+          expands: 0,
+          impressions: 0,
+          reactions: 0,
+          reactionsByType: {
+            Angry: 0,
+            Care: 0,
+            Celebrate: 0,
+            Hug: 0,
+            'Huh?': 0,
+            Laugh: 0,
+            Like: 0,
+            Love: 0,
+            Sad: 0,
+            Wow: 0,
+            Yuck: 0,
+          },
+          humanityByType: {
+            Human: 0,
+            Bot: 0,
+            Ai: 0,
+          },
+          replies: 0,
+          votes: 0,
+        },
+      } as IPostViewpoint),
+    };
   }
 
   /**

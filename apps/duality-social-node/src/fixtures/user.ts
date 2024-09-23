@@ -7,13 +7,14 @@ import {
   HumanityTypeEnum,
   IUser,
   IUserDocument,
+  IUserObject,
   LockTypeEnum,
 } from '@duality-social/duality-social-lib';
 
-export function makeUser(overrides = {}): IUser {
+export function makeUser(overrides: Partial<IUserObject> = {}): IUserDocument {
   const creatorId = new Types.ObjectId();
   const createdAt = new Date();
-  return {
+  const newUser: IUser = {
     username: faker.internet.userName(),
     languages: ['en'],
     lockStatus: LockTypeEnum.Unlocked,
@@ -42,14 +43,12 @@ export function makeUser(overrides = {}): IUser {
     },
     ...overrides,
   };
-}
-
-export function getUserDoc(newUser: IUser): IUserDocument {
   const hashedPassword = hashSync(newUser.password, AppConstants.BcryptRounds);
-  const newUserData: IUserDocument = {
+  return {
     ...newUser,
     _id: new Types.ObjectId(),
     password: hashedPassword,
   } as IUserDocument;
-  return newUserData;
 }
+
+export default makeUser;
