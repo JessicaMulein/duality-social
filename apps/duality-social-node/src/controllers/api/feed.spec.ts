@@ -142,7 +142,7 @@ app.use('/api/feed', feedRouter);
 
 // 4. Begin test suite
 describe('FeedController - newPost', () => {
-  let originalConsoleError: any;
+  let originalConsoleError: typeof console.error;
   let authToken: ISignedToken;
 
   let roles: IRoleDocument[];
@@ -735,7 +735,7 @@ describe('FeedController - newPost', () => {
 
       jest.spyOn(PostModel, 'findById').mockReturnValue({
         exec: jest.fn().mockResolvedValue(null),
-      } as { exec: jest.Mock<any, any, any> });
+      } as { exec: jest.Mock<unknown, any, any> });
 
       await FeedControllerInstance.newPost(
         mockRequest as MulterRequest,
@@ -751,7 +751,7 @@ describe('FeedController - newPost', () => {
     it('should handle non-existing parentViewpointId', async () => {
       jest.spyOn(PostViewpointModel, 'findById').mockReturnValue({
         exec: jest.fn().mockResolvedValue(null),
-      } as any);
+      } as { exec: jest.Mock<any, any, any> });
 
       await FeedControllerInstance.newPost(
         mockRequest as MulterRequest,
