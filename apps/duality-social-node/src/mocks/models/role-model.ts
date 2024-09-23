@@ -6,73 +6,85 @@ import { createMockDocument } from '../create-mock-document';
 import { Types } from 'mongoose';
 
 /**
- * Define the Mocked RoleModel interface with constructor signature.
+ * Define a constructable type for RoleModel.
  */
-interface MockedRoleModel extends jest.MockedClass<any> {
+type RoleModelConstructor = new (roleData: Partial<IRole>) => IRoleDocument;
+
+/**
+ * Define the Mocked RoleModel interface by extending jest.MockedClass with the constructor type.
+ * Removed the explicit 'new' signature as jest.MockedClass already includes it.
+ */
+interface MockedRoleModel extends jest.MockedClass<RoleModelConstructor> {
   create: jest.Mock<Promise<IRoleDocument>, [Partial<IRole>]>;
   findById: jest.Mock<Promise<IRoleDocument | null>, [string]>;
-  find: jest.Mock<Promise<IRoleDocument[]>, [any]>;
+  find: jest.Mock<Promise<IRoleDocument[]>, [unknown]>;
   findByIdAndUpdate: jest.Mock<
     Promise<IRoleDocument | null>,
-    [string, Partial<IRole>, any]
+    [string, Partial<IRole>, unknown]
   >;
   findByIdAndDelete: jest.Mock<Promise<IRoleDocument | null>, [string]>;
-  new (roleData: Partial<IRole>): IRoleDocument;
 }
 
 /**
  * Create a constructor function for RoleModel to support `new RoleModel()`.
+ * Use Object.assign to merge the constructor mock with static method mocks.
  */
-export const RoleModel: MockedRoleModel = jest.fn(
-  (roleData: Partial<IRole>) => {
+export const RoleModel: MockedRoleModel = Object.assign(
+  // Constructor mock
+  jest.fn((roleData: Partial<IRole>) => {
     const role = makeRole(roleData);
     return createMockDocument<IRoleDocument>(() => role);
+  }),
+  // Static method mocks
+  {
+    create: jest.fn<Promise<IRoleDocument>, [Partial<IRole>]>(
+      async (roleData: Partial<IRole>) => {
+        const role = makeRole(roleData);
+        return createMockDocument<IRoleDocument>(() => role);
+      },
+    ),
+
+    findById: jest.fn<Promise<IRoleDocument | null>, [string]>(
+      async (id: string) => {
+        if (!id) return null;
+        const role = makeRole({ _id: new Types.ObjectId(id) });
+        return createMockDocument<IRoleDocument>(() => role);
+      },
+    ),
+
+    find: jest.fn<Promise<IRoleDocument[]>, [unknown]>(
+      async (query: unknown) => {
+        const roles = [makeRole(), makeRole()];
+        return roles.map((role) =>
+          createMockDocument<IRoleDocument>(() => role),
+        );
+      },
+    ),
+
+    findByIdAndUpdate: jest.fn<
+      Promise<IRoleDocument | null>,
+      [string, Partial<IRole>, unknown]
+    >(async (id: string, updateData: Partial<IRole>, options: unknown) => {
+      const existingRole = await RoleModel.findById(id);
+      if (!existingRole) return null;
+
+      // Create a new role object with updated data
+      const updatedRole = Object.assign(existingRole.toObject(), updateData);
+
+      // Return a mocked document with full Mongoose properties/methods
+      return createMockDocument<IRoleDocument>(
+        () => updatedRole as IRoleDocument,
+      );
+    }),
+
+    findByIdAndDelete: jest.fn<Promise<IRoleDocument | null>, [string]>(
+      async (id: string) => {
+        const role = await RoleModel.findById(id);
+        if (!role) return null;
+
+        // Simulate deletion by returning the role
+        return role;
+      },
+    ),
   },
-) as any;
-
-// Assign static methods to the RoleModel function
-RoleModel.create = jest.fn<Promise<IRoleDocument>, [Partial<IRole>]>(
-  async (roleData: Partial<IRole>) => {
-    const role = makeRole(roleData);
-    return createMockDocument<IRoleDocument>(() => role);
-  },
-);
-
-RoleModel.findById = jest.fn<Promise<IRoleDocument | null>, [string]>(
-  async (id: string) => {
-    if (!id) return null;
-    const role = makeRole({ _id: new Types.ObjectId(id) });
-    return createMockDocument<IRoleDocument>(() => role);
-  },
-);
-
-RoleModel.find = jest.fn<Promise<IRoleDocument[]>, [any]>(
-  async (query: any) => {
-    const roles = [makeRole(), makeRole()];
-    return roles.map((role) => createMockDocument<IRoleDocument>(() => role));
-  },
-);
-
-RoleModel.findByIdAndUpdate = jest.fn<
-  Promise<IRoleDocument | null>,
-  [string, Partial<IRole>, any]
->(async (id: string, updateData: Partial<IRole>, options: any) => {
-  const existingRole = await RoleModel.findById(id);
-  if (!existingRole) return null;
-
-  // Create a new role object with updated data
-  const updatedRole = Object.assign(existingRole.toObject(), updateData);
-
-  // Return a mocked document with full Mongoose properties/methods
-  return createMockDocument<IRoleDocument>(() => updatedRole as IRoleDocument);
-});
-
-RoleModel.findByIdAndDelete = jest.fn<Promise<IRoleDocument | null>, [string]>(
-  async (id: string) => {
-    const role = await RoleModel.findById(id);
-    if (!role) return null;
-
-    // Simulate deletion by returning the role
-    return role;
-  },
-);
+) as MockedRoleModel;

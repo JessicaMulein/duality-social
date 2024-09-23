@@ -1,16 +1,21 @@
 import { Document, Types, SaveOptions } from 'mongoose';
 import { mock, MockProxy } from 'jest-mock-extended';
 
-export function convertDatesToISOStrings(obj: any): any {
+export function convertDatesToISOStrings(obj: unknown): any {
   if (obj instanceof Date) {
     return obj.toISOString();
   } else if (Array.isArray(obj)) {
     return obj.map(convertDatesToISOStrings);
   } else if (obj && typeof obj === 'object') {
-    return Object.keys(obj).reduce((acc, key) => {
-      acc[key] = convertDatesToISOStrings(obj[key]);
-      return acc;
-    }, {} as any);
+    return Object.keys(obj).reduce(
+      (acc, key) => {
+        (acc as Record<string, unknown>)[key] = convertDatesToISOStrings(
+          (obj as Record<string, unknown>)[key],
+        );
+        return acc;
+      },
+      {} as Record<string, unknown>,
+    );
   }
   return obj;
 }
@@ -23,15 +28,15 @@ export function createMockDocument<T extends Document>(
 
   Object.assign(doc, data);
 
-  (doc._id as any) = data._id || new Types.ObjectId();
-  (doc.isNew as any) = false;
+  (doc._id as unknown) = data._id || new Types.ObjectId();
+  (doc.isNew as boolean) = false;
 
   // Mock toObject as a function
   (doc.toObject as jest.Mock) = jest.fn().mockImplementation(() => {
     const result = {
       ...data,
       _id: (doc._id as Types.ObjectId).toString(),
-    } as Partial<T> & { [key: string]: any };
+    } as Partial<T> & { [key: string]: unknown };
 
     return convertDatesToISOStrings(result);
   });
@@ -42,11 +47,11 @@ export function createMockDocument<T extends Document>(
     .mockImplementation(async () => {
       // Simulate adding _id if not present
       if (!doc._id) {
-        (doc._id as any) = new Types.ObjectId();
+        (doc._id as unknown) = new Types.ObjectId();
       }
       return doc;
     });
-  (doc.save as any) = saveMock;
+  (doc.save as unknown) = saveMock;
 
   return doc as MockProxy<T> & T;
 }
