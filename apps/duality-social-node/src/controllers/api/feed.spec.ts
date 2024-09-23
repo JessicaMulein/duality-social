@@ -119,10 +119,8 @@ import { RequestUserService } from '../../services/request-user.ts';
 import {
   AppConstants,
   HumanityTypeEnum,
-  IPost,
   IPostDocument,
   IPostObject,
-  IPostViewpoint,
   IPostViewpointDocument,
   IPostViewpointObject,
   IRoleDocument,
@@ -135,10 +133,7 @@ import {
 import { RoleModel } from '../../mocks/models/role-model';
 import { PostModel } from '../../mocks/models/post-model';
 import { PostViewpointModel } from '../../mocks/models/post-viewpoint-model';
-import {
-  convertDatesToISOStrings,
-  createMockDocument,
-} from '../../mocks/create-mock-document.ts';
+import { createMockDocument } from '../../mocks/create-mock-document.ts';
 
 // 3. Initialize Express app for testing
 const app = express();
@@ -773,6 +768,7 @@ describe('FeedController - newPost', () => {
         },
         user: RequestUserService.makeRequestUser(userDoc, roles),
       };
+      jest.clearAllMocks();
     });
 
     afterEach(() => {
