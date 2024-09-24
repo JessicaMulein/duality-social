@@ -735,7 +735,7 @@ describe('FeedController - newPost', () => {
 
       jest.spyOn(PostModel, 'findById').mockReturnValue({
         exec: jest.fn().mockResolvedValue(null),
-      } as { exec: jest.Mock<unknown, any, any> });
+      } as unknown as ReturnType<typeof PostModel.findById>);
 
       await FeedControllerInstance.newPost(
         mockRequest as MulterRequest,
@@ -751,7 +751,7 @@ describe('FeedController - newPost', () => {
     it('should handle non-existing parentViewpointId', async () => {
       jest.spyOn(PostViewpointModel, 'findById').mockReturnValue({
         exec: jest.fn().mockResolvedValue(null),
-      } as { exec: jest.Mock<any, any, any> });
+      } as { exec: jest.Mock<unknown, any, any> });
 
       await FeedControllerInstance.newPost(
         mockRequest as MulterRequest,
