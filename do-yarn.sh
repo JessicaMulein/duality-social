@@ -16,7 +16,7 @@ for PACKAGE in $PACKAGE_ROOTS; do
   
   # Run yarn
   echo "Running yarn in $PACKAGE_DIR"
-  yarn
+  yarn "$@"
   
   # Return to the project root directory
   cd "$PROJECT_ROOT" || exit
