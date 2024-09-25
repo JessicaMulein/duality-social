@@ -4477,7 +4477,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/node@*", "@types/node@^22.5.5":
+"@types/node@*", "@types/node@^22.6.1":
   version "22.6.1"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-22.6.1.tgz#e531a45f4d78f14a8468cb9cdc29dc9602afc7ac"
   integrity sha512-V48tCfcKb/e6cVUigLAaJDAILdMP0fUW6BidkPK4GpGjXcfbnoHasCZDwz3N3yVt5we2RHm4XTQCpv0KJz9zqw==
@@ -12602,7 +12602,7 @@ mongoose-browser@^5.2.8-pre-2:
   resolved "https://registry.yarnpkg.com/mongoose-browser/-/mongoose-browser-5.2.8-pre-2.tgz#e7272ea2657dd2ab299fe31762f341ad6a67892d"
   integrity sha512-DCRCfcvhVtW3E861Vdx+d4btMcpgN7COYuo5hgnEzl6TjRK4gJKYDq7myRhv24dIHvGn2hscfE93CjPbI4Sr/w==
 
-mongoose@^8.5.1:
+mongoose@^8.5.1, mongoose@^8.6.3:
   version "8.6.3"
   resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-8.6.3.tgz#fdc1f4defd4de87dc3f5c18aacaf811cafcfcfbe"
   integrity sha512-++yRmm7hjMbqVA/8WeiygTnEfrFbiy+OBjQi49GFJIvCQuSYE56myyQWo4j5hbpcHjhHQU8NukMNGTwAWFWjIw==

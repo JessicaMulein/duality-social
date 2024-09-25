@@ -6,13 +6,13 @@ import { IHasSoftDelete } from '../has-soft-delete.ts';
 import { IHasTimestampOwners } from '../has-timestamp-owners.ts';
 import { IHasTimestamps } from '../has-timestamps.ts';
 import { HumanityTypeEnum } from '../../enumerations/humanity-type.ts';
-import { IHasDeleter } from '../has-deleter.ts';
+import { IHasSoftDeleter } from '../has-soft-deleter.ts';
 
 export interface IUser
   extends IHasTimestamps,
     IHasTimestampOwners,
     IHasSoftDelete,
-    IHasDeleter {
+    IHasSoftDeleter {
   username: string;
   languages: string[];
   /**

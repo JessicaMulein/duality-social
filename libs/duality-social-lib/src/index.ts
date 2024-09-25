@@ -74,7 +74,7 @@ export * from './lib/interfaces/feed-post.ts';
 export * from './lib/interfaces/feed-post-viewpoint.ts';
 export * from './lib/interfaces/has-creation.ts';
 export * from './lib/interfaces/has-creator.ts';
-export * from './lib/interfaces/has-deleter.ts';
+export * from './lib/interfaces/has-soft-deleter.ts';
 export * from './lib/interfaces/has-id.ts';
 export * from './lib/interfaces/has-soft-delete.ts';
 export * from './lib/interfaces/has-timestamp-owners.ts';

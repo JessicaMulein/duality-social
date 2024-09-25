@@ -38,7 +38,8 @@
     "clean:all": "rm -rf node_modules dist/ ~/.cache && yarn cache clean",
     "migrate:latest": "npx nx migrate latest",
     "migrate:run-migrations": "npx nx migrate --run-migrations",
-    "upgrade:all": "./do-yarn.sh upgrade"
+    "upgrade:all": "./do-yarn.sh upgrade",
+    "commands": "./list-scripts.sh"
   },
   "dependencies": {
     "@awesome.me/kit-89ec609b07": "^1.0.4",

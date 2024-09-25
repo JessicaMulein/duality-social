@@ -3,13 +3,13 @@ import { HumanityTypeEnum } from '../../enumerations/humanity-type.ts';
 import { ViewpointTypeEnum } from '../../enumerations/viewpoint-type.ts';
 import { IHasSoftDelete } from '../has-soft-delete.ts';
 import { IHasTimestamps } from '../has-timestamps.ts';
-import { IHasDeleter } from '../has-deleter.ts';
+import { IHasSoftDeleter } from '../has-soft-deleter.ts';
 import { DefaultReactionsTypeEnum } from '../../enumerations/default-reactions-type.ts';
 
 export interface IPostViewpoint
   extends IHasTimestamps,
     IHasSoftDelete,
-    IHasDeleter {
+    IHasSoftDeleter {
   /**
    * Correlation id to link the dualities.
    */
