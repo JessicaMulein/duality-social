@@ -1,10 +1,10 @@
-import React from 'react';
-import { Box, IconButton } from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faTrash,
   faPencilAlt,
+  faTrash,
 } from '@awesome.me/kit-89ec609b07/icons/classic/regular';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Box, IconButton } from '@mui/material';
+import React from 'react';
 
 interface ImagePreviewProps {
   image: File;

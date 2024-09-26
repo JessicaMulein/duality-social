@@ -1,24 +1,24 @@
-import React, { useState, useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import {
+  faComment,
+  faQuestionCircle,
+  faUser,
+} from '@awesome.me/kit-89ec609b07/icons/classic/regular';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   AppBar,
-  Toolbar,
-  Typography,
+  Box,
   Button,
   IconButton,
   Menu,
   MenuItem,
-  Box,
+  Toolbar,
+  Typography,
 } from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faUser,
-  faComment,
-  faQuestionCircle,
-} from '@awesome.me/kit-89ec609b07/icons/classic/regular';
+import React, { useContext, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import dualitySocialSymbol from '../assets/DSImageOnlySmall.png';
 import { AuthContext } from '../auth-provider.tsx';
 import { CommentMenuOption, useMenu } from '../menu-context.tsx';
-import dualitySocialSymbol from '../assets/DSImageOnlySmall.png';
 
 const TopMenu: React.FC = () => {
   const { isAuthenticated, logout, user } = useContext(AuthContext);

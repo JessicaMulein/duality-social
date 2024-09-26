@@ -1,9 +1,9 @@
-import { Schema } from 'mongoose';
 import {
+  DefaultReactionsTypeEnum,
   IPostDocument,
   ModelName,
-  DefaultReactionsTypeEnum,
 } from '@duality-social/duality-social-lib';
+import { Schema } from 'mongoose';
 
 /**
  * Toplevel object represents a post with its two viewpoints

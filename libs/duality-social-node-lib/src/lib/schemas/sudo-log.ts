@@ -1,8 +1,8 @@
-import { Schema } from 'mongoose';
 import {
   ISudoLogDocument,
   ModelName,
 } from '@duality-social/duality-social-lib';
+import { Schema } from 'mongoose';
 
 export const SudoLogSchema = new Schema<ISudoLogDocument>(
   {

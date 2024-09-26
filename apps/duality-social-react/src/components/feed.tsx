@@ -1,9 +1,9 @@
+import { IFeedPost } from '@duality-social/duality-social-lib';
+import { CircularProgress, Container, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import authenticatedApi from '../services/authenticated-api';
-import { Container, Typography, CircularProgress } from '@mui/material';
-import Post from './post';
 import { getToken, verifyToken } from '../utils/auth.ts';
-import { IFeedPost } from '@duality-social/duality-social-lib';
+import Post from './post';
 
 const Feed: React.FC = () => {
   const [posts, setPosts] = useState<IFeedPost[]>([]);

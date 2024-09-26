@@ -3,4 +3,4 @@ import { IInvitation } from '../models/invitation.ts';
 
 export interface IInvitationDocument
   extends IInvitation,
-    Document<Types.ObjectId, unknown, unknown> {}
+    Document<Types.ObjectId, unknown, IInvitation> {}

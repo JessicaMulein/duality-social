@@ -1,5 +1,5 @@
-import { connect, set } from 'mongoose';
 import { SchemaModels } from '@duality-social/duality-social-node-lib';
+import { connect, set } from 'mongoose';
 import { environment } from './environments/environment.ts';
 import { IMongoDb } from './interfaces/mongodb.ts';
 

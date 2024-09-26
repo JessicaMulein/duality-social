@@ -1,15 +1,13 @@
 import {
+  HumanityTypeEnum,
   IPostViewpoint,
   IPostViewpointDocument,
   IPostViewpointObject,
   parsePostContent,
+  ViewpointTypeEnum,
 } from '@duality-social/duality-social-lib';
 import { faker } from '@faker-js/faker';
 import { Types } from 'mongoose';
-import {
-  HumanityTypeEnum,
-  ViewpointTypeEnum,
-} from '@duality-social/duality-social-lib';
 
 export const makePostViewpoint = (
   overrides: Partial<IPostViewpointObject> = {},

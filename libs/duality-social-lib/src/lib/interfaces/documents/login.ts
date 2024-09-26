@@ -3,4 +3,4 @@ import { ILogin } from '../models/login.ts';
 
 export interface ILoginDocument
   extends ILogin,
-    Document<Types.ObjectId, unknown, unknown> {}
+    Document<Types.ObjectId, unknown, ILogin> {}

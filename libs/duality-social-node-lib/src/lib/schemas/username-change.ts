@@ -1,8 +1,8 @@
-import { Schema } from 'mongoose';
 import {
   IUsernameChangeDocument,
   ModelName,
 } from '@duality-social/duality-social-lib';
+import { Schema } from 'mongoose';
 
 export const UsernameChangeSchema = new Schema<IUsernameChangeDocument>({
   userId: {

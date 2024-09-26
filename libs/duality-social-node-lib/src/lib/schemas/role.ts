@@ -1,5 +1,5 @@
-import { Schema } from 'mongoose';
 import { IRoleDocument, ModelName } from '@duality-social/duality-social-lib';
+import { Schema } from 'mongoose';
 
 /**
  * Schema for roles

@@ -1,10 +1,10 @@
-import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
 import {
-  DefaultReactionsTypeEnum,
   DefaultReactionsIconMap,
+  DefaultReactionsTypeEnum,
 } from '@duality-social/duality-social-lib';
+import { IconName, IconPrefix } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import React from 'react';
 
 interface ReactionIconProps {
   reactionType: DefaultReactionsTypeEnum;

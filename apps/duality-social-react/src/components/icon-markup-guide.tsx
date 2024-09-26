@@ -1,15 +1,15 @@
-import React from 'react';
+import { faHeart as faHeartRegular } from '@awesome.me/kit-89ec609b07/icons/classic/regular';
+import { faHeart as faHeartSolid } from '@awesome.me/kit-89ec609b07/icons/classic/solid';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  Typography,
+  Box,
   List,
   ListItem,
-  ListItemText,
   ListItemIcon,
-  Box,
+  ListItemText,
+  Typography,
 } from '@mui/material';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart as faHeartSolid } from '@awesome.me/kit-89ec609b07/icons/classic/solid';
-import { faHeart as faHeartRegular } from '@awesome.me/kit-89ec609b07/icons/classic/regular';
+import React from 'react';
 
 interface ListItemProps {
   component: string;

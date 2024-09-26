@@ -1,8 +1,3 @@
-import { MailDataRequired, MailService } from '@sendgrid/mail';
-import { environment } from '../environment';
-import { compare, hashSync } from 'bcrypt';
-import { randomBytes } from 'crypto';
-import { MongooseValidationError } from '../errors/mongoose-validation-error.ts';
 import {
   AccountDeletedError,
   AccountLockedError,
@@ -15,27 +10,32 @@ import {
   EmailTokenType,
   EmailTokenUsedOrInvalidError,
   EmailVerifiedError,
+  IApiUserProfileResponse,
+  ICreateUserBasics,
   IEmailTokenDocument,
   InvalidCredentialsError,
   InvalidPasswordError,
   InvalidTokenError,
   InvalidUsernameError,
+  IProfile,
   IUser,
   IUserDocument,
-  ICreateUserBasics,
   LockTypeEnum,
   PendingEmailVerificationError,
   UsernameInUseError,
   UsernameOrEmailRequiredError,
   UserNotFoundError,
-  IProfile,
-  IApiUserProfileResponse,
 } from '@duality-social/duality-social-lib';
 import {
   EmailTokenModel,
-  UserModel,
   ProfileModel,
+  UserModel,
 } from '@duality-social/duality-social-node-lib';
+import { MailDataRequired, MailService } from '@sendgrid/mail';
+import { compare, hashSync } from 'bcrypt';
+import { randomBytes } from 'crypto';
+import { environment } from '../environment';
+import { MongooseValidationError } from '../errors/mongoose-validation-error.ts';
 
 export class UserService {
   private sendgridClient: MailService;

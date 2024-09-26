@@ -6,4 +6,4 @@ import { IEmailToken } from '../models/email-token.ts';
  */
 export interface IEmailTokenDocument
   extends IEmailToken,
-    Document<Types.ObjectId, unknown, unknown> {}
+    Document<Types.ObjectId, unknown, IEmailToken> {}

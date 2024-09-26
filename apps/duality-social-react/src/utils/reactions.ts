@@ -1,21 +1,21 @@
-import {
-  DefaultReactionsTypeEnum,
-  DefaultReactionsEmoji,
-} from '@duality-social/duality-social-lib';
+import { IconDefinition } from '@awesome.me/kit-89ec609b07/icons';
 import {
   faFaceAngry,
-  faHandsHoldingHeart,
-  faPartyHorn,
-  faFaceSmilingHands,
   faFaceConfused,
-  faFaceLaugh,
-  faThumbsUp,
-  faHeart,
-  faFaceSadTear,
-  faFaceHushed,
   faFaceDizzy,
+  faFaceHushed,
+  faFaceLaugh,
+  faFaceSadTear,
+  faFaceSmilingHands,
+  faHandsHoldingHeart,
+  faHeart,
+  faPartyHorn,
+  faThumbsUp,
 } from '@awesome.me/kit-89ec609b07/icons/classic/regular';
-import { IconDefinition } from '@awesome.me/kit-89ec609b07/icons';
+import {
+  DefaultReactionsEmoji,
+  DefaultReactionsTypeEnum,
+} from '@duality-social/duality-social-lib';
 
 export const reactionEmojis: { [type in DefaultReactionsTypeEnum]: string } = {
   [DefaultReactionsTypeEnum.Angry]: DefaultReactionsEmoji.Angry,

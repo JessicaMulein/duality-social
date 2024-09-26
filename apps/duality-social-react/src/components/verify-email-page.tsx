@@ -1,14 +1,14 @@
-import React, { useState, useEffect, memo, useRef } from 'react';
-import { useLocation, Link as RouterLink } from 'react-router-dom';
 import {
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
   Container,
   Paper,
   Typography,
-  CircularProgress,
-  Button,
-  Box,
-  Alert,
 } from '@mui/material';
+import React, { memo, useEffect, useRef, useState } from 'react';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import api from '../services/api.ts';
 
 const VerifyEmailPage: React.FC = () => {

@@ -1,5 +1,3 @@
-import { NextFunction, Request, Response, Router } from 'express';
-import { RouteConfig } from '../interfaces/route-config';
 import {
   IApiErrorResponse,
   IApiExpressValidationErrorResponse,
@@ -7,7 +5,9 @@ import {
   IApiMongoValidationErrorResponse,
   IMongoErrors,
 } from '@duality-social/duality-social-lib';
+import { NextFunction, Request, Response, Router } from 'express';
 import { ValidationError, validationResult } from 'express-validator';
+import { RouteConfig } from '../interfaces/route-config';
 import { authenticateToken } from '../middlewares/authenticate-token.ts';
 
 export abstract class BaseController {

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Typography } from '@mui/material';
 import { parsePostContent } from '@duality-social/duality-social-lib';
+import { Box, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 
 interface LivePostPreviewProps {

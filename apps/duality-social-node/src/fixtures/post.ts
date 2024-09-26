@@ -1,11 +1,11 @@
-import { faker } from '@faker-js/faker';
-import { Types } from 'mongoose';
 import {
   DefaultReactionsTypeEnum,
   IPost,
   IPostDocument,
   IPostObject,
 } from '@duality-social/duality-social-lib';
+import { faker } from '@faker-js/faker';
+import { Types } from 'mongoose';
 
 export const makePost = (
   overrides: Partial<IPostObject> = {},

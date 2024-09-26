@@ -1,5 +1,5 @@
-import multer from 'multer';
 import { AppConstants } from '@duality-social/duality-social-lib';
+import multer from 'multer';
 
 export const upload = multer({
   storage: multer.memoryStorage(),

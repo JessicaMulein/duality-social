@@ -1,9 +1,9 @@
 // src/mocks/models/role-model.ts
 
 import { IRole, IRoleDocument } from '@duality-social/duality-social-lib';
+import { Types } from 'mongoose';
 import { makeRole } from '../../fixtures/role';
 import { createMockDocument } from '../create-mock-document';
-import { Types } from 'mongoose';
 
 /**
  * Define a constructable type for RoleModel.

@@ -1,6 +1,6 @@
-import React from 'react';
-import { Paper, Box } from '@mui/material';
 import { IFeedPostViewpoint } from '@duality-social/duality-social-lib';
+import { Box, Paper } from '@mui/material';
+import React from 'react';
 import ViewpointPair from './viewpoint-pair.tsx';
 
 interface ReplyProps {

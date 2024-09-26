@@ -1,50 +1,50 @@
+import { S3 } from '@aws-sdk/client-s3';
+import { Upload } from '@aws-sdk/lib-storage';
+import {
+  AppConstants,
+  ContentEmptyError,
+  ContentTooLongError,
+  DefaultReactionsTypeEnum,
+  getCharacterCount,
+  HumanityTypeEnum,
+  IFeedPost,
+  IFeedPostViewpoint,
+  ImageUploadError,
+  InvalidImageDimensionError,
+  IPost,
+  IPostDocument,
+  IPostViewpoint,
+  IPostViewpointDocument,
+  IRequestUser,
+  MaxImageSizeError,
+  NestedBlogError,
+  ParentPostIdMismatchError,
+  ParentPostNotFoundError,
+  ParentViewpointNotFoundError,
+  parsePostContent,
+  sanitizeWhitespace,
+  ViewpointTypeEnum,
+} from '@duality-social/duality-social-lib';
+import {
+  PostExpandModel,
+  PostImpressionModel,
+  PostModel,
+  PostViewpointHumanityModel,
+  PostViewpointModel,
+  PostViewpointReactionModel,
+} from '@duality-social/duality-social-node-lib';
 import { Request, Response } from 'express';
+import sizeOf from 'image-size';
 import {
   Types as MongooseTypes,
-  PipelineStage,
   ObjectId,
+  PipelineStage,
   Types,
 } from 'mongoose';
-import { Upload } from '@aws-sdk/lib-storage';
-import { S3 } from '@aws-sdk/client-s3';
 import { v4 as uuidv4 } from 'uuid';
-import sizeOf from 'image-size';
 import { environment } from '../environment.ts';
 import { MulterRequest } from '../interfaces/multer-request.ts';
 import { INewPostResult } from '../interfaces/new-post-result.ts';
-import {
-  sanitizeWhitespace,
-  HumanityTypeEnum,
-  parsePostContent,
-  IFeedPost,
-  IRequestUser,
-  DefaultReactionsTypeEnum,
-  IFeedPostViewpoint,
-  AppConstants,
-  getCharacterCount,
-  MaxImageSizeError,
-  InvalidImageDimensionError,
-  ImageUploadError,
-  ParentPostNotFoundError,
-  ParentViewpointNotFoundError,
-  ParentPostIdMismatchError,
-  NestedBlogError,
-  ContentTooLongError,
-  ContentEmptyError,
-  IPostViewpoint,
-  IPost,
-  ViewpointTypeEnum,
-  IPostDocument,
-  IPostViewpointDocument,
-} from '@duality-social/duality-social-lib';
-import {
-  PostModel,
-  PostViewpointModel,
-  PostViewpointReactionModel,
-  PostViewpointHumanityModel,
-  PostImpressionModel,
-  PostExpandModel,
-} from '@duality-social/duality-social-node-lib';
 
 export class FeedService {
   private s3: S3;

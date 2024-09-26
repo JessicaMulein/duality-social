@@ -6,10 +6,4 @@ import { RoleModel } from '../../src/mocks/models/role-model';
 import { UserModel } from '../../src/mocks/models/user-model';
 // Import other model mocks as needed
 
-export {
-  PostModel,
-  PostViewpointModel,
-  RoleModel,
-  UserModel,
-  // Export other models
-};
+export { PostModel, PostViewpointModel, RoleModel, UserModel };

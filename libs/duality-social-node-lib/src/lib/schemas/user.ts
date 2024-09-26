@@ -1,14 +1,14 @@
-import { Schema } from 'mongoose';
-import validator from 'validator';
 import {
   AccountStatusTypeEnum,
+  AppConstants,
+  HumanityTypeEnum,
+  IUserDocument,
   LockTypeEnum,
   ModelName,
-  HumanityTypeEnum,
-  AppConstants,
-  IUserDocument,
   isValidTimezone,
 } from '@duality-social/duality-social-lib';
+import { Schema } from 'mongoose';
+import validator from 'validator';
 
 /**
  * A user in the system.

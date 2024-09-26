@@ -1,5 +1,5 @@
-import { UserController } from '../controllers/api/user.ts';
 import { FeedController } from '../controllers/api/feed.ts';
+import { UserController } from '../controllers/api/user.ts';
 import { BaseRouter } from './base.ts';
 
 /**

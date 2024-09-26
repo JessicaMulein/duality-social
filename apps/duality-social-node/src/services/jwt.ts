@@ -1,14 +1,14 @@
-import { sign, verify, JwtPayload, VerifyOptions } from 'jsonwebtoken';
-import { promisify } from 'util';
-import { environment } from '../environment.ts';
-import { ISignedToken } from '../interfaces/signed-token.ts';
 import {
   AppConstants,
   InvalidTokenError,
-  IUserDocument,
   ITokenUser,
+  IUserDocument,
 } from '@duality-social/duality-social-lib';
 import { RoleModel } from '@duality-social/duality-social-node-lib';
+import { JwtPayload, sign, verify, VerifyOptions } from 'jsonwebtoken';
+import { promisify } from 'util';
+import { environment } from '../environment.ts';
+import { ISignedToken } from '../interfaces/signed-token.ts';
 
 const verifyAsync = promisify<
   string,

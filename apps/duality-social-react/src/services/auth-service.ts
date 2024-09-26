@@ -1,6 +1,6 @@
 // services/authService.js
-import { isAxiosError } from 'axios';
 import { IRequestUser } from '@duality-social/duality-social-lib';
+import { isAxiosError } from 'axios';
 import api from './api.ts';
 import authenticatedApi from './authenticated-api.ts';
 

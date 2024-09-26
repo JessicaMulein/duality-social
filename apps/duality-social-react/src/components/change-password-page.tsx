@@ -1,18 +1,18 @@
-import React, { useContext, useState } from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { Navigate } from 'react-router-dom';
-import { AuthContext } from '../auth-provider.tsx';
 import { AppConstants } from '@duality-social/duality-social-lib';
 import {
+  Alert,
   Box,
   Button,
   Container,
+  Paper,
   TextField,
   Typography,
-  Alert,
-  Paper,
 } from '@mui/material';
+import { useFormik } from 'formik';
+import React, { useContext, useState } from 'react';
+import { Navigate } from 'react-router-dom';
+import * as Yup from 'yup';
+import { AuthContext } from '../auth-provider.tsx';
 
 const ChangePasswordPage: React.FC = () => {
   const { isAuthenticated, user, loading, error, changePassword } =

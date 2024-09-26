@@ -1,8 +1,8 @@
-import { Schema } from 'mongoose';
 import {
   IPostImpressionDocument,
   ModelName,
 } from '@duality-social/duality-social-lib';
+import { Schema } from 'mongoose';
 
 /**
  * Represents a post being viewed.

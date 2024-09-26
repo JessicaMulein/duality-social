@@ -6,4 +6,4 @@ import { IRole } from '../models/role.ts';
  */
 export interface IRoleDocument
   extends IRole,
-    Document<Types.ObjectId, unknown, unknown> {}
+    Document<Types.ObjectId, unknown, IRole> {}

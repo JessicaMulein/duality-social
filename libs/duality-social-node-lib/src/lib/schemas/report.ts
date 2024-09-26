@@ -1,9 +1,9 @@
-import { Schema } from 'mongoose';
 import {
   IReportDocument,
   ModelName,
   ReportTypeEnum,
 } from '@duality-social/duality-social-lib';
+import { Schema } from 'mongoose';
 
 export const ReportSchema = new Schema<IReportDocument>({
   /**

@@ -1,22 +1,22 @@
-import { Model } from 'mongoose';
 import {
   IAdminUserDocument,
-  IUserDocument,
+  IEmailTokenDocument,
   IInvitationDocument,
   ILoginDocument,
   IPostDocument,
   IPostExpandDocument,
   IPostImpressionDocument,
   IPostViewpointDocument,
+  IPostViewpointHumanityDocument,
   IPostViewpointReactionDocument,
   IProfileDocument,
   IReportDocument,
-  ISudoLogDocument,
-  IUsernameChangeDocument,
-  IPostViewpointHumanityDocument,
   IRoleDocument,
-  IEmailTokenDocument,
+  ISudoLogDocument,
+  IUserDocument,
+  IUsernameChangeDocument,
 } from '@duality-social/duality-social-lib';
+import { Model } from 'mongoose';
 
 export interface ISchemaModels {
   AdminUser: Model<IAdminUserDocument>;

@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
 /* eslint-disable @typescript-eslint/no-namespace */
 import { AccountStatusTypeEnum } from '../../enumerations/account-status-type.ts';
+import { HumanityTypeEnum } from '../../enumerations/humanity-type.ts';
 import { LockTypeEnum } from '../../enumerations/lock-type.ts';
 import { IHasSoftDelete } from '../has-soft-delete.ts';
+import { IHasSoftDeleter } from '../has-soft-deleter.ts';
 import { IHasTimestampOwners } from '../has-timestamp-owners.ts';
 import { IHasTimestamps } from '../has-timestamps.ts';
-import { HumanityTypeEnum } from '../../enumerations/humanity-type.ts';
-import { IHasSoftDeleter } from '../has-soft-deleter.ts';
 
 export interface IUser
   extends IHasTimestamps,

@@ -1,13 +1,13 @@
-import { NextFunction, Request, Response } from 'express';
-import { IncomingHttpHeaders } from 'http';
-import { JwtService } from '../services/jwt.ts';
-import { RequestUserService } from '../services/request-user.ts';
 import {
   AccountStatusTypeEnum,
   IRoleDocument,
   ITokenUser,
 } from '@duality-social/duality-social-lib';
 import { RoleModel, UserModel } from '@duality-social/duality-social-node-lib';
+import { NextFunction, Request, Response } from 'express';
+import { IncomingHttpHeaders } from 'http';
+import { JwtService } from '../services/jwt.ts';
+import { RequestUserService } from '../services/request-user.ts';
 
 export function findAuthToken(headers: IncomingHttpHeaders): string | null {
   const authHeader = headers['Authorization'] || headers['authorization'];

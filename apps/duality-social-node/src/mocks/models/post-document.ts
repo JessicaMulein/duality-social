@@ -1,12 +1,12 @@
 // src/mocks/models/mockIPostDocument.ts
 
-import { Types } from 'mongoose';
-import { jest } from '@jest/globals';
 import {
   IPost,
   IPostDocument,
   IPostObject,
 } from '@duality-social/duality-social-lib';
+import { jest } from '@jest/globals';
+import { Types } from 'mongoose';
 
 /**
  * Custom interface for mocking IPostDocument with necessary properties and methods.

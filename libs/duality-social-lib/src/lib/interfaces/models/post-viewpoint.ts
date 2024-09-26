@@ -1,10 +1,10 @@
 import { Types } from 'mongoose';
+import { DefaultReactionsTypeEnum } from '../../enumerations/default-reactions-type.ts';
 import { HumanityTypeEnum } from '../../enumerations/humanity-type.ts';
 import { ViewpointTypeEnum } from '../../enumerations/viewpoint-type.ts';
 import { IHasSoftDelete } from '../has-soft-delete.ts';
-import { IHasTimestamps } from '../has-timestamps.ts';
 import { IHasSoftDeleter } from '../has-soft-deleter.ts';
-import { DefaultReactionsTypeEnum } from '../../enumerations/default-reactions-type.ts';
+import { IHasTimestamps } from '../has-timestamps.ts';
 
 export interface IPostViewpoint
   extends IHasTimestamps,

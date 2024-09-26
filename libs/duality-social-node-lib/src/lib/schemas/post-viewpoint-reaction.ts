@@ -1,9 +1,9 @@
-import { Schema } from 'mongoose';
 import {
   DefaultReactionsTypeEnum,
   IPostViewpointReactionDocument,
   ModelName,
 } from '@duality-social/duality-social-lib';
+import { Schema } from 'mongoose';
 
 /**
  * Represents a user reacting to a viewpoint

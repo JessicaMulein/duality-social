@@ -1,9 +1,9 @@
-import { Schema } from 'mongoose';
-import validator from 'validator';
 import {
   IClaimedInvitationDocument,
   ModelName,
 } from '@duality-social/duality-social-lib';
+import { Schema } from 'mongoose';
+import validator from 'validator';
 
 /*
 export interface IClaimedInvitation extends IHasID {

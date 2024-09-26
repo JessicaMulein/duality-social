@@ -1,14 +1,14 @@
-import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
 import {
   Box,
-  Typography,
   Button,
   Card,
   CardContent,
   Container,
+  Typography,
   useTheme,
 } from '@mui/material';
+import React from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 
 const SplashPage: React.FC = () => {
   const theme = useTheme();

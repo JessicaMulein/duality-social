@@ -100,22 +100,7 @@ jest.mock('franc', () => ({
 }));
 
 // 2. Now proceed with the import statements
-import request from 'supertest';
-import express, { Request, Response, NextFunction } from 'express';
-import bodyParser from 'body-parser';
-import sizeOf from 'image-size';
 import { Upload } from '@aws-sdk/lib-storage';
-import { Types } from 'mongoose';
-import { Readable } from 'stream';
-import feedRouter, { FeedControllerInstance } from './feed.ts';
-import { ISignedToken } from '../../interfaces/signed-token.ts';
-import { getAuthToken } from '../../fixtures/auth.ts';
-import { makeRole } from '../../fixtures/role';
-import { makePost } from '../../fixtures/post';
-import { makePostViewpoint } from '../../fixtures/post-viewpoint';
-import { MulterRequest } from '../../interfaces/multer-request.ts';
-import { FeedService } from '../../services/feed.ts';
-import { RequestUserService } from '../../services/request-user.ts';
 import {
   AppConstants,
   HumanityTypeEnum,
@@ -130,10 +115,25 @@ import {
   ParentViewpointNotFoundError,
   ViewpointTypeEnum,
 } from '@duality-social/duality-social-lib';
-import { RoleModel } from '../../mocks/models/role-model';
+import bodyParser from 'body-parser';
+import express, { NextFunction, Request, Response } from 'express';
+import sizeOf from 'image-size';
+import { Types } from 'mongoose';
+import { Readable } from 'stream';
+import request from 'supertest';
+import { getAuthToken } from '../../fixtures/auth.ts';
+import { makePost } from '../../fixtures/post';
+import { makePostViewpoint } from '../../fixtures/post-viewpoint';
+import { makeRole } from '../../fixtures/role';
+import { MulterRequest } from '../../interfaces/multer-request.ts';
+import { ISignedToken } from '../../interfaces/signed-token.ts';
+import { createMockDocument } from '../../mocks/create-mock-document.ts';
 import { PostModel } from '../../mocks/models/post-model';
 import { PostViewpointModel } from '../../mocks/models/post-viewpoint-model';
-import { createMockDocument } from '../../mocks/create-mock-document.ts';
+import { RoleModel } from '../../mocks/models/role-model';
+import { FeedService } from '../../services/feed.ts';
+import { RequestUserService } from '../../services/request-user.ts';
+import feedRouter, { FeedControllerInstance } from './feed.ts';
 
 // 3. Initialize Express app for testing
 const app = express();

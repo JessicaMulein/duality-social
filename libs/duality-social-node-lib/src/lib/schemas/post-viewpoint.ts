@@ -1,11 +1,11 @@
-import { Schema } from 'mongoose';
 import {
   DefaultReactionsTypeEnum,
-  IPostViewpointDocument,
   HumanityTypeEnum,
-  ViewpointTypeEnum,
+  IPostViewpointDocument,
   ModelName,
+  ViewpointTypeEnum,
 } from '@duality-social/duality-social-lib';
+import { Schema } from 'mongoose';
 
 export const PostViewpointSchema = new Schema<IPostViewpointDocument>(
   {

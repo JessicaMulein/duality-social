@@ -1,7 +1,7 @@
 import { all, IconDefinition } from '@awesome.me/kit-89ec609b07/icons';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import cssProperties from 'known-css-properties';
-import postcss, { Root, Declaration } from 'postcss';
+import postcss, { Declaration, Root } from 'postcss';
 
 import { FontAwesomeTextStyleTypeEnum } from '../enumerations/font-awesome-text-class.ts';
 

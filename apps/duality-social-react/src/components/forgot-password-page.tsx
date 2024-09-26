@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { AppConstants } from '@duality-social/duality-social-lib';
-import { isAxiosError } from 'axios';
-import api from '../services/api';
 import {
+  Alert,
   Box,
   Button,
   Container,
+  Paper,
   TextField,
   Typography,
-  Alert,
-  Paper,
 } from '@mui/material';
+import { isAxiosError } from 'axios';
+import { useFormik } from 'formik';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import * as Yup from 'yup';
+import api from '../services/api';
 
 type FormValues = {
   email?: string;

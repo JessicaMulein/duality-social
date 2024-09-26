@@ -1,8 +1,8 @@
 import { Application, static as expressStatic } from 'express';
-import { join } from 'path';
 import { existsSync } from 'fs';
-import { ApiRouter } from './api.ts';
+import { join } from 'path';
 import { environment } from '../environment.ts';
+import { ApiRouter } from './api.ts';
 
 /**
  * Application router

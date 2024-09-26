@@ -1,9 +1,9 @@
 import {
   extractIconDetails,
-  isValidIconMarkup,
-  parseIconMarkup,
   FontAwesomeAdditionalClasses,
   FontAwesomeIconStyles,
+  isValidIconMarkup,
+  parseIconMarkup,
 } from './font-awesome';
 
 describe('font-awesome', () => {

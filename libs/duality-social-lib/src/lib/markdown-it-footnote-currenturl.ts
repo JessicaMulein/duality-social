@@ -1,4 +1,4 @@
-import MarkdownIt, { Token, Options, Renderer } from 'markdown-it';
+import MarkdownIt, { Options, Renderer, Token } from 'markdown-it';
 
 interface Env {
   docId?: string;

@@ -1,10 +1,10 @@
-import { Types } from 'mongoose';
 import {
   IRole,
   IRoleDocument,
   IRoleObject,
 } from '@duality-social/duality-social-lib';
 import { faker } from '@faker-js/faker';
+import { Types } from 'mongoose';
 
 export function makeRole(overrides: Partial<IRoleObject> = {}): IRoleDocument {
   const isAdmin = faker.datatype.boolean();

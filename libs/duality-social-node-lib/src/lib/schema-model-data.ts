@@ -2,23 +2,23 @@ import {
   ModelName,
   ModelNameCollection,
 } from '@duality-social/duality-social-lib';
+import { ISchemaModelData } from './interfaces/schema-model-data.ts';
 import { AdminUserSchema } from './schemas/admin-user.ts';
 import { EmailTokenSchema } from './schemas/email-token.ts';
 import { InvitationSchema } from './schemas/invitation.ts';
 import { LoginSchema } from './schemas/login.ts';
-import { PostSchema } from './schemas/post.ts';
 import { PostExpandSchema } from './schemas/post-expand.ts';
 import { PostImpressionSchema } from './schemas/post-impression.ts';
+import { PostViewpointHumanitySchema } from './schemas/post-viewpoint-humanity.ts';
+import { PostViewpointReactionSchema } from './schemas/post-viewpoint-reaction.ts';
 import { PostViewpointSchema } from './schemas/post-viewpoint.ts';
+import { PostSchema } from './schemas/post.ts';
 import { ProfileSchema } from './schemas/profile.ts';
 import { ReportSchema } from './schemas/report.ts';
+import { RoleSchema } from './schemas/role.ts';
 import { SudoLogSchema } from './schemas/sudo-log.ts';
 import { UserSchema } from './schemas/user.ts';
 import { UsernameChangeSchema } from './schemas/username-change.ts';
-import { PostViewpointReactionSchema } from './schemas/post-viewpoint-reaction.ts';
-import { PostViewpointHumanitySchema } from './schemas/post-viewpoint-humanity.ts';
-import { ISchemaModelData } from './interfaces/schema-model-data.ts';
-import { RoleSchema } from './schemas/role.ts';
 
 function modelNameCollectionToPath(
   modelNameCollection: ModelNameCollection,

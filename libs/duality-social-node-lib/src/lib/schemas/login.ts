@@ -1,5 +1,5 @@
-import { Schema } from 'mongoose';
 import { ILoginDocument, ModelName } from '@duality-social/duality-social-lib';
+import { Schema } from 'mongoose';
 
 /**
  * Represents a user logging in.

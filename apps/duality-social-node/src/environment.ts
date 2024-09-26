@@ -1,6 +1,6 @@
-import { dirname } from 'path';
-import 'dotenv/config';
 import { randomBytes } from 'crypto';
+import 'dotenv/config';
+import { dirname } from 'path';
 import { IEnvironment } from './interfaces/environment.ts';
 
 const host = process.env.SERVER_HOST ?? '0.0.0.0';

@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
-import { IHasSoftDeleter } from '../has-soft-deleter.ts';
 import { IHasSoftDelete } from '../has-soft-delete.ts';
+import { IHasSoftDeleter } from '../has-soft-deleter.ts';
 import { IHasTimestampOwners } from '../has-timestamp-owners.ts';
 import { IHasTimestamps } from '../has-timestamps.ts';
 

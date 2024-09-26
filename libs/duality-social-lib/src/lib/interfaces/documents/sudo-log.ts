@@ -3,4 +3,4 @@ import { ISudoLog } from '../models/sudo-log.ts';
 
 export interface ISudoLogDocument
   extends ISudoLog,
-    Document<Types.ObjectId, unknown, unknown> {}
+    Document<Types.ObjectId, unknown, ISudoLog> {}

@@ -3,4 +3,4 @@ import { IClaimedInvitation } from '../models/claimed-invitation.ts';
 
 export interface IClaimedInvitationDocument
   extends IClaimedInvitation,
-    Document<Types.ObjectId, unknown, unknown> {}
+    Document<Types.ObjectId, unknown, IClaimedInvitation> {}

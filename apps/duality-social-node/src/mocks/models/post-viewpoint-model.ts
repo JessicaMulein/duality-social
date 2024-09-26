@@ -2,9 +2,9 @@ import {
   IPostViewpoint,
   IPostViewpointDocument,
 } from '@duality-social/duality-social-lib';
+import { Types } from 'mongoose';
 import { makePostViewpoint } from '../../fixtures/post-viewpoint';
 import { createMockDocument } from '../create-mock-document';
-import { Types } from 'mongoose';
 
 interface MockedPostViewpointModel {
   create: jest.Mock<Promise<IPostViewpointDocument>, [Partial<IPostViewpoint>]>;

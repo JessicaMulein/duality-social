@@ -1,5 +1,5 @@
-import { Document, Types, SaveOptions } from 'mongoose';
 import { mock, MockProxy } from 'jest-mock-extended';
+import { Document, SaveOptions, Types } from 'mongoose';
 
 export function convertDatesToISOStrings(obj: unknown): unknown {
   if (obj instanceof Date) {

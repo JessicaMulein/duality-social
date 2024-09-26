@@ -1,7 +1,7 @@
 import { IPost } from '@duality-social/duality-social-lib';
 import { environment } from './environments/environment.ts';
-import { setupDatabase } from './setupDatabase.ts';
 import { IMongoDb } from './interfaces/mongodb.ts';
+import { setupDatabase } from './setupDatabase.ts';
 console.log(
   'environment: ',
   environment.production ? 'production' : 'development',

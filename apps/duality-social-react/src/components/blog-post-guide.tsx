@@ -1,5 +1,5 @@
+import { Box, List, ListItem, ListItemText, Typography } from '@mui/material';
 import React from 'react';
-import { Typography, List, ListItem, ListItemText, Box } from '@mui/material';
 
 const BlogPostGuide: React.FC = () => {
   return (

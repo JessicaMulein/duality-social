@@ -1,8 +1,8 @@
-import { Schema } from 'mongoose';
 import {
   IProfileDocument,
   ModelName,
 } from '@duality-social/duality-social-lib';
+import { Schema } from 'mongoose';
 
 export const ProfileSchema = new Schema<IProfileDocument>(
   {

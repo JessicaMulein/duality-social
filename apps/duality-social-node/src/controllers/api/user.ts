@@ -1,27 +1,27 @@
-import { Request, Response } from 'express';
-import { body, param, query } from 'express-validator';
 import {
   AccountStatusTypeEnum,
   AppConstants,
   EmailTokenExpiredError,
   EmailTokenUsedOrInvalidError,
+  HumanityTypeEnum,
+  IApiMessageResponse,
   InvalidCredentialsError,
   InvalidPasswordError,
-  IApiMessageResponse,
   IRequestUser,
   ITokenResponse,
   IUserResponse,
-  HumanityTypeEnum,
   UserNotFoundError,
 } from '@duality-social/duality-social-lib';
 import { UserModel } from '@duality-social/duality-social-node-lib';
-import { findAuthToken } from '../../middlewares/authenticate-token.ts';
-import { UserService } from '../../services/user.ts';
-import { JwtService } from '../../services/jwt.ts';
+import { Request, Response } from 'express';
+import { body, param, query } from 'express-validator';
 import { MongooseValidationError } from '../../errors/mongoose-validation-error.ts';
-import { BaseController } from '../base.ts';
 import { RouteConfig } from '../../interfaces/route-config.ts';
+import { findAuthToken } from '../../middlewares/authenticate-token.ts';
+import { JwtService } from '../../services/jwt.ts';
 import { RequestUserService } from '../../services/request-user.ts';
+import { UserService } from '../../services/user.ts';
+import { BaseController } from '../base.ts';
 
 /**
  * Controller for user-related routes

@@ -1,9 +1,9 @@
-import { Schema } from 'mongoose';
 import {
-  ModelName,
   HumanityTypeEnum,
   IPostViewpointHumanityDocument,
+  ModelName,
 } from '@duality-social/duality-social-lib';
+import { Schema } from 'mongoose';
 
 export const PostViewpointHumanitySchema =
   new Schema<IPostViewpointHumanityDocument>(

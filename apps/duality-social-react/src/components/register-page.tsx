@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { useFormik, FormikHelpers } from 'formik';
-import * as Yup from 'yup';
-import { useNavigate, Navigate } from 'react-router-dom';
-import { isAxiosError } from 'axios';
-import authService from '../services/auth-service.ts';
-import { AuthContext } from '../auth-provider.tsx';
 import { AppConstants } from '@duality-social/duality-social-lib';
 import {
+  Alert,
   Box,
   Button,
   Container,
+  Paper,
   TextField,
   Typography,
-  Alert,
-  Paper,
 } from '@mui/material';
+import { isAxiosError } from 'axios';
+import { FormikHelpers, useFormik } from 'formik';
+import React, { useEffect, useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
+import * as Yup from 'yup';
+import { AuthContext } from '../auth-provider.tsx';
+import authService from '../services/auth-service.ts';
 
 interface FormValues {
   username: string;

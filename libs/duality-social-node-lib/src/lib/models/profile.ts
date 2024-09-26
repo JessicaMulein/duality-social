@@ -1,5 +1,5 @@
-import { model } from 'mongoose';
 import { IProfileDocument } from '@duality-social/duality-social-lib';
+import { model } from 'mongoose';
 import { ModelData } from '../schema-model-data.ts';
 
 export const ProfileModel = model<IProfileDocument>(

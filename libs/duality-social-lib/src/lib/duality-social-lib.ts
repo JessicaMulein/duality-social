@@ -1,10 +1,10 @@
 import sanitizeHtml from 'sanitize-html';
+import { v4 } from 'uuid';
 import {
   isValidIconMarkup,
   parseIconMarkup,
   stripIconMarkup,
 } from './font-awesome/font-awesome';
-import { v4 } from 'uuid';
 import customFootnote from './markdown-it-footnote-currenturl';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires

@@ -1,8 +1,7 @@
 // file: user-profile.tsx
-import React, { useState, useEffect, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle } from '@awesome.me/kit-89ec609b07/icons/classic/regular';
+import { IApiUserProfileResponse } from '@duality-social/duality-social-lib';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   Box,
   Chip,
@@ -15,10 +14,11 @@ import {
   Typography,
 } from '@mui/material';
 import Link from '@mui/material/Link';
-import { IApiUserProfileResponse } from '@duality-social/duality-social-lib';
+import { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AuthContext } from '../auth-provider.tsx';
 import authenticatedApi from '../services/authenticated-api.ts';
 import { getToken, verifyToken } from '../utils/auth.ts';
-import { AuthContext } from '../auth-provider.tsx';
 import NewPost from './new-post.tsx';
 
 const UserProfilePage = () => {

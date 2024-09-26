@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
-import { IHasTimestamps } from '../has-timestamps.ts';
 import { IHasSoftDelete } from '../has-soft-delete.ts';
+import { IHasTimestamps } from '../has-timestamps.ts';
 
 /**
  * Authentication object based profile

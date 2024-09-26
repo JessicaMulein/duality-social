@@ -1,7 +1,7 @@
 import { IPost, IPostDocument } from '@duality-social/duality-social-lib';
+import { Types } from 'mongoose';
 import { makePost } from '../../fixtures/post';
 import { createMockDocument } from '../create-mock-document';
-import { Types } from 'mongoose';
 
 interface MockedPostModel {
   create: jest.Mock<Promise<IPostDocument>, [Partial<IPost>]>;

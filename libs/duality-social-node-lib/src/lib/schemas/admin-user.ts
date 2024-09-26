@@ -1,8 +1,8 @@
-import { Schema } from 'mongoose';
 import {
   IAdminUserDocument,
   ModelName,
 } from '@duality-social/duality-social-lib';
+import { Schema } from 'mongoose';
 
 /**
  * An admin user in the system.

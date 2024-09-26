@@ -1,14 +1,14 @@
+import { IRequestUser } from '@duality-social/duality-social-lib';
+import { isAxiosError } from 'axios';
 import {
+  createContext,
   ReactNode,
   useCallback,
-  createContext,
   useContext,
   useEffect,
   useState,
 } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { isAxiosError } from 'axios';
-import { IRequestUser } from '@duality-social/duality-social-lib';
 import authService from './services/auth-service.ts';
 
 export interface AuthContextData {

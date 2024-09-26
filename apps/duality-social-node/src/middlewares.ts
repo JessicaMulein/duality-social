@@ -1,6 +1,6 @@
+import cors from 'cors';
 import { Application, json, urlencoded } from 'express';
 import helmet from 'helmet';
-import cors from 'cors';
 
 export class Middlewares {
   private static readonly corsWhitelist = [

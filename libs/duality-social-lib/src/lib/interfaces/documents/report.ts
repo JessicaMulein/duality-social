@@ -3,4 +3,4 @@ import { IReport } from '../models/report.ts';
 
 export interface IReportDocument
   extends IReport,
-    Document<Types.ObjectId, unknown, unknown> {}
+    Document<Types.ObjectId, unknown, IReport> {}

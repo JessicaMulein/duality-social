@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import {
-  Typography,
-  Paper,
-  Divider,
-  TextField,
-  Box,
-  FormControlLabel,
-  Checkbox,
-} from '@mui/material';
 import {
   AppConstants,
   prepareContentForCharacterCount,
 } from '@duality-social/duality-social-lib';
-import LivePostPreview from './live-post-preview.tsx';
-import IconMarkupGuide from './icon-markup-guide.tsx';
+import {
+  Box,
+  Checkbox,
+  Divider,
+  FormControlLabel,
+  Paper,
+  TextField,
+  Typography,
+} from '@mui/material';
+import React, { useState } from 'react';
+import { environment } from '../environments/environment.ts';
 import BlogPostGuide from './blog-post-guide.tsx';
 import CharacterCountGuide from './character-count-guide.tsx';
-import { environment } from '../environments/environment.ts';
+import IconMarkupGuide from './icon-markup-guide.tsx';
+import LivePostPreview from './live-post-preview.tsx';
 
 const exampleBlurb = `
 # Welcome to the Blog Post Guide

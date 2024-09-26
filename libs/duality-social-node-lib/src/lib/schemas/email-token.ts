@@ -1,11 +1,11 @@
-import { Schema } from 'mongoose';
-import validator from 'validator';
-import { v4 as uuidv4 } from 'uuid';
 import {
-  ModelName,
-  IEmailTokenDocument,
   EmailTokenType,
+  IEmailTokenDocument,
+  ModelName,
 } from '@duality-social/duality-social-lib';
+import { Schema } from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
+import validator from 'validator';
 
 const generateRandomToken = () => {
   return uuidv4();

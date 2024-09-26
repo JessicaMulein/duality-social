@@ -1,6 +1,3 @@
-import { Types } from 'mongoose';
-import { hashSync } from 'bcrypt';
-import { faker } from '@faker-js/faker';
 import {
   AccountStatusTypeEnum,
   AppConstants,
@@ -10,6 +7,9 @@ import {
   IUserObject,
   LockTypeEnum,
 } from '@duality-social/duality-social-lib';
+import { faker } from '@faker-js/faker';
+import { hashSync } from 'bcrypt';
+import { Types } from 'mongoose';
 
 export function makeUser(overrides: Partial<IUserObject> = {}): IUserDocument {
   const creatorId = new Types.ObjectId();

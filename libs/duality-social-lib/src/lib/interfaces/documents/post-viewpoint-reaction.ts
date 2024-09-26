@@ -3,4 +3,4 @@ import { IPostViewpointReaction } from '../models/post-viewpoint-reaction.ts';
 
 export interface IPostViewpointReactionDocument
   extends IPostViewpointReaction,
-    Document<Types.ObjectId, unknown, unknown> {}
+    Document<Types.ObjectId, unknown, IPostViewpointReaction> {}

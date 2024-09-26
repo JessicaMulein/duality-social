@@ -1,20 +1,20 @@
-import React, { useState } from 'react';
 import {
-  Box,
-  Typography,
-  IconButton,
-  Chip,
-  Tooltip,
-  Badge,
-} from '@mui/material';
-import {
-  IFeedPostViewpoint,
   DefaultReactionsTypeEnum,
   HumanityTypeEnum,
+  IFeedPostViewpoint,
 } from '@duality-social/duality-social-lib';
-import Reply from './reply.tsx';
-import ReactionIcon from './reaction-icon.tsx';
+import {
+  Badge,
+  Box,
+  Chip,
+  IconButton,
+  Tooltip,
+  Typography,
+} from '@mui/material';
+import React, { useState } from 'react';
 import HumanityTypeIcon from './humanity-type-icon.tsx';
+import ReactionIcon from './reaction-icon.tsx';
+import Reply from './reply.tsx';
 
 interface ViewpointProps {
   viewpoint: IFeedPostViewpoint;

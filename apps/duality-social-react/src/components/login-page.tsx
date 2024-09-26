@@ -1,20 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { Formik, Form, Field, FormikProps } from 'formik';
-import * as Yup from 'yup';
-import { isAxiosError } from 'axios';
+import { AppConstants } from '@duality-social/duality-social-lib';
 import {
+  Alert,
   Box,
   Button,
   Container,
+  Link as MuiLink,
+  Paper,
   TextField,
   Typography,
-  Alert,
-  Paper,
   useTheme,
-  Link as MuiLink,
 } from '@mui/material';
-import { AppConstants } from '@duality-social/duality-social-lib';
+import { isAxiosError } from 'axios';
+import { Field, Form, Formik, FormikProps } from 'formik';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import * as Yup from 'yup';
 import { useAuth } from '../auth-provider.tsx';
 import api from '../services/api.ts';
 

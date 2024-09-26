@@ -1,13 +1,13 @@
-import React, { useEffect, useState, memo } from 'react';
-import { useAuth } from '../auth-provider';
 import {
   Box,
+  CircularProgress,
   Container,
   Paper,
   Typography,
-  CircularProgress,
   useTheme,
 } from '@mui/material';
+import React, { memo, useEffect, useState } from 'react';
+import { useAuth } from '../auth-provider';
 import Feed from './feed.tsx';
 import NewPost from './new-post.tsx';
 

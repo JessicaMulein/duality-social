@@ -1,18 +1,18 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Button, TextField, Box, Typography } from '@mui/material';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import { isAxiosError } from 'axios';
-import ImagePreview from './image-preview.tsx';
-import LivePostPreview from './live-post-preview.tsx';
-import ImageCropDialog from './image-crop-dialog.tsx';
-import authenticatedApi from '../services/authenticated-api.ts';
 import {
   AppConstants,
   getCharacterCount,
   IApiNewPostResponse,
 } from '@duality-social/duality-social-lib';
+import { Box, Button, TextField, Typography } from '@mui/material';
+import { isAxiosError } from 'axios';
+import { useFormik } from 'formik';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import * as Yup from 'yup';
+import authenticatedApi from '../services/authenticated-api.ts';
+import ImageCropDialog from './image-crop-dialog.tsx';
+import ImagePreview from './image-preview.tsx';
+import LivePostPreview from './live-post-preview.tsx';
 
 interface NewPostProps {
   isBlogPost?: boolean;
